@@ -33,10 +33,18 @@ To Dos:
         - Selecting a square with a bomb beneath it --> Death function gets called
     - Create a function that pulls from the api the high scores -- maybe using .map to record names and flexbox for recording hard, medium, and
       easy difficulty high scores
-        - API model with command something as follows: 
-
-          db('highscores as h').leftJoin('easy as e', 'h.easy_id', 'e.easy_id').leftJoin('medium as m', 'h.medium_id', 'm.medium_id').leftJoin('expert as x', 'h.expert_id', 'x.expert_id').select('h.name', 'e.time', 'm.time', 'x.time).orderBy('e.time', 'm.time', 'x.time')
-          
+        - SQL query for returning highscore chart:
+            - SELECT u.name, g.time, d.difficulty
+              FROM username AS u
+              LEFT JOIN gamemode AS g ON u.gamemode_id = g.gamemode_id
+              LEFT JOIN difficulty AS d ON g.difficulty_id = d.difficulty_id
+              ORDER BY g.time; 
+        - Corresponding knex command:
+            - db('username as u')
+                .leftJoin('gamemode as g', 'u.gamemode_id', 'g.gamemode_id')
+                .leftJoin('difficulty as d', 'g.difficulty_id', 'd.difficulty_id')
+                .select('u.name', 'g.time', 'd.difficulty')
+                .orderBy('g.time')
     - Create a Form.js file for making the custom board and if a highscore, the name of the player
         - Make a validation function for form data in the api. URL maybe :9000/api/board/custom?
     - Make sure to include false selects (square is selected but there is no bomb there) in set state
