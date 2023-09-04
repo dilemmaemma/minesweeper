@@ -11,29 +11,7 @@ import '../css/header.css'
 
 function App() {
   return (
-    // <Router>
-    //   <div className="App">
-    //     <Header />
-    //     <Switch>
-    //       <Route path="/easy">
-    //         <Board difficulty="easy" />
-    //       </Route>
-    //       <Route path="/normal">
-    //         <Board difficulty="normal" />
-    //       </Route>
-    //       <Route path="/hard">
-    //         <Board difficulty="hard" />
-    //       </Route>
-    //       {/* Add a default route or 404 page */}
-    //       {/* I have added this in server.js in server.use('*'...). It will yield us our 404 */}
-    //       <Route path="/">
-    //         <p>Page not found!</p>
-    //       </Route>
-    //     </Switch>
-    //   </div>
-    // </Router>
     <>
-    {/* I think this would be a nicer look, but if you're attached to the above method, I can def flex. */}
       <header>
         <nav className='navbar'>
           <div className="hamburger-menu navbar-container">
@@ -45,14 +23,7 @@ function App() {
             <ul className="menu__box">
               <nav>
                 <li><Link to='/' className='menu__item'>Home</Link></li>
-                <li><Link to='gamemode' className='menu__item'>Gamemodes</Link></li> {/* This is a third alternative of just selecting it in the hamburger menu. Will list all alternatives below */}
-
-                {/* Alternatives:
-                - Link to gamemode URL extension to select gamemode
-                - Span custom links to prebuild URLs
-                - Something within Home.js for building out links within the header
-
-                Whatever it is, we will need to build it in <Routes> to handle to URL */}
+                <li><Link to='gamemode' className='menu__item'>Gamemodes</Link></li>
 
                 <li><Link to='highscores' className='menu__item'>High Scores</Link></li>
                 <li><Link to='about' className='menu__item'>About</Link></li>
