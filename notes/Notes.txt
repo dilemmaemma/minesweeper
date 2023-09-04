@@ -1,5 +1,15 @@
 To Dos:
     - Make a SQL database for storing high scores using knex.js
+        - To find IP address of system:
+            - $.getJSON("http://jsonip.com/?callback=?", function (data) {
+                console.log(data);
+                alert(data.ip);
+              });
+        - Only one username can belong to each system. IP address can be repeated, but username must be tied to IP address
+            - Make helper function that takes in username from form and checks it against existing usernames
+                - If username already exists:
+                    - If IP attached to that username is the IP of the computer, allow username to be recorded
+                    - If IP attached to that username is NOT the IP of the computer, present error message
     - Create and wire the API
     - List out all models needed, along with custom middleware and routers
     - Select from the list how to do the difficulty selection:
