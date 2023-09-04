@@ -1,0 +1,40 @@
+To Dos:
+    - Make a SQL database for storing high scores using knex.js
+    - Create and wire the API
+    - List out all models needed, along with custom middleware and routers
+    - Select from the list how to do the difficulty selection:
+        - Keep the original Route setup
+        - Fix the header issue in Home.js
+        - Put a Gamemodes link in the hamburger menu
+        - Create custom links via span and href for difficulty selection
+    - Need to fix the CSS placement issue of the hamburger menu
+    - Maybe pick a new color palatte?
+    - Create a file or function for time recording (time played)
+    - Create a function for marking number of bombs unselected
+    - Create a function for detection of face change:
+        - Default: happy
+        - On keypress: shocked
+        - On death: dead
+    - Create a detection function for each square to search around it and find if there are any bombs connected to it. If there are, have the
+      square state the number of bombs that it is touching
+    - Create a detection function for keypresses:
+        - Selecting a square with no bombs around it --> Expose every square around that one until it hits a square that is border a bomb
+        - Selecting a square with a bomb bordering it --> Only that square flips up
+        - Selecting a square with a bomb beneath it --> Death function gets called
+    - Create a function that pulls from the api the high scores -- maybe using .map to record names and flexbox for recording hard, medium, and
+      easy difficulty high scores
+        - API model with command something as follows: 
+
+          db('highscores as h').leftJoin('easy as e', 'h.easy_id', 'e.easy_id').leftJoin('medium as m', 'h.medium_id', 'm.medium_id').leftJoin('expert as x', 'h.expert_id', 'x.expert_id').select('h.name', 'e.time', 'm.time', 'x.time).orderBy('e.time', 'm.time', 'x.time')
+          
+    - Create a Form.js file for making the custom board and if a highscore, the name of the player
+        - Make a validation function for form data in the api. URL maybe :9000/api/board/custom?
+    - Make sure to include false selects (square is selected but there is no bomb there) in set state
+    - Maybe original state be something like this?
+        - const initialState = {
+            face: 'happy',
+            bombsLeft: bombDifficulty,
+            falseSelects: 0,
+        }
+        - { state, setState } = useState(initialState)
+    - Check out https://minesweeperonline.com/ for other ideas

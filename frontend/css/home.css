@@ -1,0 +1,10 @@
+.redirect {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    text-decoration: none;
+}
