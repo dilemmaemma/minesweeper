@@ -67,9 +67,7 @@ function App() {
           </div>
         </nav>
       </header>
-      <body>
-        <TimeElapsed />
-      </body>
+      <TimeElapsed />
       <Routes>
         {/* <Route path='/' element={<Home />}/> Commenting out for now to make the render prettier. Home.js is a huge fuckery */}
         <Route path='highscores' element={<Highscores />} />
