@@ -1,7 +1,7 @@
 const username = [
-    { username: 'ScoreMaster99', ip_address: '192.168.1.100', gamemode_id: 1 },
-    { username: 'TopScorer2023', ip_address: '10.0.0.45', gamemode_id: 2 },
-    { username: 'GameChampion42', ip_address: '172.16.0.255', gamemode_id: 3 }
+    { name: 'ScoreMaster99', ip_address: '192.168.1.100', gamemode_id: 1 },
+    { name: 'TopScorer2023', ip_address: '10.0.0.45', gamemode_id: 2 },
+    { name: 'GameChampion42', ip_address: '172.16.0.255', gamemode_id: 3 }
 ]
 
 const gamemode = [

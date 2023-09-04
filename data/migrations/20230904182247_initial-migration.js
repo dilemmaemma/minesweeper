@@ -6,7 +6,7 @@ exports.up = async function(knex) {
       })
       .createTable('username', tbl => {
           tbl.increments('username_id')
-          tbl.string('username', 15).notNullable()
+          tbl.string('name', 15).notNullable()
           tbl.string('ip_address', 128).notNullable()
           tbl.integer('gamemode_id')
               .unsigned()
