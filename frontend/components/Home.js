@@ -14,6 +14,7 @@ function Home () {
             <Link to='medium' className='redirect child2'>Medium</Link>
             <Link to='hard' className='redirect child3'>Hard</Link>
             <Link to='custom' className='redirect child4'>Custom</Link>
+            
             <Routes>
                 <Route path='easy' element = {<Board difficulty='easy' />} />
                 <Route path='medium' element = {<Board difficulty='medium' />} />
