@@ -24,7 +24,6 @@ function App() {
               <nav>
                 <li><Link to='/' className='menu__item'>Home</Link></li>
                 <li><Link to='gamemode' className='menu__item'>Gamemodes</Link></li>
-
                 <li><Link to='highscores' className='menu__item'>High Scores</Link></li>
                 <li><Link to='about' className='menu__item'>About</Link></li>
               </nav>
