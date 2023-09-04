@@ -34,6 +34,5 @@ exports.up = async function(knex) {
       .dropTableIfExists('gamemode')
       .dropTableIfExists('username')
       .dropTableIfExists('difficulty')
-  
   };
   
