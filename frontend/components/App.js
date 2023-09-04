@@ -2,11 +2,10 @@
 import React from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
 
-import Header from './Header';
+// import Header from './Header';
 import Home from './Home';
 import Highscores from './Highscores';
 import About from './About'
-import TimeElapsed from './TimeElapsed';
 
 import '../css/header.css'
 
@@ -67,9 +66,8 @@ function App() {
           </div>
         </nav>
       </header>
-      <TimeElapsed />
       <Routes>
-        {/* <Route path='/' element={<Home />}/> Commenting out for now to make the render prettier. Home.js is a huge fuckery */}
+        <Route path='*' element={<Home />}/>
         <Route path='highscores' element={<Highscores />} />
         <Route path='about' element={<About />} />
     </Routes>

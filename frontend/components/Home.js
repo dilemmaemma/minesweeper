@@ -2,13 +2,14 @@ import React from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 
 import Board from './Board';
+import TimeElapsed from './TimeElapsed';
 
-// import '../css/home.css';
+import '../css/home.css';
 
 function Home () {
     return (
         // Trying to get these to display on the header to take to different gamemodes. Would appear prettier I think
-        <header>
+        <div>
             <Link to='easy' className='redirect child1'>Easy</Link>
             <Link to='medium' className='redirect child2'>Medium</Link>
             <Link to='hard' className='redirect child3'>Hard</Link>
@@ -19,7 +20,9 @@ function Home () {
                 <Route path='hard' element = {<Board difficulty='hard' />} />
                 <Route path='custom' element = {<Board difficulty='custom' />} />
             </Routes>
-        </header>
+
+            <TimeElapsed />
+        </div>
     )
 }
 
