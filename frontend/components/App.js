@@ -6,6 +6,7 @@ import Header from './Header';
 import Home from './Home';
 import Highscores from './Highscores';
 import About from './About'
+import TimeElapsed from './TimeElapsed';
 
 import '../css/header.css'
 
@@ -66,6 +67,9 @@ function App() {
           </div>
         </nav>
       </header>
+      <body>
+        <TimeElapsed />
+      </body>
       <Routes>
         {/* <Route path='/' element={<Home />}/> Commenting out for now to make the render prettier. Home.js is a huge fuckery */}
         <Route path='highscores' element={<Highscores />} />
