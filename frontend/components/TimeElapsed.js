@@ -24,9 +24,7 @@ function TimeElapsed (playing) {
       }, [playing !== false]);
 
     return (
-        <body>
         <h1>Time elapsed: {time}</h1>
-        </body>
     )
 }
 
