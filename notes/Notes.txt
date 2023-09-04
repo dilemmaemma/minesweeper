@@ -55,4 +55,9 @@ To Dos:
             falseSelects: 0,
         }
         - { state, setState } = useState(initialState)
+    - Create a variable, playing, that holds a value of true or false
+        - playing === true: game is actively going
+        - playing === false: changed when bomb is pressed and altered when new game starts
+
+        - Pass this variable to TimeElapsed.js so that the while statement will break when playing stops, thus stopping the time
     - Check out https://minesweeperonline.com/ for other ideas
