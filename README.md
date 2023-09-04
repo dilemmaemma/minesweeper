@@ -44,7 +44,7 @@ Add `"start"`. `"server"`, `"migrate"` and `"rollback"` scripts to the `package.
   - Example of response body: `[{"face":smiley,"response":null,"bombs_left":99}]`
   - 
 - [ ] `[POST] /api/location`
-  - Example of response body: `{"face":dead,"response":"You Lost! Play again?","bombs_left":1}`
+  - Example of response body: `{face:"dead","response":"You Lost! Play again?","bombs_left":1}`
      
 ### Required Front-End Endpoints - For Dev Purposes Only
 
