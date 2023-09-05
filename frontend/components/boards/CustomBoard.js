@@ -49,7 +49,7 @@ const CustomBoard = () => {
             <form id='custom-board' onSubmit={onSubmit} onReset={onReset}>
                 <h2>Create Custom Board</h2>
                 <div>
-                    <label htmlFor='width'>Width/Rows:</label>
+                    <label htmlFor='width'>Width/Rows:&nbsp;</label>
                     <input
                         type='number'
                         name='width'
@@ -66,7 +66,7 @@ const CustomBoard = () => {
                 {/* Checks to see if proper form constraints were followed. If not, renders error. */}
                 {(board.width < 8 || board.width > 50) && board.error && <p id='error'>{board.error}</p>}
                 <div>
-                    <label htmlFor='height'>Height/Columns:</label>
+                    <label htmlFor='height'>Height/Columns:&nbsp;</label>
                     <input
                         type='number'
                         name='height'
@@ -83,7 +83,7 @@ const CustomBoard = () => {
                 {/* Checks to see if proper form constraints were followed. If not, renders error. */}
                 {(board.height < 8 || board.height > 50) && board.error && <p id='error'>{board.error}</p>}
                 <div>
-                    <label htmlFor='bombs'>Bombs:</label>
+                    <label htmlFor='bombs'>Bombs:&nbsp;</label>
                     <input
                         type='number'
                         name='bombs'
