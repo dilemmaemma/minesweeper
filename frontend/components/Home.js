@@ -3,6 +3,7 @@ import { Routes, Route, Link } from 'react-router-dom'
 
 import Board from './boards/Board';
 import TimeElapsed from './TimeElapsed';
+import CustomBoard from './boards/CustomBoard';
 
 import '../css/home.css';
 
@@ -23,6 +24,7 @@ function Home () {
             </Routes>
 
             <TimeElapsed />
+            <CustomBoard />
         </div>
     )
 }
