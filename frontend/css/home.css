@@ -8,3 +8,9 @@
     font-weight: 600;
     text-decoration: none;
 }
+
+.placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
