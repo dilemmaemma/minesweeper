@@ -18,7 +18,7 @@ const CustomBoard = () => {
                board.height >= 8 && 
                board.height <= 50 && 
                board.bombs > 0 && 
-               board.bombs <= 999 ? true : false
+               board.bombs <= 999 ? false : true
     }
 
     const onChange = e => {
