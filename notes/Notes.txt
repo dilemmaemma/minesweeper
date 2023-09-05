@@ -65,3 +65,11 @@ To Dos:
     - Maybe do something like this in about for instructions, or make an instructions tab?
         - https://freeminesweeper.org/how-to-play-minesweeper.php
     
+    - Controls:
+        - Left-click: reveal square
+        - Right-click (ctrl + click): flag square
+        - Middle-click (left + right click or shift + enter or shift + space): do it on a number to reveal all adjacent unflagged squares
+        - F2 (or click face): start new game
+
+    - Possible Easter Egg:
+        - Type xyzzy and press Shift + Enter - pixel at top left of board turns white - turns black if mouse is over a bomb
