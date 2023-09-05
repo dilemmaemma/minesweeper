@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {useState} from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
 
 import Home from './Home';
@@ -10,6 +10,13 @@ import Board from './boards/Board'
 import '../css/header.css'
 
 function App() {
+
+  const [showLinks, setShowLinks] = useState(false)
+
+  const toggleLinks = () => {
+    setShowLinks(!showLinks)
+  }
+
   return (
     <>
       <header>
@@ -23,11 +30,11 @@ function App() {
             <ul className="menu__box">
               <nav>
                 <li><Link to='/' className='menu__item'>Home</Link></li>
-                <li><Link to='gamemode' className='menu__item'>Gamemodes</Link></li>
-                <li><Link to='easy' className='menu__item'>Easy</Link></li>
-                <li><Link to='medium' className='menu__item'>Intermediate</Link></li>
-                <li><Link to='expert' className='menu__item'>Expert</Link></li>
-                <li><Link to='custom' className='menu__item'>Custom</Link></li>
+                <li><Link to='gamemode' className='menu__item' onClick={() => toggleLinks()}>Gamemodes {!showLinks ? '▼' : '▲'}</Link></li>
+                <li><Link to='easy' className={`special menu__item ${!showLinks ? 'hidden' : ''}`}>Easy</Link></li>
+                <li><Link to='medium' className={`special menu__item ${!showLinks ? 'hidden' : ''}`}>Intermediate</Link></li>
+                <li><Link to='expert' className={`special menu__item ${!showLinks ? 'hidden' : ''}`}>Expert</Link></li>
+                <li><Link to='custom' className={`special menu__item ${!showLinks ? 'hidden' : ''}`}>Custom</Link></li>
                 <li><Link to='highscores' className='menu__item'>High Scores</Link></li>
                 <li><Link to='about' className='menu__item'>About</Link></li>
               </nav>
