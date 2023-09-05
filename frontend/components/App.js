@@ -12,9 +12,18 @@ import '../css/header.css'
 function App() {
 
   const [showLinks, setShowLinks] = useState(false)
+  const [isMouseOver, setIsMouseOver] = useState(false)
 
   const toggleLinks = () => {
     setShowLinks(!showLinks)
+  }
+
+  const handleMouseOver = () => {
+    setIsMouseOver(true)
+  }
+
+  const handleMouseOut = () => {
+    setIsMouseOver(false)
   }
 
   return (
@@ -30,7 +39,7 @@ function App() {
             <ul className="menu__box">
               <nav>
                 <li><Link to='/' className='menu__item'>Home</Link></li>
-                <li><Link to='gamemode' className='menu__item' onClick={() => toggleLinks()}>Gamemodes {!showLinks ? '▼' : '▲'}</Link></li>
+                <li><p className='menu__item' onClick={() => toggleLinks()} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} style={{ cursor: isMouseOver ? 'pointer' : 'default' }}>Gamemodes {!showLinks ? '▼' : '▲'}</p></li>
                 <li><Link to='easy' className={`special menu__item ${!showLinks ? 'hidden' : ''}`}>Easy</Link></li>
                 <li><Link to='medium' className={`special menu__item ${!showLinks ? 'hidden' : ''}`}>Intermediate</Link></li>
                 <li><Link to='expert' className={`special menu__item ${!showLinks ? 'hidden' : ''}`}>Expert</Link></li>
