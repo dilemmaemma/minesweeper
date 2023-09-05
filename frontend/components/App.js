@@ -2,10 +2,10 @@
 import React from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
 
-// import Header from './Header';
 import Home from './Home';
 import Highscores from './Highscores';
 import About from './About'
+import Board from './boards/Board'
 
 import '../css/header.css'
 
@@ -24,15 +24,14 @@ function App() {
               <nav>
                 <li><Link to='/' className='menu__item'>Home</Link></li>
                 <li><Link to='gamemode' className='menu__item'>Gamemodes</Link></li>
+                <li><Link to='easy' className='menu__item'>Easy</Link></li>
+                <li><Link to='medium' className='menu__item'>Intermediate</Link></li>
+                <li><Link to='expert' className='menu__item'>Expert</Link></li>
+                <li><Link to='custom' className='menu__item'>Custom</Link></li>
                 <li><Link to='highscores' className='menu__item'>High Scores</Link></li>
                 <li><Link to='about' className='menu__item'>About</Link></li>
               </nav>
             </ul>
-            {/* <span><a href='http://github.com/dilemmaemma' className='redirect child1'>Easy</a></span>
-            <span><a href='http://linkedin.com/in/emmahtml' className='redirect child2'>Medium</a></span>
-            <span><a href='https://app.codesignal.com/profile/emmahtml' className='redirect child3'>Hard</a></span>
-            <span><a href='https://app.codesignal.com/profile/emmahtml' className='redirect child3'>Custom</a></span> */}
-            {/* Another possible approaching is the one above with obv a different href location. Either way, I think this promotes a cleaner look. */}
           </div>
         </nav>
       </header>
@@ -40,6 +39,10 @@ function App() {
         <Route path='*' element={<Home />}/>
         <Route path='highscores' element={<Highscores />} />
         <Route path='about' element={<About />} />
+        <Route path='easy' element = {<Board difficulty='easy' />} />
+        <Route path='medium' element = {<Board difficulty='medium' />} />
+        <Route path='hard' element = {<Board difficulty='hard' />} />
+        <Route path='custom' element = {<Board difficulty='custom' />} />
     </Routes>
   </>
   );
