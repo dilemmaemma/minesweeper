@@ -21,7 +21,7 @@ function App() {
     <>
       <header>
         <nav className='navbar'>
-          <div className="hamburger-menu navbar-container">
+          <div className="navbar-container">
             <input id="menu__toggle" type="checkbox" />
             <label className="menu__btn" htmlFor="menu__toggle">
               <span></span>
