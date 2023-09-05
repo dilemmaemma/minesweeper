@@ -1,0 +1,57 @@
+Square Sprite Positioning - class square:
+    - Number 1: -16px -23px - class open1
+    - Number 2: -32px -23px - class open2
+    - Number 3: -48px -23px - class open3
+    - Number 4: -64px -23px - class open4
+    - Number 5: -80px -23px - class open5
+    - Number 6: -96px -23px - class open6
+    - Number 7: -112px -23px - class open7
+    - Number 8: -128px -23px - class open8
+    - Empty Square: 0 -23px - class open0
+    - Unpressed Square: 0 -39px - class blank
+    - Flagged Square: -16px -39px - class bombflagged
+    - Exploded Bomb: -32px -39px - class bombdeath
+    - Fake Bomb: -48px -39px - class fakebomb (A fake bomb is where a square is flagged, but there is not a bomb under that square)
+    - Revealed Bomb: -64px -39px - class bombrevealed
+
+Face Sprite Positioning - class face:
+    - Smiley Face: 0 -55px - class facesmile
+    - Pressed Smiley Face: -26px -55px - class facepressed
+    - Shocked Face: -52px -55px - class faceooh
+    - Dead Face: -78px -55px - class facedead
+    - Cool Face: -114px -55px - class facewin
+
+Time and Score Sprite Positioning - class time:
+    - 0: 0 0 - class time0
+    - 1: -13px 0 - class time1
+    - 2: -26px 0 - class time2
+    - 3: -39px 0 - class time3
+    - 4: -52px 0 - class time4
+    - 5: -65px 0 - class time5
+    - 6: -78px 0 - class time6
+    - 7: -91px 0 - class time7
+    - 8: -104px 0 - class time8
+    - 9: -117px 0 - class time9
+    - Negative: -130px 0 - class time-
+
+Time and Score IDs:
+    - mines_hundreds: margin 4px 0 5px 6px
+    - mines_tens: margin 4px 0 5px 0
+    - mines_ones: margin 4px 0 5px 0
+
+    - seconds_hundreds: margin 4px 0 5px 0
+    - seconds_tens: margin 4px 0 5px 0
+    - seconds_ones: margin 4px 6px 5px 0
+
+Class square:
+    - Width: 16px
+    - Height: 16px
+
+Class face:
+    - margin: 3px 14px 3px 14px
+    - Width: 26px
+    - Height: 26px
+
+Class time:
+    - Width: 13px
+    - Height: 23px
