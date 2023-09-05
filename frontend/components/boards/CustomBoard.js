@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 // import axios from 'axios'
 
+import '../../css/board.css'
+
 const initialBoard = {
-    width: '',
-    height: '',
-    bombs: '',
+    width: 0,
+    height: 0,
+    bombs: 0,
+    error: ''
 }
 
 const CustomBoard = () => {
@@ -25,13 +28,14 @@ const CustomBoard = () => {
         setBoard({ ...board, [name]: value })
     }
 
-    const onReset = e => {
-        e.preventDefault()
+    const onReset = () => {
         setBoard(initialBoard)
     }
 
     const onSubmit = e => {
         e.preventDefault()
+        // axios post call
+        onReset()
     }
 
     // Max size: 50x50
@@ -54,7 +58,7 @@ const CustomBoard = () => {
                         min='8'
                         max='50'
                         onChange={onChange}
-                        value={board.width}
+                        value={ board.width !== 0 ? board.width : '' }
                     />
                     <p>Must be between 8 and 50, inclusive</p>
                 </div>
@@ -69,7 +73,7 @@ const CustomBoard = () => {
                         max='50'
                         placeholder='Height'
                         onChange={onChange}
-                        value={board.height}
+                        value={ board.height !== 0 ? board.height : '' }
                     />
                     <p>Must be between 8 and 50, inclusive</p>
                 </div>
@@ -81,13 +85,34 @@ const CustomBoard = () => {
                         id='bombs'
                         step='1'
                         min='1'
-                        max={(board.width*board.height)/2 <=999 ? (board.width*board.height)/2 : 999}
+                        max={board.width && board.height ? (board.width*board.height)/2 <=999 ? (board.width*board.height)/2 : 999 : 32}
                         placeholder='Bombs'
                         onChange={onChange}
-                        value={board.bombs}
+                        value={ board.bombs !== 0 ? board.bombs : '' } 
                     />
-                    <p>Must be between 1 and {(board.width*board.height)/2 <=999 ? Math.floor((board.width*board.height)/2) : 999}, inclusive</p>
+
+                    {/* Nested ternaries. For the max clause in bomb input, it is basically saying that if board width and board height don't exist, that the max should default to 32. Otherwise, the max defaults to (board.width * board.height) / 2. Reads as:
+
+                    if (board.width && board.height) {
+                        if (((board.width * board.height) / 2) <= 999) max = (board.width * board.height) / 2
+                        else max = 999
+                    }
+                    else max = 32
+
+                    For the ternaries below, it is basically saying that, if board.bombs exists, along with board.width and board.height, that the message should be, "Must be between 1 and ((board.width * board.height) / 2), inclusive". If board.bombs exists but board.width and board.height don't, the message should be, "Must be between 1 and 32". If board.bombs does not exist, the message should read, "Must be at least 1". Reads as:
+
+                    if (board.bombs) {
+                        if (board.width && board.height) {
+                            if (((board.width * board.height) / 2) <= 999) message = `Must be between 1 and ${(board.width * board.height) / 2}`
+                            else message = 'Must be between 1 and 999'
+                        }
+                        else message = 'Must be between 1 and 32'
+                    }
+                    else message = 'Must be at least 1' */}
+
+                    {<p>Must be between 1 and {board.width !== 0 && board.heigth !== 0 ? ((board.width*board.height)/2 <=999 ? Math.floor((board.width*board.height)/2) : 999) : 32}, inclusive</p>}
                 </div>
+                {board.error && <p id='error'>{board.error}</p>}
                 <div>
                     <button disabled={isDisabled()} id='SubmitForm'>Submit</button>
                     <button id='ResetForm'>Reset</button>
