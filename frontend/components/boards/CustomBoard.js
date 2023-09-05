@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 // import axios from 'axios'
 
 import '../../css/board.css'
@@ -37,6 +37,12 @@ const CustomBoard = () => {
         // axios post call
         onReset()
     }
+
+    useEffect(() => {
+        if (board.width < 8 || board.width > 50) setBoard({ ...board, error: 'Board width must be between 8 and 50' })
+        else if (board.height < 8 || board.heigth > 50) setBoard({ ...board, error: 'Board height must be between 8 and 50' })
+        else if (board.bombs < 1 || board.bombs > (board.width*board.height)/2 <=999 ? (board.width*board.height)/2 : 999) setBoard({ ...board, error: `Total number of bombs must be between 1 and ${(board.width*board.height)/2 <=999 ? (board.width*board.height)/2 : 999}`})
+    }, [board.width, board.height, board.bombs])
 
     // Max size: 50x50
     // Min size: 8x8
