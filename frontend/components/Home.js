@@ -8,6 +8,9 @@ import '../css/home.css';
 function Home () {
     return (
         <div>
+            <br></br>
+            <br></br>
+            <br></br>
             <TimeElapsed />
             <CustomBoard />
         </div>
