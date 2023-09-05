@@ -7,7 +7,7 @@ import '../css/home.css';
 
 function Home () {
     return (
-        <div>
+        <div className='placeholder'>
             <br></br>
             <br></br>
             <br></br>
