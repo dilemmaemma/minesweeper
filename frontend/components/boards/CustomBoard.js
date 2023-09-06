@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 // import axios from 'axios'
 
+import Board from './Board'
+
 import '../../css/board.css'
 
 const initialBoard = {
@@ -35,7 +37,8 @@ const CustomBoard = () => {
 
     const onSubmit = e => {
         e.preventDefault()
-        // axios post call
+        // axios post call - may not need
+        <Board/>
         onReset()
     }
 
