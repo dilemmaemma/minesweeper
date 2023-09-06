@@ -24,20 +24,6 @@ This project was a two person collaboration to help showcase expertise in state 
 
 The project needs some additional NPM dependencies in order to work.
 
-### Required Scripts - For Dev Purposes Only
-
-Add `"start"`. `"server"`, `"migrate"` and `"rollback"` scripts to the `package.json` file.
-
-### Required Tables - For Dev Purposes Only
-
-- [ ] A **table** is what needs to be done and is stored in a `[table]` table with the following columns:
-      
-  - [ ] [column]
-  - [ ] [column]
-  - [ ] [column]
-        
-- [ ] etc
-
 ### Required Back-End Endpoints - For Dev Purposes Only
 
 - [ ] `[GET] /api/location`
@@ -48,7 +34,7 @@ Add `"start"`. `"server"`, `"migrate"` and `"rollback"` scripts to the `package.
      
 ### Required Front-End Endpoints - For Dev Purposes Only
 
-- [ ] `Function for recording seconds elapsed`
+- [X] `Function for recording seconds elapsed`
       
 - [ ] `Function for recording x and y coordinates`
 
