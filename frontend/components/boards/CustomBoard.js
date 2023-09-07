@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Navigate } from 'react-router-dom'
 // import axios from 'axios'
 
 import '../../css/board.css'
@@ -37,6 +38,7 @@ const CustomBoard = () => {
         e.preventDefault()
         // axios post call - may not need
         onReset()
+        return <Navigate to=''/>
     }
 
     useEffect(() => {
