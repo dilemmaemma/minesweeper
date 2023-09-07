@@ -7,6 +7,8 @@ import '../../css/home.css'
 
 function Board ({difficulty}) {
     const [game, setGame] = useState([])
+    const [level, setLevel] = useState(difficulty)
+
     if (!localStorage.getItem('difficulty')) localStorage.setItem('difficulty', difficulty)
     if (localStorage.getItem('difficulty') !== difficulty) localStorage.setItem('difficulty', difficulty)
 
@@ -18,32 +20,33 @@ function Board ({difficulty}) {
         // To prevent errors, state is only set if difficulty is not equal to custom
         // If it is custom difficulty, useEffect is ignored and the component is rendered in the DOM
 
-        if (difficulty === 'easy') {
+        if (level === 'easy') {
             board = {
                 bombs: 10,
                 width: 8,
                 height: 8,
             }
-        } else if (difficulty === 'medium') {
+        } else if (level === 'medium') {
             board = {
                 bombs: 40,
                 width: 16,
                 height: 16,
             }
-        } else if (difficulty === 'hard') {
+        } else if (level === 'hard') {
             board = {
                 bombs: 99,
                 width: 30,
                 height: 16,
             }
-        } else if (difficulty === 'custom') {
+        } else if (level === 'custom') {
             // axios call here
         } 
-        if (difficulty !== 'custom') {
+        if (level !== 'custom') {
             let bombPlacement = createGameBoard(board)
             setGame(bombPlacement)
+            if (localStorage.getItem('board')) setGame(localStorage.getItem('board'))
         } else return
-    }, [difficulty]);
+    }, [level]);
 
     function generateRandomBombPositions(board) {
         const bombPositions = [];
@@ -84,12 +87,16 @@ function Board ({difficulty}) {
 
     function newBoard() {
         setGame([])
+        localStorage.removeItem('board')
+        setLevel(level)
     }
 
     return (
         <div className='placeholder'>
+            {localStorage.setItem('board', game)}
             <br/><br/><br/>
-            {difficulty === 'custom' && <CustomBoard/>}
+            {level === 'custom' && <CustomBoard/>}
+            <button onClick={newBoard}>Get New Board</button>
         </div>
     )
 }

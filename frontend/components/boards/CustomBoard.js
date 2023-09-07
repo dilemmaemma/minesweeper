@@ -15,6 +15,21 @@ const CustomBoard = () => {
 
     const [ customBoard, setCustomBoard ] = useState(initialBoard)
 
+    const randomize = (e) => {
+        e.preventDefault()
+        const {name} = e.target
+
+        if (name === 'bombs' && (!customBoard.width || !customBoard.height)) {
+            setCustomBoard({...customBoard, [name]: Math.floor(Math.random() * (32)) + 1})
+        }
+
+        if (name === 'bombs' && (customBoard.width && customBoard.height))
+        return setCustomBoard({...customBoard, [name]: Math.floor(Math.random() * ((customBoard.width*customBoard.height)/2 <=999 ? (customBoard.width*customBoard.height)/2 : 999))})
+
+        if (name === 'width' || name === 'height')
+        return setCustomBoard({...customBoard, [name]: Math.floor(Math.random() * (50 - 8 + 1)) + 8})
+    }
+
     const isDisabled = () => {
         // If all tests pass, enables the button
         return customBoard.width >= 8 && 
@@ -45,7 +60,7 @@ const CustomBoard = () => {
         // Checks for possible errors in form. If present, generates an error message. If all tests pass, deletes the error message
         if (customBoard.width < 8 || customBoard.width > 50) setCustomBoard({ ...customBoard, error: 'Board width must be between 8 and 50' })
         else if (customBoard.height < 8 || customBoard.height > 50) setCustomBoard({ ...customBoard, error: 'Board height must be between 8 and 50' })
-        else if (customBoard.bombs < 1 || customBoard.bombs > ((customBoard.width*customBoard.height)/2 <=999 ? (customBoard.width*customBoard.height)/2 : 999)) setCustomBoard({ ...customBoard, error: `Total number of bombs must be between 1 and ${(customBoard.width*customBoard.height)/2 <=999 ? (customBoard.width*customBoard.height)/2 : 999}` })
+        else if (customBoard.bombs < 1 || customBoard.bombs > ((customBoard.width*customBoard.height)/2 <=999 ? (customBoard.width*customBoard.height)/2 : 999)) setCustomBoard({ ...customBoard, error: `Total number of bombs must be between 1 and ${(customBoard.width*customBoard.height)/2 <=999 ? Math.floor((customBoard.width*customBoard.height)/2) : 999}` })
 
         if (customBoard.error && customBoard.width >= 8 && customBoard.width <= 50 && customBoard.height >= 8 && customBoard.height <= 50 && customBoard.bombs >= 1 && customBoard.bombs <= ((customBoard.width*customBoard.height)/2 <=999 ? (customBoard.width*customBoard.height)/2 : 999)) setCustomBoard({ ...customBoard, error: '' })
 
@@ -72,8 +87,9 @@ const CustomBoard = () => {
                         max='50'
                         onChange={onChange}
                         value={ customBoard.width !== 0 ? customBoard.width : '' }
-                    />
-                    <p>Must be between 8 and 50, inclusive</p>
+                    /> 
+                    &nbsp; <button name='width' onClick={randomize}>Randomize</button>
+                    <p style={{fontSize: '10px'}}>Must be between 8 and 50, inclusive</p>
                 </div>
                 <div>
                     <label htmlFor='height'>Height/Columns:&nbsp;</label>
@@ -88,7 +104,8 @@ const CustomBoard = () => {
                         onChange={onChange}
                         value={ customBoard.height !== 0 ? customBoard.height : '' }
                     />
-                    <p>Must be between 8 and 50, inclusive</p>
+                    &nbsp; <button name='height' onClick={randomize}>Randomize</button>
+                    <p style={{fontSize: '10px'}}>Must be between 8 and 50, inclusive</p>
                 </div>
                 <div>
                     <label htmlFor='bombs'>Bombs:&nbsp;</label>
@@ -122,8 +139,8 @@ const CustomBoard = () => {
                         else message = 'Must be between 1 and 32'
                     }
                     else message = 'Must be at least 1' */}
-
-                    {<p>Must be between 1 and {customBoard.width !== 0 && customBoard.height !== 0 ? ((customBoard.width*customBoard.height)/2 <=999 ? Math.floor((customBoard.width*customBoard.height)/2) : 999) : 32}, inclusive</p>}
+                    &nbsp; <button name='bombs' onClick={randomize}>Randomize</button>
+                    {<p style={{fontSize: '10px'}}>Must be between 1 and {customBoard.width !== 0 && customBoard.height !== 0 ? ((customBoard.width*customBoard.height)/2 <=999 ? Math.floor((customBoard.width*customBoard.height)/2) : 999) : 32}, inclusive</p>}
                 </div>
                 {customBoard.error && <p id='error'>{customBoard.error}</p>}
                 <div>
@@ -131,6 +148,7 @@ const CustomBoard = () => {
                     <button id='ResetForm'>Reset</button>
                 </div>
             </form>
+            {console.log(customBoard)}
         </div>
     )
 }
