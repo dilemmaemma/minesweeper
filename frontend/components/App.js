@@ -34,14 +34,70 @@ function App() {
 
             <ul className="menu__box">
               <nav>
-                <li><Link to='/' className='menu__item'>Home</Link></li>
-                <li><p className='menu__item' onClick={() => toggleLinks()} style={{ cursor: 'pointer' }}>Gamemodes {!showLinks ? '▼' : '▲'}</p></li>
-                <li><Link to='board' className={`special menu__item ${!showLinks ? 'hidden' : ''}`} onClick={() => difficultyNav('easy')}>Easy</Link></li>
-                <li><Link to='board' className={`special menu__item ${!showLinks ? 'hidden' : ''}`} onClick={() => difficultyNav('medium')}>Intermediate</Link></li>
-                <li><Link to='board' className={`special menu__item ${!showLinks ? 'hidden' : ''}`} onClick={() => difficultyNav('hard')}>Expert</Link></li>
-                <li><Link to='board' className={`special menu__item ${!showLinks ? 'hidden' : ''}`} onClick={() => difficultyNav('custom')}>Custom</Link></li>
-                <li><Link to='highscores' className='menu__item'>High Scores</Link></li>
-                <li><Link to='controls' className='menu__item'>Controls</Link></li>
+                <li>
+                  <Link to='/' className='menu__item'>Home</Link>
+                </li>
+                <li>
+                  <p className='menu__item' 
+                    onClick={() => toggleLinks()}
+                    style={{ 
+                      cursor: 'pointer', 
+                      marginTop: '0', 
+                      marginBottom: '0'
+                    }}>
+                    Gamemodes {!showLinks ? '▼' : '▲'}
+                  </p>
+                </li>
+                <li>
+                  <Link to='board' 
+                    className={`menu__item ${!showLinks ? 'hidden' : ''}`} 
+                    onClick={() => difficultyNav('easy')} 
+                    style={{ 
+                      textIndent: '40px', 
+                      fontSize: '17px'
+                    }}>
+                    Easy
+                  </Link>
+                </li>
+                <li>
+                  <Link to='board' 
+                    className={`menu__item ${!showLinks ? 'hidden' : ''}`} 
+                    onClick={() => difficultyNav('medium')} 
+                    style={{ 
+                      textIndent: '40px', 
+                      fontSize: '17px'
+                    }}>
+                    Intermediate
+                  </Link>
+                </li>
+                <li>
+                  <Link to='board'
+                    className={`menu__item ${!showLinks ? 'hidden' : ''}`} 
+                    onClick={() => difficultyNav('hard')} 
+                    style={{ 
+                      textIndent: '40px', 
+                      fontSize: '17px'
+                    }}>
+                    Expert
+                  </Link>
+                </li>
+                <li>
+                  <Link to='board' 
+                    className={`menu__item ${!showLinks ? 'hidden' : ''}`} 
+                    onClick={() => difficultyNav('custom')} 
+                    style={{ 
+                      textIndent: '40px', 
+                      fontSize: '17px'
+                    }}>
+                    Custom
+                  </Link>
+                </li>
+                <li>
+                  <Link to='highscores' className='menu__item'>High Scores</Link>
+                </li>
+                <li>
+                  <Link to='controls' className='menu__item'>Controls</Link>
+                </li>
               </nav>
             </ul>
           </div>
