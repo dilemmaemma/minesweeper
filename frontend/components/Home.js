@@ -18,7 +18,7 @@ function Home () {
             <br></br>
             {error && (
                 <div className='error'>
-                    <h3 className='error' style={{ textAlign: 'center' }}>
+                    <h3 style={{ textAlign: 'center' }}>
                     {error}
                     </h3>
                     <br />
