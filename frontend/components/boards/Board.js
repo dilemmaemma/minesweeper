@@ -14,7 +14,9 @@ function Board({ difficulty }) {
     if (localStorage.getItem('board')) {
       setGame(JSON.parse(localStorage.getItem('board')));
     }
-    createBoard()
+    const newGame = createBoard()
+    setGame(newGame)
+    localStorage.setItem('board', JSON.stringify(game));
   }, []);
 
   // Function to create a new board based on the given level or difficulty
@@ -26,8 +28,7 @@ function Board({ difficulty }) {
         height: 8,
       };
       const bombPlacement = createGameBoard(board);
-      setGame(bombPlacement);
-      localStorage.setItem('board', JSON.stringify(board));
+      return bombPlacement;
     } else if (level === 'medium') {
         board = {
             bombs: 40,
@@ -35,8 +36,7 @@ function Board({ difficulty }) {
             height: 16,
         };
         const bombPlacement = createGameBoard(board);
-        setGame(bombPlacement);
-        localStorage.setItem('board', JSON.stringify(board));
+        return bombPlacement;
     } else if (level === 'custom') {
         board = {
             bombs: 99,
@@ -44,8 +44,7 @@ function Board({ difficulty }) {
             height: 16,
         }
         const bombPlacement = createGameBoard(board);
-        setGame(bombPlacement);
-        localStorage.setItem('board', JSON.stringify(board));
+        return bombPlacement;
     }
   }
 
@@ -90,7 +89,9 @@ function Board({ difficulty }) {
   function newBoard() {
     setGame([]);
     localStorage.removeItem('board');
-    createBoard();
+    const newGame = createBoard();
+    setGame(newGame);
+    localStorage.setItem('board', JSON.stringify(game));
   }
 
   console.log(game)
