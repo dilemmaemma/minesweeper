@@ -20,7 +20,6 @@ function App() {
 
   const difficultyNav = (selectedDifficulty) => {
     setDifficulty(selectedDifficulty)
-    localStorage.setItem('difficutly', difficulty)
   }
 
   return (

@@ -8,12 +8,13 @@ import '../../css/home.css'
 function Board ({difficulty}) {
     const [game, setGame] = useState([])
     if (!localStorage.getItem('difficulty')) localStorage.setItem('difficulty', difficulty)
+    if (localStorage.getItem('difficulty') !== difficulty) localStorage.setItem('difficulty', difficulty)
 
     useEffect(() => {
         let board
         // Keeps difficulty the same if move away from current page
         if (localStorage.getItem('difficulty')) difficulty = localStorage.getItem('difficulty')
-        
+
         // To prevent errors, state is only set if difficulty is not equal to custom
         // If it is custom difficulty, useEffect is ignored and the component is rendered in the DOM
 
