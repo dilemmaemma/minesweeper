@@ -12,8 +12,8 @@ module.exports = {
     connection: { filename: './data/database.db3' },
     seeds: { directory: './data/seeds' },
   },
-  testing: {
+  production: {
     ...sharedConfig,
-    connection: { filename: './data/test.db3' },
+    connection: { filename: './data/highescores.db3' },
   },
 };
