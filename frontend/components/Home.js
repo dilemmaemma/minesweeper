@@ -5,7 +5,10 @@ import CustomBoard from './boards/CustomBoard';
 
 import '../css/home.css';
 
-function Home () {
+function Home ({error}) {
+
+    if (error) {<h3 className='error'>{error}</h3>}
+
     return (
         <div className='placeholder'>
             <br></br>
