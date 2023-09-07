@@ -12,25 +12,25 @@ const initialBoard = {
 
 const CustomBoard = () => {
 
-    const [ board, setBoard ] = useState(initialBoard)
+    const [ customBoard, setCustomBoard ] = useState(initialBoard)
 
     const isDisabled = () => {
         // If all tests pass, enables the button
-        return board.width >= 8 && 
-               board.width <= 50 && 
-               board.height >= 8 && 
-               board.height <= 50 && 
-               board.bombs > 0 && 
-               board.bombs <= 999 ? false : true
+        return customBoard.width >= 8 && 
+               customBoard.width <= 50 && 
+               customBoard.height >= 8 && 
+               customBoard.height <= 50 && 
+               customBoard.bombs > 0 && 
+               customBoard.bombs <= 999 ? false : true
     }
 
     const onChange = e => {
         const { name, value } = e.target
-        setBoard({ ...board, [name]: value })
+        setCustomBoard({ ...customBoard, [name]: value })
     }
 
     const onReset = () => {
-        setBoard(initialBoard)
+        setCustomBoard(initialBoard)
     }
 
     const onSubmit = e => {
@@ -41,13 +41,13 @@ const CustomBoard = () => {
 
     useEffect(() => {
         // Checks for possible errors in form. If present, generates an error message. If all tests pass, deletes the error message
-        if (board.width < 8 || board.width > 50) setBoard({ ...board, error: 'Board width must be between 8 and 50' })
-        else if (board.height < 8 || board.height > 50) setBoard({ ...board, error: 'Board height must be between 8 and 50' })
-        else if (board.bombs < 1 || board.bombs > ((board.width*board.height)/2 <=999 ? (board.width*board.height)/2 : 999)) setBoard({ ...board, error: `Total number of bombs must be between 1 and ${(board.width*board.height)/2 <=999 ? (board.width*board.height)/2 : 999}` })
+        if (customBoard.width < 8 || customBoard.width > 50) setCustomBoard({ ...customBoard, error: 'Board width must be between 8 and 50' })
+        else if (customBoard.height < 8 || customBoard.height > 50) setCustomBoard({ ...customBoard, error: 'Board height must be between 8 and 50' })
+        else if (customBoard.bombs < 1 || customBoard.bombs > ((customBoard.width*customBoard.height)/2 <=999 ? (customBoard.width*customBoard.height)/2 : 999)) setCustomBoard({ ...customBoard, error: `Total number of bombs must be between 1 and ${(customBoard.width*customBoard.height)/2 <=999 ? (customBoard.width*customBoard.height)/2 : 999}` })
 
-        if (board.error && board.width >= 8 && board.width <= 50 && board.height >= 8 && board.height <= 50 && board.bombs >= 1 && board.bombs <= ((board.width*board.height)/2 <=999 ? (board.width*board.height)/2 : 999)) setBoard({ ...board, error: '' })
+        if (customBoard.error && customBoard.width >= 8 && customBoard.width <= 50 && customBoard.height >= 8 && customBoard.height <= 50 && customBoard.bombs >= 1 && customBoard.bombs <= ((customBoard.width*customBoard.height)/2 <=999 ? (customBoard.width*customBoard.height)/2 : 999)) setCustomBoard({ ...customBoard, error: '' })
 
-    }, [board.width, board.height, board.bombs])
+    }, [customBoard.width, customBoard.height, customBoard.bombs])
 
     // Max size: 50x50
     // Min size: 8x8
@@ -69,7 +69,7 @@ const CustomBoard = () => {
                         min='8'
                         max='50'
                         onChange={onChange}
-                        value={ board.width !== 0 ? board.width : '' }
+                        value={ customBoard.width !== 0 ? customBoard.width : '' }
                     />
                     <p>Must be between 8 and 50, inclusive</p>
                 </div>
@@ -84,7 +84,7 @@ const CustomBoard = () => {
                         max='50'
                         placeholder='Height'
                         onChange={onChange}
-                        value={ board.height !== 0 ? board.height : '' }
+                        value={ customBoard.height !== 0 ? customBoard.height : '' }
                     />
                     <p>Must be between 8 and 50, inclusive</p>
                 </div>
@@ -96,10 +96,10 @@ const CustomBoard = () => {
                         id='bombs'
                         step='1'
                         min='1'
-                        max={board.width && board.height ? (board.width*board.height)/2 <=999 ? (board.width*board.height)/2 : 999 : 32}
+                        max={customBoard.width && customBoard.height ? (customBoard.width*customBoard.height)/2 <=999 ? (customBoard.width*customBoard.height)/2 : 999 : 32}
                         placeholder='Bombs'
                         onChange={onChange}
-                        value={ board.bombs !== 0 ? board.bombs : '' } 
+                        value={ customBoard.bombs !== 0 ? customBoard.bombs : '' } 
                     />
 
                     {/* Nested ternaries. For the max clause in bomb input, it is basically saying that if board width and board height don't exist, that the max should default to 32. Otherwise, the max defaults to (board.width * board.height) / 2. Reads as:
@@ -121,9 +121,9 @@ const CustomBoard = () => {
                     }
                     else message = 'Must be at least 1' */}
 
-                    {<p>Must be between 1 and {board.width !== 0 && board.height !== 0 ? ((board.width*board.height)/2 <=999 ? Math.floor((board.width*board.height)/2) : 999) : 32}, inclusive</p>}
+                    {<p>Must be between 1 and {customBoard.width !== 0 && customBoard.height !== 0 ? ((customBoard.width*customBoard.height)/2 <=999 ? Math.floor((customBoard.width*customBoard.height)/2) : 999) : 32}, inclusive</p>}
                 </div>
-                {board.error && <p id='error'>{board.error}</p>}
+                {customBoard.error && <p id='error'>{customBoard.error}</p>}
                 <div>
                     <button disabled={isDisabled()} id='SubmitForm'>Submit</button>
                     <button id='ResetForm'>Reset</button>

@@ -3,12 +3,15 @@ import React, {useState, useEffect} from 'react'
 
 import CustomBoard from './CustomBoard'
 
-function Board ({difficulty}) {
+import '../../css/home.css'
 
+function Board ({difficulty}) {
     const [game, setGame] = useState([])
 
     useEffect(() => {
         let board
+        // To prevent errors, state is only set if difficulty is not equal to custom
+        // If it is custom difficulty, useEffect is ignored and the component is rendered in the DOM
 
         if (difficulty === 'easy') {
             board = {
@@ -29,17 +32,9 @@ function Board ({difficulty}) {
                 height: 16,
             }
         } else if (difficulty === 'custom') {
-            console.log('Here');
-            return <CustomBoard/>;
-            // axios get from custom board api
-        } else {
-            board = {
-                bombs: 8,
-                width: 8,
-                height: 10,
-            }
-        }
-        if (game.length < 8 || !game) {
+            // axios call here
+        } 
+        if (difficulty !== 'custom') {
             let bombPlacement = createGameBoard(board)
             setGame(bombPlacement)
         } else return
@@ -87,8 +82,9 @@ function Board ({difficulty}) {
     }
 
     return (
-        <div>
-            
+        <div className='placeholder'>
+            <br/><br/><br/>
+            {difficulty === 'custom' && <CustomBoard/>}
         </div>
     )
 }
