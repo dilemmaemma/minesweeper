@@ -16,10 +16,11 @@ function Home () {
             <br></br>
             <br></br>
             <br></br>
+
             {error && (
                 <div className='error'>
                     <h3 style={{ textAlign: 'center' }}>
-                    {error}
+                        {error}
                     </h3>
                     <br />
                 </div>
@@ -27,6 +28,7 @@ function Home () {
 
             <TimeElapsed />
             <CustomBoard />
+            
             <br/>
             <h3>Sprite Testing:</h3>
             <br/>
