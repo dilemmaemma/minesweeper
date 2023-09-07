@@ -1,18 +1,30 @@
 import React from 'react'
+import {useLocation} from 'react-router-dom'
 
 import TimeElapsed from './TimeElapsed';
 import CustomBoard from './boards/CustomBoard';
 
 import '../css/home.css';
 
-function Home ({error}) {
+function Home () {
+
+    const location = useLocation();
+    const error = location.state?.error || null;
 
     return (
         <div className='placeholder'>
             <br></br>
             <br></br>
             <br></br>
-            {error && <div className='error'><h3 className='error'>{error}</h3><br/></div>}
+            {error && (
+                <div className='error'>
+                    <h3 className='error' style={{ textAlign: 'center' }}>
+                    {error}
+                    </h3>
+                    <br />
+                </div>
+            )}
+
             <TimeElapsed />
             <CustomBoard />
             <br/>
