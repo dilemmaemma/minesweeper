@@ -8,6 +8,8 @@ import '../../css/home.css'
 function Board ({difficulty}) {
     const [game, setGame] = useState([])
 
+    console.log(difficulty)
+
     useEffect(() => {
         let board
         // To prevent errors, state is only set if difficulty is not equal to custom
