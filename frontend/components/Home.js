@@ -7,13 +7,12 @@ import '../css/home.css';
 
 function Home ({error}) {
 
-    if (error) {<h3 className='error'>{error}</h3>}
-
     return (
         <div className='placeholder'>
             <br></br>
             <br></br>
             <br></br>
+            {error && <div className='error'><h3 className='error'>{error}</h3><br/></div>}
             <TimeElapsed />
             <CustomBoard />
             <br/>

@@ -11,8 +11,14 @@ function Board ({difficulty}) {
     const [game, setGame] = useState([])
     const [level, setLevel] = useState(difficulty)
 
-    if (!level) {
-        <Navigate to='/' error={'Your session has timed out due to inactivity. Please select a new gamemode to continue'}/>
+    if (!['easy', 'medium', 'hard', 'custom'].includes(level)) {
+        console.log('here');
+        return (
+            <Navigate 
+                to='/' 
+                state={{error: 'Your session has timed out due to inactivity. Please select a new gamemode to continue'}}
+            />
+        )
     }
 
     useEffect(() => {
