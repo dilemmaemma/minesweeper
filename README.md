@@ -9,10 +9,11 @@
 ## Libraries Used
 
 - Node.js
-- Express.js
+- Express
 - React.js
-- Cors.js
+- Cors
 - SQLite3
+- Axios
 
 ## Description
 
