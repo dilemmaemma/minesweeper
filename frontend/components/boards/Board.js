@@ -3,13 +3,13 @@ import React, {useState, useEffect} from 'react'
 
 import CustomBoard from './CustomBoard'
 
-let board
-
 function Board ({difficulty}) {
 
     const [game, setGame] = useState([])
 
     useEffect(() => {
+        let board
+
         if (difficulty === 'easy') {
             board = {
                 bombs: 10,
@@ -29,7 +29,8 @@ function Board ({difficulty}) {
                 height: 16,
             }
         } else if (difficulty === 'custom') {
-            <CustomBoard/>
+            console.log('Here');
+            return <CustomBoard/>;
             // axios get from custom board api
         } else {
             board = {

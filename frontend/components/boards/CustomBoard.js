@@ -42,7 +42,7 @@ const CustomBoard = () => {
     useEffect(() => {
         // Checks for possible errors in form. If present, generates an error message. If all tests pass, deletes the error message
         if (board.width < 8 || board.width > 50) setBoard({ ...board, error: 'Board width must be between 8 and 50' })
-        else if (board.height < 8 || board.heigth > 50) setBoard({ ...board, error: 'Board height must be between 8 and 50' })
+        else if (board.height < 8 || board.height > 50) setBoard({ ...board, error: 'Board height must be between 8 and 50' })
         else if (board.bombs < 1 || board.bombs > ((board.width*board.height)/2 <=999 ? (board.width*board.height)/2 : 999)) setBoard({ ...board, error: `Total number of bombs must be between 1 and ${(board.width*board.height)/2 <=999 ? (board.width*board.height)/2 : 999}` })
 
         if (board.error && board.width >= 8 && board.width <= 50 && board.height >= 8 && board.height <= 50 && board.bombs >= 1 && board.bombs <= ((board.width*board.height)/2 <=999 ? (board.width*board.height)/2 : 999)) setBoard({ ...board, error: '' })
@@ -121,7 +121,7 @@ const CustomBoard = () => {
                     }
                     else message = 'Must be at least 1' */}
 
-                    {<p>Must be between 1 and {board.width !== 0 && board.heigth !== 0 ? ((board.width*board.height)/2 <=999 ? Math.floor((board.width*board.height)/2) : 999) : 32}, inclusive</p>}
+                    {<p>Must be between 1 and {board.width !== 0 && board.height !== 0 ? ((board.width*board.height)/2 <=999 ? Math.floor((board.width*board.height)/2) : 999) : 32}, inclusive</p>}
                 </div>
                 {board.error && <p id='error'>{board.error}</p>}
                 <div>
