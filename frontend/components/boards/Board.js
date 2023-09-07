@@ -16,7 +16,9 @@ function Board ({difficulty}) {
         return (
             <Navigate 
                 to='/' 
-                state={{error: 'Your session has timed out due to inactivity. Please select a new gamemode to continue'}}
+                state={{
+                    error: 'Your session has timed out due to inactivity. Please select a new gamemode to continue'
+                }}
             />
         )
     }
