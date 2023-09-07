@@ -12,18 +12,9 @@ import '../css/header.css'
 function App() {
 
   const [showLinks, setShowLinks] = useState(false)
-  const [isMouseOver, setIsMouseOver] = useState(false)
-
+  
   const toggleLinks = () => {
     setShowLinks(!showLinks)
-  }
-
-  const handleMouseOver = () => {
-    setIsMouseOver(true)
-  }
-
-  const handleMouseOut = () => {
-    setIsMouseOver(false)
   }
 
   return (
