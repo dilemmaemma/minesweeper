@@ -11,8 +11,8 @@ function Board ({difficulty}) {
     const [game, setGame] = useState([])
     const [level, setLevel] = useState(difficulty)
 
+    // Navigate to home with custom error message if DOM unmounts
     if (!['easy', 'medium', 'hard', 'custom'].includes(level)) {
-        console.log('here');
         return (
             <Navigate 
                 to='/' 
@@ -56,8 +56,6 @@ function Board ({difficulty}) {
         let bombPlacement = createGameBoard(board)
         setGame(bombPlacement)
 
-        // Navigate to home page when component unmounts
-        return () => {<Navigate to='/'/>}
     }, [difficulty]);
 
     localStorage.setItem('board', JSON.stringify(game))
@@ -66,34 +64,34 @@ function Board ({difficulty}) {
         const bombPositions = [];
       
         while (bombPositions.length < board.bombs) {
-          const x = Math.floor(Math.random() * board.width);
-          const y = Math.floor(Math.random() * board.height);
-          const position = `${x}-${y}`;
-      
-          // Ensure there are no duplicates
-          if (!bombPositions.includes(position)) {
-            bombPositions.push(position);
-          }
+            const x = Math.floor(Math.random() * board.width);
+            const y = Math.floor(Math.random() * board.height);
+            const position = `${x}-${y}`;
+          
+            // Ensure there are no duplicates
+            if (!bombPositions.includes(position)) {
+                bombPositions.push(position);
+            }
         }
-      
+          
         return bombPositions;
     }
       
     function createGameBoard(board) {
         const bombPositions = generateRandomBombPositions(board);
         const newGame = [];
-      
+          
         for (let i = 0; i < board.height; i++) {
-          const row = [];
-      
-          for (let j = 0; j < board.width; j++) {
-            const isBomb = bombPositions.includes(`${j}-${i}`);
-            row.push(isBomb ? 'X' : 'O');
-          }
-      
-          newGame.push(row);
+            const row = [];
+          
+            for (let j = 0; j < board.width; j++) {
+                const isBomb = bombPositions.includes(`${j}-${i}`);
+                row.push(isBomb ? 'X' : 'O');
+            }
+          
+            newGame.push(row);
         }
-      
+          
         return newGame;
     }
 
@@ -130,8 +128,6 @@ function Board ({difficulty}) {
         setGame([]);
         const newGame = createBoard();
         setGame(newGame);
-        localStorage.removeItem('board');
-        localStorage.setItem('board', JSON.stringify(game));
     }
 
     console.log(game)

@@ -1,6 +1,6 @@
 
 import React, {useState} from 'react';
-import { Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes, Link, useLocation } from 'react-router-dom';
 
 import Home from './Home';
 import Highscores from './Highscores';
@@ -13,6 +13,8 @@ function App() {
 
   const [showLinks, setShowLinks] = useState(false)
   const [difficulty, setDifficulty] = useState()
+
+  const location = useLocation();
 
   const toggleLinks = () => {
     setShowLinks(!showLinks)
@@ -35,7 +37,7 @@ function App() {
             <ul className="menu__box">
               <nav>
                 <li><Link to='/' className='menu__item'>Home</Link></li>
-                <li><Link to='/' className='menu__item' onClick={() => toggleLinks()} >Gamemodes {!showLinks ? '▼' : '▲'}</Link></li>
+                <li><Link to={location} className='menu__item' onClick={() => toggleLinks()} >Gamemodes {!showLinks ? '▼' : '▲'}</Link></li>
                 <li><Link to='board' className={`special menu__item ${!showLinks ? 'hidden' : ''}`} onClick={() => difficultyNav('easy')}>Easy</Link></li>
                 <li><Link to='board' className={`special menu__item ${!showLinks ? 'hidden' : ''}`} onClick={() => difficultyNav('medium')}>Intermediate</Link></li>
                 <li><Link to='board' className={`special menu__item ${!showLinks ? 'hidden' : ''}`} onClick={() => difficultyNav('hard')}>Expert</Link></li>
