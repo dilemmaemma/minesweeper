@@ -23,7 +23,7 @@ function App() {
   }
 
   return (
-    <div className='main'>
+    <div>
       <header>
         <nav className='navbar'>
           <div className="navbar-container">

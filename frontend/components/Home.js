@@ -32,54 +32,54 @@ function Home () {
             <br/>
             <div id='game'>
                 <div>
-                    <p className='square open0'>i</p>          
-                    <p className='square open1'>i</p>
-                    <p className='square open2'>i</p>
-                    <p className='square open3'>i</p>
-                    <p className='square open4'>i</p>
-                    <p className='square open5'>i</p>
-                    <p className='square open6'>i</p>
-                    <p className='square open7'>i</p>
-                    <p className='square open8'>i</p>
-                    <p className='square blank'>i</p>
-                    <p className='square bombflagged'>i</p>
-                    <p className='square bombdeath'>i</p>
-                    <p className='square fakebomb'>i</p>
-                    <p className='square bombrevealed'>i</p>
+                    <div className='square open0'/>         
+                    <div className='square open1'/>
+                    <div className='square open2'/>
+                    <div className='square open3'/>
+                    <div className='square open4'/>
+                    <div className='square open5'/>
+                    <div className='square open6'/>
+                    <div className='square open7'/>
+                    <div className='square open8'/>
+                    <div className='square blank'/>
+                    <div className='square bombflagged'/>
+                    <div className='square bombdeath'/>
+                    <div className='square falsebomb'/>
+                    <div className='square bombrevealed'/>
                 </div>
                 <br/>
                 <div>
-                    <p className='face facesmile'>i</p>
-                    <p className='face facepressed'>i</p>
-                    <p className='face faceooh'>i</p>
-                    <p className='face facedead'>i</p>
-                    <p className='face facewin'>i</p>
+                    <div className='face facesmile'/>
+                    <div className='face facepressed'/>
+                    <div className='face faceooh'/>
+                    <div className='face facedead'/>
+                    <div className='face facewin'/>
+                </div>
+                <br/><br/>
+                <div>
+                    <div className='time time0'/>
+                    <div className='time time1'/>
+                    <div className='time time2'/>
+                    <div className='time time3'/>
+                    <div className='time time4'/>
+                    <div className='time time5'/>
+                    <div className='time time6'/>
+                    <div className='time time7'/>
+                    <div className='time time8'/>
+                    <div className='time time9'/>
+                    <div className='time time-'/>
                 </div>
                 <br/>
                 <div>
-                    <p className='time time0'>i</p>
-                    <p className='time time1'>i</p>
-                    <p className='time time2'>i</p>
-                    <p className='time time3'>i</p>
-                    <p className='time time4'>i</p>
-                    <p className='time time5'>i</p>
-                    <p className='time time6'>i</p>
-                    <p className='time time7'>i</p>
-                    <p className='time time8'>i</p>
-                    <p className='time time9'>i</p>
-                    <p className='time time-'>i</p>
+                    <div id='mines_hundreds' className='time-'/>
+                    <div id='mines_tens' className='time1'/>
+                    <div id='mines_ones' className='time0'/>
                 </div>
                 <br/>
                 <div>
-                    <div id='mines_hundreds'><p className='time-'>i</p></div>
-                    <div id='mines_tens'><p className='time1'>i</p></div>
-                    <div id='mines_ones'><p className='time0'>i</p></div>
-                </div>
-                <br/>
-                <div>
-                    <div id='seconds_hundreds'><p className='time0'>i</p></div>
-                    <div id='seconds_tens'><p className='time8'>i</p></div>
-                    <div id='seconds_ones'><p className='time4'>i</p></div>
+                    <div id='seconds_hundreds' className='time0'/>
+                    <div id='seconds_tens' className='time8'/>
+                    <div id='seconds_ones' className='time4'/>
                 </div>
             </div>
         </div>

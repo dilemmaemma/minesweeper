@@ -3,170 +3,171 @@
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-#game {
+#game div {
     background-image: url('../images/sprite100.gif');
+    display: block;
     float: left;
     line-height: 0;
     font-size: 0;
     background-color: silver;
 }
 
-#mines_hundreds {
+#mines_hundreds div {
     margin: 4px 0 5px 6px;
 } 
 
-#mines_tens {
+#mines_tens div {
     margin: 4px 0 5px 0;
 } 
 
-#mines_ones {
+#mines_ones div {
     margin: 4px 0 5px 0;
 } 
 
-#seconds_hundreds {
+#seconds_hundreds div {
     margin: 4px 0 5px 0;
 } 
 
-#seconds_tens {
+#seconds_tens div {
     margin: 4px 0 5px 0;
 } 
 
-#seconds_ones {
+#seconds_ones div {
     margin: 4px 6px 5px 0
 }
 
-.square {
+#game .square {
     width: 16px;
     height: 16px;
 }
 
-.face {
+#game .face {
     margin: 3px 14px 3px 14px;
     width: 26px;
     height: 26px;
 }
 
-.time {
+#game .time {
     width: 13px;
     height: 23px;
 }
 
-.open1 {
+#game .square.open1 {
     background-position: -16px -23px;
 }
 
-.open2 {
+#game .square.open2 {
     background-position: -32px -23px;
 }
 
-.open3 {
+#game .square.open3 {
     background-position: -48px -23px;
 }
 
-.open4 {
+#game .square.open4 {
     background-position: -64px -23px;
 }
 
-.open5 {
+#game .square.open5 {
     background-position: -80px -23px;
 }
 
-.open6 {
+#game .square.open6 {
     background-position: -96px -23px;
 }
 
-.open7 {
+#game .square.open7 {
     background-position: -112px -23px;
 }
 
-.open8 {
+#game .square.open8 {
     background-position: -128px -23px;
 }
 
-.open0 {
+#game .square.open0 {
     background-position: -0 -23px;
 }
 
-.blank {
+#game .square.blank {
     background-position: 0 -39px;
 }
 
-.bombflagged {
+#game .square.bombflagged {
     background-position: -16px -39px;
 }
 
-.bombdeath {
+#game .square.bombdeath {
     background-position: -32px -39px;
 }
 
-.falsebomb {
+#game .square.falsebomb {
     background-position: -48px -39px;
 }
 
-.bombrevealed {
+#game .square.bombrevealed {
     background-position: -64px -39px;
 }
 
-.facesmile {
+#game .face.facesmile {
     background-position: 0 -55px;
 }
 
-.facepressed {
+#game .face.facepressed {
     background-position: -26px -55px;
 }
 
-.faceooh {
+#game .face.faceooh {
     background-position: -52px -55px;
 }
 
-.facedead {
+#game .face.facedead {
     background-position: -78px -55px;
 }
 
-.facewin {
+#game .face.facewin {
     background-position: -114px -55px;
 }
 
-.time0 {
+#game .time.time0 {
     background-position: 0 0;
 }
 
-.time1 {
+#game .time.time1 {
     background-position: -13px 0;
 }
 
-.time2 {
+#game .time.time2 {
     background-position: -26px 0;
 }
 
-.time3 {
+#game .time.time3 {
     background-position: -39px 0;
 }
 
-.time4 {
+#game .time.time4 {
     background-position: -52px 0;
 }
 
-.time5 {
+#game .time.time5 {
     background-position: -65px 0;
 }
 
-.time6 {
+#game .time.time6 {
     background-position: -78px 0;
 }
 
-.time7 {
+#game .time.time7 {
     background-position: -91px 0;
 }
 
-.time8 {
+#game .time.time8 {
     background-position: -104px 0;
 }
 
-.time9 {
+#game .time.time9 {
     background-position: -117px 0;
 }
 
-.time- {
+#game .time.time- {
     background-position: -130px 0;
 }
