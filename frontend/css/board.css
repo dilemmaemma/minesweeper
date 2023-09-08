@@ -182,3 +182,23 @@ button {
 button:hover {
     opacity: 0.9; /* Reduce opacity on hover */
 }
+
+
+label,
+p {
+    color: #08705f; /* Text color (bright color) */
+    font-weight: bold; /* Make the text bold */
+}
+
+/* Optionally, you can add a border around the labels */
+label {
+    border: 1px solid #240866; /* Border style and a bright color (e.g., orange) */
+    padding: 5px; /* Adjust padding as needed */
+}
+
+/* Optionally, you can add a border around the descriptions */
+p {
+    border: 1px solid #230f73; /* Border style and a bright color (e.g., orange) */
+    padding: 5px; /* Adjust padding as needed */
+    font-size: 14px; /* Adjust font size */
+}
