@@ -34,8 +34,8 @@ function Board ({difficulty}) {
         if (difficulty === 'easy') {
             board = {
                 bombs: 10,
-                width: 8,
-                height: 8,
+                width: 9,
+                height: 9,
             }
         } else if (difficulty === 'medium') {
             board = {
@@ -142,7 +142,7 @@ function Board ({difficulty}) {
     console.log(game)
 
     function dimensionRender() {
-        if (difficulty === 'easy') return style = { height: '128px', width: '128px' }
+        if (difficulty === 'easy') return style = { height: '144px', width: '144px' }
         else if (difficulty === 'medium') return style = { height: '256px', width: '256px' }
         else if (difficulty === 'hard') return style = { height: '256px', width: '480px' }
         // else if (difficulty === 'custom') {
