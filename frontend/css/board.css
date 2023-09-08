@@ -3,7 +3,8 @@
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-#game div {
+#game
+div {
     background-image: url('../images/sprite100.gif');
     display: block;
     float: left;
@@ -12,209 +13,267 @@
     background-color: silver;
 }
 
-#game #mines_hundreds div {
-    margin: 4px 0 5px 6px;
-} 
-
-#game #mines_tens div {
-    margin: 4px 0 5px 0;
-} 
-
-#game #mines_ones div {
-    margin: 4px 0 5px 0;
-} 
-
-#game #seconds_hundreds div {
-    margin: 4px 0 5px 0;
-} 
-
-#game #seconds_tens div {
-    margin: 4px 0 5px 0;
-} 
-
-#game #seconds_ones div {
-    margin: 4px 6px 5px 0
-}
-
-#game .square {
-    width: 16px;
-    height: 16px;
-}
-
-#game .face {
-    width: 26px;
-    height: 26px;
+#face {
     margin-top: 3px;
     margin-bottom: 3px;
 }
 
-#game .time {
+#game 
+#mines_hundreds 
+div {
+    margin: 4px 0 5px 6px;
+} 
+
+#game 
+#mines_tens 
+div {
+    margin: 4px 0 5px 0;
+} 
+
+#game 
+#mines_ones 
+div {
+    margin: 4px 0 5px 0;
+} 
+
+#game 
+#seconds_hundreds 
+div {
+    margin: 4px 0 5px 0;
+} 
+
+#game 
+#seconds_tens 
+div {
+    margin: 4px 0 5px 0;
+} 
+
+#game 
+#seconds_ones 
+div {
+    margin: 4px 6px 5px 0;
+}
+
+#game 
+.square {
+    width: 16px;
+    height: 16px;
+}
+
+#game 
+.face {
+    width: 26px;
+    height: 26px;
+}
+
+#game 
+.time {
     width: 13px;
     height: 23px;
 }
 
-#game .border {
+#game 
+.border {
     width: 10px;
     height: 10px;
 }
 
-#game .square.open1 {
+#game 
+.square.open1 {
     background-position: -16px -23px;
 }
 
-#game .square.open2 {
+#game 
+.square.open2 {
     background-position: -32px -23px;
 }
 
-#game .square.open3 {
+#game 
+.square.open3 {
     background-position: -48px -23px;
 }
 
-#game .square.open4 {
+#game 
+.square.open4 {
     background-position: -64px -23px;
 }
 
-#game .square.open5 {
+#game 
+.square.open5 {
     background-position: -80px -23px;
 }
 
-#game .square.open6 {
+#game 
+.square.open6 {
     background-position: -96px -23px;
 }
 
-#game .square.open7 {
+#game 
+.square.open7 {
     background-position: -112px -23px;
 }
 
-#game .square.open8 {
+#game 
+.square.open8 {
     background-position: -128px -23px;
 }
 
-#game .square.open0 {
+#game 
+.square.open0 {
     background-position: -0 -23px;
 }
 
-#game .square.blank {
+#game 
+.square.blank {
     background-position: 0 -39px;
 }
 
-#game .square.bombflagged {
+#game 
+.square.bombflagged {
     background-position: -16px -39px;
 }
 
-#game .square.bombdeath {
+#game 
+.square.bombdeath {
     background-position: -32px -39px;
 }
 
-#game .square.falsebomb {
+#game 
+.square.falsebomb {
     background-position: -48px -39px;
 }
 
-#game .square.bombrevealed {
+#game 
+.square.bombrevealed {
     background-position: -64px -39px;
 }
 
-#game .face.facesmile {
+#game 
+.face.facesmile {
     background-position: 0 -55px;
 }
 
-#game .face.facepressed {
+#game 
+.face.facepressed {
     background-position: -26px -55px;
 }
 
-#game .face.faceooh {
+#game 
+.face.faceooh {
     background-position: -52px -55px;
 }
 
-#game .face.facedead {
+#game 
+.face.facedead {
     background-position: -78px -55px;
 }
 
-#game .face.facewin {
+#game 
+.face.facewin {
     background-position: -104px -55px;
 }
 
-#game .time.time0 {
+#game 
+.time.time0 {
     background-position: 0 0;
 }
 
-#game .time.time1 {
+#game 
+.time.time1 {
     background-position: -13px 0;
 }
 
-#game .time.time2 {
+#game 
+.time.time2 {
     background-position: -26px 0;
 }
 
-#game .time.time3 {
+#game 
+.time.time3 {
     background-position: -39px 0;
 }
 
-#game .time.time4 {
+#game 
+.time.time4 {
     background-position: -52px 0;
 }
 
-#game .time.time5 {
+#game 
+.time.time5 {
     background-position: -65px 0;
 }
 
-#game .time.time6 {
+#game 
+.time.time6 {
     background-position: -78px 0;
 }
 
-#game .time.time7 {
+#game 
+.time.time7 {
     background-position: -91px 0;
 }
 
-#game .time.time8 {
+#game 
+.time.time8 {
     background-position: -104px 0;
 }
 
-#game .time.time9 {
+#game 
+.time.time9 {
     background-position: -117px 0;
 }
 
-#game .time.time- {
+#game 
+.time.time- {
     background-position: -130px 0;
 }
 
-#game .border.tl {
+#game 
+.border.tl {
     background-position: 0 -81px;
 }
 
-#game .tb {
+#game 
+.tb {
     background-position: -40px -81px;
     width: 16px;
     height: 10px
 }
 
-#game .border.tr {
-    background-position: -10px -81px;
-}
-
-#game .lb {
+#game 
+.lb {
     background-position: -134px -39px;
     width: 10px;
     height: 32px;
 }
 
-#game .border.jbl {
+#game 
+.border.tr {
+    background-position: -10px -81px;
+}
+
+#game 
+.border.jbl {
     background-position: -56px -81px;
 }
 
-#game .border.jbr {
+#game 
+.border.jbr {
     background-position: -66px -81px;
 }
 
-#game .border.sb {
+#game 
+.border.sb {
     background-position: -134px -39px;
 }
 
-#game .border.bl {
+#game 
+.border.bl {
     background-position: -20px -81px;
 }
 
-#game .border.br {
+#game 
+.border.br {
     background-position: -30px -81px;
 }
 

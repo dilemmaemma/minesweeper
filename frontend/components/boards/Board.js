@@ -171,6 +171,12 @@ function Board ({difficulty}) {
     function renderBoard(clicked) {
         // DimensionRender() runs before this, meaning you can plug in the specific style into face to make things seamless
         const boardElements = [];
+
+        boardElements.push(<div className='border tl')
+
+        for (let i = 0; i < board.width; i++) {
+            boardElements.push(<div className='tb' />)
+        }
       
         for (let i = 0; i < game.length; i++) {
           for (let j = 0; j < game[i].length; j++) {
