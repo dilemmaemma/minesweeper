@@ -35,15 +35,15 @@ Time and Score Sprite Positioning - class time:
     - Negative: -130px 0 - class time-
 
 Borders:
-    - Top Left  Border:  0 -81px - class tl
+    - Top Left  Border:  0 -81px - class border tl
     - Top Border: -40px -81px - class tb
-    - Top Right Border: -10px -81px - class tr
+    - Top Right Border: -10px -81px - class border tr
     - Long Border: -134px -39px - class lb (put time stuff and face after first one)
-    - Joint Border Left: -56px -81px - class jbl
-    - Joint Border Right: -66px -81px - class jbr
-    - Side Border: -134px -39px - class sb
-    - Bottom Left: -20px -81px - class bl
-    - Bottom Right: -30px -81px - class br
+    - Joint Border Left: -56px -81px - class border jbl
+    - Joint Border Right: -66px -81px - class border jbr
+    - Side Border: -134px -39px - class border sb
+    - Bottom Left: -20px -81px - class border bl
+    - Bottom Right: -30px -81px - class border br
 
 Time and Score IDs:
     - mines_hundreds: margin 4px 0 5px 6px
@@ -67,7 +67,7 @@ Class time:
     - Width: 13px
     - Height: 23px
 
-Class tl, tr, jbl, jbr, sb, bl, br:
+Class border:
     - Width: 10px
     - Height: 10px
 

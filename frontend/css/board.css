@@ -51,6 +51,10 @@
     height: 23px;
 }
 
+#game .border {
+    
+}
+
 #game .square.open1 {
     background-position: -16px -23px;
 }
