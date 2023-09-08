@@ -8,6 +8,8 @@ import '../../css/board.css'
 
 // Set board up with false values to trick the parser into moving on to the next step when Custom Board is called before other gamemodes
 let board
+let style
+let node_env = 'development'
 
 function Board ({difficulty}) {
 
@@ -139,6 +141,22 @@ function Board ({difficulty}) {
 
     console.log(game)
 
+    function dimensionRender() {
+        if (difficulty === 'easy') return style = { height: '128px', width: '128px' }
+        else if (difficulty === 'medium') return style = { height: '256px', width: '256px' }
+        else if (difficulty === 'hard') return style = { height: '256px', width: '480px' }
+        // else if (difficulty === 'custom') {
+        //     axios.get(l`localhost:9000/api/board/custom`)
+        //         .then(res => {
+        //             console.log(res.data)
+        //             return style = { height: `${String(res.data.height * 16)}px`, width: `${String(res.data.width * 16)}px` }
+        //         })
+        //         .catch(err => {
+        //             console.error(err)
+        //         })
+        // }
+    }      
+
     function renderBoard(clicked) {
         const boardElements = [];
       
@@ -150,7 +168,7 @@ function Board ({difficulty}) {
             let className;
             if (cellValue === 'X' && clicked === true) { // Convert only after clicking
               className = `square bombdeath`;
-            } else if (cellValue === 'O' || (cellValue === 'X' && clicked === false)) {
+            } else if (cellValue === 'O' ) {
               className = `square blank`;
             } else if (cellValue === '1' && clicked === true) { // Convert only after clicking
               className = `square open1`;
@@ -174,7 +192,7 @@ function Board ({difficulty}) {
                 className = 'square bombflagged'
             } else if (cellValue === 'FF' && clicked === 'end') { // Upon game ending, if array value has OF, convert it to a falsebomb
                 className = 'square falsebomb'
-            } else if (cellValue === 'R' && clicked === 'end') { // Upon game ending, shift all squares with 'X' to 'R' to show where bombs were
+            } else if ((cellValue === 'R' && clicked === 'end') || node_env === 'development' && (cellValue === 'X' && !clicked)) { // Upon game ending, shift all squares with 'X' to 'R' to show where bombs were
                 className = 'square bombrevealed'
             }
             // Add JSX elements to the array
@@ -188,9 +206,10 @@ function Board ({difficulty}) {
 
     return (
         <div className='placeholder'>
+            {console.log(style)}
             <br /><br /><br />
-            {level !== 'custom' && (
-                <div id='game'>{renderBoard()}</div>
+            {level !== 'custom' && dimensionRender() && (
+                <div id='game' style={{height: style.height, width: style.width}}>{renderBoard()}</div>
             )}
             {level === 'custom' ? <CustomBoard /> : <button onClick={newBoard}>Get New Board</button>}
         </div>
