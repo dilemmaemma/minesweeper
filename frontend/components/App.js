@@ -20,6 +20,7 @@ function App() {
 
   const difficultyNav = (selectedDifficulty) => {
     setDifficulty(selectedDifficulty)
+    toggleLinks()
   }
 
   return (
