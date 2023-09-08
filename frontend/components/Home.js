@@ -49,14 +49,6 @@ function Home () {
                 </div>
                 <br/>
                 <div>
-                    <div className='face facesmile'/>
-                    <div className='face facepressed'/>
-                    <div className='face faceooh'/>
-                    <div className='face facedead'/>
-                    <div className='face facewin'/>
-                </div>
-                <br/><br/>
-                <div>
                     <div className='time time0'/>
                     <div className='time time1'/>
                     <div className='time time2'/>
@@ -69,17 +61,24 @@ function Home () {
                     <div className='time time9'/>
                     <div className='time time-'/>
                 </div>
-                <br/>
                 <div>
-                    <div id='mines_hundreds' className='time-'/>
-                    <div id='mines_tens' className='time1'/>
-                    <div id='mines_ones' className='time0'/>
+                    <div id='mines_hundreds' className='time time-'/>
+                    <div id='mines_tens' className='time time1'/>
+                    <div id='mines_ones' className='time time0'/>
+                </div>
+                <div>
+                    <div id='seconds_hundreds' className='time time0'/>
+                    <div id='seconds_tens' className='time time8'/>
+                    <div id='seconds_ones' className='time time4'/>
                 </div>
                 <br/>
+                {/* Margin placement for putting these into the board:     margin: 3px 14px 3px 14px; */}
                 <div>
-                    <div id='seconds_hundreds' className='time0'/>
-                    <div id='seconds_tens' className='time8'/>
-                    <div id='seconds_ones' className='time4'/>
+                    <div className='face facesmile'/>
+                    <div className='face facepressed'/>
+                    <div className='face faceooh'/>
+                    <div className='face facedead'/>
+                    <div className='face facewin'/>
                 </div>
             </div>
         </div>

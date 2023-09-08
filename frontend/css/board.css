@@ -12,27 +12,27 @@
     background-color: silver;
 }
 
-#mines_hundreds div {
+#game #mines_hundreds div {
     margin: 4px 0 5px 6px;
 } 
 
-#mines_tens div {
+#game #mines_tens div {
     margin: 4px 0 5px 0;
 } 
 
-#mines_ones div {
+#game #mines_ones div {
     margin: 4px 0 5px 0;
 } 
 
-#seconds_hundreds div {
+#game #seconds_hundreds div {
     margin: 4px 0 5px 0;
 } 
 
-#seconds_tens div {
+#game #seconds_tens div {
     margin: 4px 0 5px 0;
 } 
 
-#seconds_ones div {
+#game #seconds_ones div {
     margin: 4px 6px 5px 0
 }
 
@@ -42,7 +42,6 @@
 }
 
 #game .face {
-    margin: 3px 14px 3px 14px;
     width: 26px;
     height: 26px;
 }
@@ -125,7 +124,7 @@
 }
 
 #game .face.facewin {
-    background-position: -114px -55px;
+    background-position: -104px -55px;
 }
 
 #game .time.time0 {
