@@ -105,3 +105,17 @@ Notes about margin on bombs, face, and time:
             - (6 * 13) - Total amount of time classes multiplied by their width
             - 26 - width of face
             - Reduced: ((border.width * 16) - 116) / 2
+
+Board Construction:
+    - class border tl in top left corner
+    - class tb board.width amount of repeats
+    - class border tr in top right corner
+    - class lb followed by bombs left, face, and time
+    - class lb
+    - class border jbl
+    - class tb board.width amount of repeats
+    - class border jbr
+    - class sb followed by cells followed by class sb repeated board.height amount of TimeElapsed
+    - class border bl
+    - class tb board.width amount of repeats
+    - class border br

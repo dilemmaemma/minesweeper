@@ -142,14 +142,25 @@ function Board ({difficulty}) {
     console.log(game)
 
     function dimensionRender() {
-        if (difficulty === 'easy') return style = { height: '144px', width: '144px' }
-        else if (difficulty === 'medium') return style = { height: '256px', width: '256px' }
-        else if (difficulty === 'hard') return style = { height: '256px', width: '480px' }
+        if (difficulty === 'easy') return (
+            style = { height: '144px', width: '144px', margin: '14px' }
+        )
+        else if (difficulty === 'medium') return (
+            style = { height: '256px', width: '256px', margin: '70px' }
+        )
+        else if (difficulty === 'hard') return (
+            style = { height: '256px', width: '480px', margin: '182px' }
+        )
         // else if (difficulty === 'custom') {
         //     axios.get(l`localhost:9000/api/board/custom`)
         //         .then(res => {
         //             console.log(res.data)
-        //             return style = { height: `${String(res.data.height * 16)}px`, width: `${String(res.data.width * 16)}px` }
+        //             return (
+        //                style = { 
+        //                    height: `${String(res.data.height * 16)}px`, 
+        //                    width: `${String(res.data.width * 16)}px`, 
+        //                    margin: `${String(((res.data.width * 16) - 116) / 2)}`, 
+        //                })
         //         })
         //         .catch(err => {
         //             console.error(err)
@@ -158,6 +169,7 @@ function Board ({difficulty}) {
     }      
 
     function renderBoard(clicked) {
+        // DimensionRender() runs before this, meaning you can plug in the specific style into face to make things seamless
         const boardElements = [];
       
         for (let i = 0; i < game.length; i++) {

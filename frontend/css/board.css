@@ -44,6 +44,8 @@
 #game .face {
     width: 26px;
     height: 26px;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
 #game .time {
@@ -52,7 +54,8 @@
 }
 
 #game .border {
-    
+    width: 10px;
+    height: 10px;
 }
 
 #game .square.open1 {
@@ -174,6 +177,47 @@
 #game .time.time- {
     background-position: -130px 0;
 }
+
+#game .border.tl {
+    background-position: 0 -81px;
+}
+
+#game .tb {
+    background-position: -40px -81px;
+    width: 16px;
+    height: 10px
+}
+
+#game .border.tr {
+    background-position: -10px -81px;
+}
+
+#game .lb {
+    background-position: -134px -39px;
+    width: 10px;
+    height: 32px;
+}
+
+#game .border.jbl {
+    background-position: -56px -81px;
+}
+
+#game .border.jbr {
+    background-position: -66px -81px;
+}
+
+#game .border.sb {
+    background-position: -134px -39px;
+}
+
+#game .border.bl {
+    background-position: -20px -81px;
+}
+
+#game .border.br {
+    background-position: -30px -81px;
+}
+
 button {
     border: 3px solid #450344; /* Border style and color */
     padding: 5px 10px; /* Adjust padding as needed */
