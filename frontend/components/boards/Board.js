@@ -4,7 +4,12 @@ import { Navigate } from 'react-router'
 
 import CustomBoard from './CustomBoard'
 
-let board
+// Set board up with false values to trick the parser into moving on to the next step when Custom Board is called before other gamemodes
+let board = {
+    bombs: 1,
+    width: 1,
+    height: 1
+}
 
 function Board ({difficulty}) {
 
@@ -114,14 +119,14 @@ function Board ({difficulty}) {
             };
             const bombPlacement = createGameBoard(board);
             return bombPlacement;
-        // } else if (level === 'custom') {
-        //     board = {
-        //         bombs: 99,
-        //         width: 30,
-        //         height: 16,
-        //     };
-        //     const bombPlacement = createGameBoard(board);
-        //     return bombPlacement;
+        } else if (difficulty === 'hard') {
+            board = {
+                bombs: 99,
+                width: 30,
+                height: 16,
+            }
+            const bombPlacement = createGameBoard(board);
+            return bombPlacement;
         }
     }
 
