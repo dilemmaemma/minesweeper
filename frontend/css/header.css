@@ -104,9 +104,3 @@
 .hidden {
     display: none;
 }
-
-.main {
-    background-image: url('../images/minesweeper-background.jpg');
-    background-size: cover;
-    margin: -8px -8px -8px -8px;
-}
