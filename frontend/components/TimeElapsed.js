@@ -26,7 +26,7 @@ function TimeElapsed (playing) {
       }, []);
 
     return (
-        <h1>Time elapsed: {time}</h1>
+        <h1 style={{color: 'white'}}>Time elapsed: {time}</h1>
     )
 }
 

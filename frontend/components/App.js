@@ -23,7 +23,7 @@ function App() {
   }
 
   return (
-    <>
+    <div className='main'>
       <header>
         <nav className='navbar'>
           <div className="navbar-container">
@@ -109,7 +109,7 @@ function App() {
         <Route path='controls' element={<Controls />} />
         <Route path='board' element = {<Board difficulty={difficulty} />} />
     </Routes>
-  </>
+  </div>
   );
 }
 

@@ -40,7 +40,7 @@
 
 .menu__btn {
     position: fixed;
-    top: 31.5px;
+    top: 24px;
     left: 20px;
     width: 26px;
     height: 26px;
@@ -103,4 +103,10 @@
 
 .hidden {
     display: none;
+}
+
+.main {
+    background-image: url('../images/minesweeper-background.jpg');
+    background-size: cover;
+    margin: -8px -8px -8px -8px;
 }
