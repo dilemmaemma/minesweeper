@@ -170,3 +170,15 @@
 #game .time.time- {
     background-position: -130px 0;
 }
+button {
+    border: 3px solid #450344; /* Border style and color */
+    padding: 5px 10px; /* Adjust padding as needed */
+    background-color: transparent; /* Transparent background */
+    color: #610836; /* Text color */
+    cursor: pointer;
+    transition: opacity 0.3s ease-in-out; /* Smooth opacity transition */
+}
+
+button:hover {
+    opacity: 0.9; /* Reduce opacity on hover */
+}
