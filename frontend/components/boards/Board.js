@@ -4,12 +4,10 @@ import { Navigate } from 'react-router'
 
 import CustomBoard from './CustomBoard'
 
+import '../../css/board.css'
+
 // Set board up with false values to trick the parser into moving on to the next step when Custom Board is called before other gamemodes
-let board = {
-    bombs: 1,
-    width: 1,
-    height: 1
-}
+let board
 
 function Board ({difficulty}) {
 
@@ -60,8 +58,10 @@ function Board ({difficulty}) {
             }
         }
 
-        let bombPlacement = createGameBoard(board)
-        setGame(bombPlacement)
+        if (difficulty !== 'custom') {
+            let bombPlacement = createGameBoard(board)
+            setGame(bombPlacement)
+        }
 
     }, [difficulty]);
 
@@ -139,11 +139,60 @@ function Board ({difficulty}) {
 
     console.log(game)
 
+    function renderBoard(clicked) {
+        const boardElements = [];
+      
+        for (let i = 0; i < game.length; i++) {
+          for (let j = 0; j < game[i].length; j++) {
+            const cellValue = game[i][j];
+      
+            // Determine the class name based on the cell value
+            let className;
+            if (cellValue === 'X' && clicked === true) { // Convert only after clicking
+              className = `square bombdeath`;
+            } else if (cellValue === 'O' || (cellValue === 'X' && clicked === false)) {
+              className = `square blank`;
+            } else if (cellValue === '1' && clicked === true) { // Convert only after clicking
+              className = `square open1`;
+            } else if (cellValue === '2' && clicked === true) { // Convert only after clicking
+              className = `square open2`;
+            } else if (cellValue === '3' && clicked === true) { // Convert only after clicking
+                className = 'square open3'
+            } else if (cellValue === '4' && clicked === true) { // Convert only after clicking
+                className = 'square open4'
+            } else if (cellValue === '5' && clicked === true) { // Convert only after clicking
+                className = 'square open5'
+            } else if (cellValue === '6' && clicked === true) { // Convert only after clicking
+                className = 'square open6'
+            } else if (cellValue === '7' && clicked === true) { // Convert only after clicking
+                className = 'square open7'
+            } else if (cellValue === '8' && clicked === true) { // Convert only after clicking
+                className = 'square open8'
+            } else if (cellValue === '0' && clicked === true) { // Convert only after clicking
+                className = 'square open0'
+            } else if (cellValue === 'F' && clicked === true) { // When cell is clicked, change array value to the letter it was followed by F, ex: OF or XF
+                className = 'square bombflagged'
+            } else if (cellValue === 'FF' && clicked === 'end') { // Upon game ending, if array value has OF, convert it to a falsebomb
+                className = 'square falsebomb'
+            } else if (cellValue === 'R' && clicked === 'end') { // Upon game ending, shift all squares with 'X' to 'R' to show where bombs were
+                className = 'square bombrevealed'
+            }
+            // Add JSX elements to the array
+            boardElements.push(<div key={`cell-${i}-${j}`} className={className} />);
+          }
+        }
+      
+        return boardElements;
+      }
+      
+
     return (
         <div className='placeholder'>
-            <br/><br/><br/>
-            {level === 'custom' && <CustomBoard />}
-            {level !== 'custom' && <button onClick={newBoard}>Get New Board</button>}
+            <br /><br /><br />
+            {level !== 'custom' && (
+                <div id='game'>{renderBoard()}</div>
+            )}
+            {level === 'custom' ? <CustomBoard /> : <button onClick={newBoard}>Get New Board</button>}
         </div>
     );
 }
