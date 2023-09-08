@@ -164,13 +164,13 @@ function Board ({difficulty}) {
 
     function dimensionRender() {
         if (difficulty === 'easy') return (
-            style = { height: '144px', width: '144px', margin: '14px' }
+            style = { height: '164px', width: '164px', margin: '14px' }
         )
         else if (difficulty === 'medium') return (
-            style = { height: '256px', width: '256px', margin: '70px' }
+            style = { height: '276px', width: '276px', margin: '70px' }
         )
         else if (difficulty === 'hard') return (
-            style = { height: '256px', width: '480px', margin: '182px' }
+            style = { height: '276px', width: '500px', margin: '182px' }
         )
         // else if (difficulty === 'custom') {
         //     axios.get(l`localhost:9000/api/board/custom`)
@@ -178,8 +178,8 @@ function Board ({difficulty}) {
         //             console.log(res.data)
         //             return (
         //                style = { 
-        //                    height: `${String(res.data.height * 16)}px`, 
-        //                    width: `${String(res.data.width * 16)}px`, 
+        //                    height: `${String((res.data.height * 16) + 20)}px`, 
+        //                    width: `${String((res.data.width * 16) + 20)}px`, 
         //                    margin: `${String(((res.data.width * 16) - 116) / 2)}`, 
         //                })
         //         })
