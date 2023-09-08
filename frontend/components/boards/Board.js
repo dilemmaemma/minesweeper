@@ -36,18 +36,27 @@ function Board ({difficulty}) {
                 bombs: 10,
                 width: 9,
                 height: 9,
+                face: 'facesmile',
+                bombs_left: 10,
+                time: 0,
             }
         } else if (difficulty === 'medium') {
             board = {
                 bombs: 40,
                 width: 16,
                 height: 16,
+                face: 'facesmile',
+                bombs_left: 40,
+                time: 0,
             }
         } else if (difficulty === 'hard') {
             board = {
                 bombs: 99,
                 width: 30,
                 height: 16,
+                face: 'facesmile',
+                bombs_left: 99,
+                time: 0,
             }
         } else if (difficulty === 'custom') {
             <CustomBoard/>
@@ -57,6 +66,9 @@ function Board ({difficulty}) {
                 bombs: 8,
                 width: 8,
                 height: 10,
+                face: 'facesmile',
+                bombs_left: 8,
+                time: 0,
             }
         }
 
@@ -110,6 +122,9 @@ function Board ({difficulty}) {
                 bombs: 10,
                 width: 8,
                 height: 8,
+                face: 'facesmile',
+                bombs_left: 10,
+                time: 0,
             };
             const bombPlacement = createGameBoard(board);
             return bombPlacement;
@@ -118,6 +133,9 @@ function Board ({difficulty}) {
                 bombs: 40,
                 width: 16,
                 height: 16,
+                face: 'facesmile',
+                bombs_left: 40,
+                time: 0,
             };
             const bombPlacement = createGameBoard(board);
             return bombPlacement;
@@ -126,6 +144,9 @@ function Board ({difficulty}) {
                 bombs: 99,
                 width: 30,
                 height: 16,
+                face: 'facesmile',
+                bombs_left: 99,
+                time: 0,
             }
             const bombPlacement = createGameBoard(board);
             return bombPlacement;
@@ -172,11 +193,66 @@ function Board ({difficulty}) {
         // DimensionRender() runs before this, meaning you can plug in the specific style into face to make things seamless
         const boardElements = [];
 
-        boardElements.push(<div className='border tl')
+        // Rendering start of information top border
+        boardElements.push(<div className='border tl' />)
 
+        // Rendering information top border
         for (let i = 0; i < board.width; i++) {
             boardElements.push(<div className='tb' />)
         }
+
+        // Rendering end of information top border
+        boardElements.push(<div className='border tr' />)
+
+        // Rendering start of information container
+        boardElements.push(<div className='lb' />)
+
+        // Creating a variable to hold how many bombs are left in an array with three digits
+        let bombs = String(board.bombs_left).slice('')
+        if (bombs.length < 2) bombs.unshift('0', '0')
+        else if (bombs.length < 3) bombs.unshift('0')
+
+        if (board.bombs_left < -99) bombs = ['-', '9', '9']
+        
+        if (board.bombs_left < 0) {
+            bombs.shift()
+            bombs.unshift('-')
+        }
+
+        // Creating a variable to hold how many seconds have passed in an array with three digits
+        let time = String(board.time).slice('')
+        if (time.length < 2) time.unshift('0', '0')
+        else if (time.length < 3) time.unshift('0')
+
+        if (board.time > 999) time = ['9', '9', '9']
+
+        //Rendering information container
+        // Rendering bomb attributes
+        boardElements.push(<div id='mines_hundreds' className={`time time${bombs[0]}`} />)
+        boardElements.push(<div id='mines_tens' className={`time time${bombs[1]}`} />)
+        boardElements.push(<div id='mines_ones' className={`time time${bombs[2]}`} />)
+
+        // Rendering face attributes
+        boardElements.push(<div key={'face'} id='face' className={board.face} style={{marginLeft: style.margin, marginRight: style.margin}} />)
+
+        // Rendering time attributes
+        boardElements.push(<div id='seconds_hundreds' className={`time time${time[0]}`} />)
+        boardElements.push(<div id='seconds_tens' className={`time time${time[1]}`} />)
+        boardElements.push(<div id='seconds_ones' className={`time time${time[2]}`} />)
+
+        // Rendering end of information container
+        boardElements.push(<div className='lb' />)
+
+        // Rendering start of information bottom border
+        boardElements.push(<div className='border jbl' />)
+
+        // Rendering information bottom border
+        for (let i = 0; i < board.width; i++) {
+            boardElements.push(<div className='tb' />)
+        }
+
+        // Rendering end of information bottom border
+        boardElements.push(<div className='border jbr' />)
       
         for (let i = 0; i < game.length; i++) {
           for (let j = 0; j < game[i].length; j++) {
@@ -184,6 +260,8 @@ function Board ({difficulty}) {
       
             // Determine the class name based on the cell value
             let className;
+            // Rendering start of playing board border
+            if (j === 0) boardElements.push(<div className='sb' />)
             if (cellValue === 'X' && clicked === true) { // Convert only after clicking
               className = `square bombdeath`;
             } else if (cellValue === 'O' ) {
@@ -213,10 +291,23 @@ function Board ({difficulty}) {
             } else if ((cellValue === 'R' && clicked === 'end') || node_env === 'development' && (cellValue === 'X' && !clicked)) { // Upon game ending, shift all squares with 'X' to 'R' to show where bombs were
                 className = 'square bombrevealed'
             }
+            // Rendering end of playing board border
+            if (j === game[i].length - 1) boardElements.push(<div className='sb' />)
             // Add JSX elements to the array
             boardElements.push(<div key={`cell-${i}-${j}`} className={className} />);
           }
         }
+
+        // Rendering bottom left of board
+        boardElements.push(<div className='border bl' />)
+
+        // Rendering bottom of board
+        for (let i = 0; i < board.width; i++) {
+            boardElements.push(<div className='tb' />)
+        }
+
+        // Rendering bottom right of board
+        boardElements.push(<div className='border br' />)
       
         return boardElements;
       }

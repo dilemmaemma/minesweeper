@@ -229,11 +229,6 @@ div {
 }
 
 #game 
-.border.tl {
-    background-position: 0 -81px;
-}
-
-#game 
 .tb {
     background-position: -40px -81px;
     width: 16px;
@@ -245,6 +240,18 @@ div {
     background-position: -134px -39px;
     width: 10px;
     height: 32px;
+}
+
+#game 
+.sb {
+    background-position: -134px -39px;
+    width: 10px;
+    height: 16px;
+}
+
+#game 
+.border.tl {
+    background-position: 0 -81px;
 }
 
 #game 
@@ -260,11 +267,6 @@ div {
 #game 
 .border.jbr {
     background-position: -66px -81px;
-}
-
-#game 
-.border.sb {
-    background-position: -134px -39px;
 }
 
 #game 

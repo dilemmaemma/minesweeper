@@ -41,7 +41,7 @@ Borders:
     - Long Border: -134px -39px - class lb (put time stuff and face after first one)
     - Joint Border Left: -56px -81px - class border jbl
     - Joint Border Right: -66px -81px - class border jbr
-    - Side Border: -134px -39px - class border sb
+    - Side Border: -134px -39px - class sb
     - Bottom Left: -20px -81px - class border bl
     - Bottom Right: -30px -81px - class border br
 
@@ -78,6 +78,10 @@ Class tb:
 Class lb:
     - Width: 10px
     - Height: 32px
+
+Class sb:
+    - Width: 10px
+    - Height: 16px
 
 Notes about margin on bombs, face, and time:
     - Difficulty - Easy:
