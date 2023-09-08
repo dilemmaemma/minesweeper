@@ -2,7 +2,6 @@ import React from 'react'
 import {useLocation} from 'react-router-dom'
 
 import TimeElapsed from './TimeElapsed';
-import CustomBoard from './boards/CustomBoard';
 
 import '../css/home.css';
 
@@ -27,7 +26,6 @@ function Home () {
             )}
 
             <TimeElapsed />
-            <CustomBoard />
             
             <br/>
             <h3>Sprite Testing:</h3>
