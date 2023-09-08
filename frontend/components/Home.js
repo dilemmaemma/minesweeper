@@ -28,7 +28,7 @@ function Home () {
             <TimeElapsed />
             
             <br/>
-            <h3>Sprite Testing:</h3>
+            <h3 style={{color: 'white'}}>Sprite Testing:</h3>
             <br/>
             <div id='game'>
                 <div>
