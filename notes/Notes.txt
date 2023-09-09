@@ -59,7 +59,7 @@ To Dos:
     
     - Controls:
         - Left-click: reveal square
-        - Right-click (ctrl + click): flag square
+        - Right-click: flag square
         - Middle-click (left + right click or shift + enter or shift + space): do it on a number to reveal all adjacent unflagged squares
         - F2 (or click face): start new game
 
