@@ -60,6 +60,12 @@ function Board ({difficulty}) {
             }
             setBombsLeft(99)
         } else if (difficulty === 'custom') {
+            board = {
+                bombs: 8,
+                width: 8,
+                height: 8,
+            }; 
+            setBombsLeft(8); // Placeholder info
             <CustomBoard/>
             // axios get from custom board api
             // axios.get('localhost:9000/api/custom/board')
@@ -83,13 +89,12 @@ function Board ({difficulty}) {
             setBombsLeft(8)
         }
 
-        if (difficulty !== 'custom') {
-            let bombPlacement = createGameBoard(board)
-            setGame(bombPlacement)
-            setUserGame(bombPlacement)
-            let newGameData = renderClues(bombPlacement)
-            setGame(newGameData)
-        }
+        let bombPlacement = createGameBoard(board)
+        setGame(bombPlacement)
+        setUserGame(bombPlacement)
+        let newGameData = renderClues(bombPlacement)
+        setGame(newGameData)
+        
     }, [difficulty]);
 
     useEffect(() => {
@@ -99,8 +104,10 @@ function Board ({difficulty}) {
         console.table(game)
         console.info('Hide placements:')
         console.table(userGame)
-        const data = renderBoard()
-        setCurrentBoard(data)
+        if (difficulty !== 'custom') {
+            const data = renderBoard()
+            setCurrentBoard(data)
+        } // Placeholder statement
     }, [game])
 
 

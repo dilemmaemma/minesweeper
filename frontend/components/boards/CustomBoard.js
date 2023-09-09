@@ -131,7 +131,7 @@ const CustomBoard = () => {
             <form id='custom-board' onSubmit={onSubmit} onReset={onReset}>
                 <h2 className='custom-heading'>Create Custom Board</h2>
                 <div>
-                    <label htmlFor='width'>Width/Rows:&nbsp;</label>
+                    <label htmlFor='width' style={{color: 'white'}}>Width/Rows:&nbsp;</label>
                     <input
                         type='number'
                         name='width'
@@ -147,10 +147,10 @@ const CustomBoard = () => {
                         }
                     /> 
                     &nbsp; <button name='width' onClick={randomize}>Randomize</button>
-                    <p style={{fontSize: '10px'}}>Must be between 8 and 50, inclusive</p>
+                    <p style={{fontSize: '10px', color: 'white'}}>Must be between 8 and 50, inclusive</p>
                 </div>
                 <div>
-                    <label htmlFor='height'>Height/Columns:&nbsp;</label>
+                    <label htmlFor='height' style={{color: 'white'}}>Height/Columns:&nbsp;</label>
                     <input
                         type='number'
                         name='height'
@@ -166,10 +166,10 @@ const CustomBoard = () => {
                         }
                     />
                     &nbsp; <button name='height' onClick={randomize}>Randomize</button>
-                    <p style={{fontSize: '10px'}}>Must be between 8 and 50, inclusive</p>
+                    <p style={{fontSize: '10px', color: 'white'}}>Must be between 8 and 50, inclusive</p>
                 </div>
                 <div>
-                    <label htmlFor='bombs'>Bombs:&nbsp;</label>
+                    <label htmlFor='bombs' style={{color: 'white'}}>Bombs:&nbsp;</label>
                     <input
                         type='number'
                         name='bombs'
@@ -209,7 +209,7 @@ const CustomBoard = () => {
                     }
                     else message = 'Must be at least 1' */}
                     &nbsp; <button name='bombs' onClick={randomize}>Randomize</button>
-                    {<p style={{fontSize: '10px'}}>
+                    {<p style={{fontSize: '10px', color: 'white'}}>
                         Must be between 1 and 
                         {customBoard.width !== 0 && customBoard.height !== 0 ? 
                         ((customBoard.width*customBoard.height)/2 <=999 ? 
