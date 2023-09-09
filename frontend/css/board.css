@@ -289,3 +289,19 @@ button:hover {
     opacity: 0.9; /* Reduce opacity on hover */
 }
 
+
+
+@font-face {
+    font-family: 'Hylian Symbols';
+    src: url('../images/Triforce.ttf') format('truetype'); 
+ }
+ 
+ .custom-heading {
+    font-family: 'Hylian Symbols', sans-serif;
+    
+    font-size: 42px;
+    color: #a569bd;
+   
+    padding: 10px;
+ }
+ 
