@@ -3,12 +3,14 @@ import { Navigate } from 'react-router'
 // import axios from 'axios'
 
 import CustomBoard from './CustomBoard'
+// import GenerateBoard from './GenerateBoard'
 
 import '../../css/board.css'
 
 // Set board up with false values to trick the parser into moving on to the next step when Custom Board is called before other gamemodes
 let board
 let style
+let clicked = false
 let node_env = 'development'
 
 function Board ({difficulty}) {
@@ -341,7 +343,7 @@ function Board ({difficulty}) {
             {console.log(style)}
             <br /><br /><br />
             {level !== 'custom' && dimensionRender() && (
-                <div id='game' style={{height: style.height, width: style.width}}>{renderBoard()}</div>
+                <div id='game' style={{height: style.height, width: style.width}}>{renderBoard(clicked)}</div>
             )}
             <br/>
             {level === 'custom' ? <CustomBoard /> : <button onClick={newBoard}>Get New Board</button>}
