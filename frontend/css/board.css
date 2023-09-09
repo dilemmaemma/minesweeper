@@ -299,9 +299,9 @@ button:hover {
  .custom-heading {
     font-family: 'Hylian Symbols', sans-serif;
     
-    font-size: 24px;
-    color: lightpurple;
-    border: 2px solid rgba(74, 5, 31, 0.5);
+    font-size: 42px;
+    color: #a569bd;
+   
     padding: 10px;
  }
  
