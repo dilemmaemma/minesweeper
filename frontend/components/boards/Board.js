@@ -89,9 +89,20 @@ function Board ({difficulty}) {
             setBombsLeft(8)
         }
 
+        // Sets the game that the user will see. Updates with values that correspond to the game state
+        let hiddenGame = []
+
+        for (let i = 0; i < board.height; i++) {
+            let row = []
+            for (let j = 0; j < board.width; j++) {
+                row.push('O')
+            }
+            hiddenGame.push(row)
+        }
+
         let bombPlacement = createGameBoard(board)
         setGame(bombPlacement)
-        setUserGame(bombPlacement)
+        setUserGame(hiddenGame)
         let newGameData = renderClues(bombPlacement)
         setGame(newGameData)
         
@@ -181,7 +192,18 @@ function Board ({difficulty}) {
         setGame([]);
         const newGame = createBoard();
         setGame(newGame);
-        setUserGame(game);
+        // Sets the game that the user will see. Updates with values that correspond to the game state
+        let hiddenGame = []
+
+        for (let i = 0; i < board.height; i++) {
+            let row = []
+            for (let j = 0; j < board.width; j++) {
+                row.push('O')
+            }
+            hiddenGame.push(row)
+        }
+
+        setUserGame(hiddenGame)
         const newGameData = renderClues(newGame)
         setGame(newGameData);
     }
