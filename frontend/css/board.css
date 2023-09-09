@@ -10,6 +10,9 @@ div {
     float: left;
     line-height: 0;
     font-size: 0;
+}
+
+#game {
     background-color: silver;
 }
 
@@ -19,38 +22,32 @@ div {
 }
 
 #game 
-#mines_hundreds 
-div {
+#mines_hundreds {
     margin: 4px 0 5px 6px;
 } 
 
 #game 
-#mines_tens 
-div {
+#mines_tens {
     margin: 4px 0 5px 0;
 } 
 
 #game 
-#mines_ones 
-div {
+#mines_ones {
     margin: 4px 0 5px 0;
 } 
 
 #game 
-#seconds_hundreds 
-div {
+#seconds_hundreds {
     margin: 4px 0 5px 0;
 } 
 
 #game 
-#seconds_tens 
-div {
+#seconds_tens {
     margin: 4px 0 5px 0;
 } 
 
 #game 
-#seconds_ones 
-div {
+#seconds_ones {
     margin: 4px 6px 5px 0;
 }
 
