@@ -34,6 +34,17 @@ Time and Score Sprite Positioning - class time:
     - 9: -117px 0 - class time9
     - Negative: -130px 0 - class time-
 
+Borders:
+    - Top Left  Border:  0 -81px - class border tl
+    - Top Border: -40px -81px - class tb
+    - Top Right Border: -10px -81px - class border tr
+    - Long Border: -134px -39px - class lb (put time stuff and face after first one)
+    - Joint Border Left: -56px -81px - class border jbl
+    - Joint Border Right: -66px -81px - class border jbr
+    - Side Border: -134px -39px - class sb
+    - Bottom Left: -20px -81px - class border bl
+    - Bottom Right: -30px -81px - class border br
+
 Time and Score IDs:
     - mines_hundreds: margin 4px 0 5px 6px
     - mines_tens: margin 4px 0 5px 0
@@ -55,3 +66,60 @@ Class face:
 Class time:
     - Width: 13px
     - Height: 23px
+
+Class border:
+    - Width: 10px
+    - Height: 10px
+
+Class tb:
+    - Width: 16px
+    - Height: 10px
+
+Class lb:
+    - Width: 10px
+    - Height: 32px
+
+Class sb:
+    - Width: 10px
+    - Height: 16px
+
+Notes about margin on bombs, face, and time:
+    - Difficulty - Easy:
+        - Bombs: margin 4px 0 5px 6px (mines_hundreds)
+        - Face: margin 3px 14px 3px 14px
+        - Time: margin 4px 6px 5px 0 (seconds_ones)
+    - Difficulty - Medium:
+        - Bombs: margin 4px 0 5px 6px (mines_hundreds)
+        - Face: margin 3px 70px 3px 70px
+        - Time: margin 4px 6px 5px 0 (seconds_ones)
+    - Difficulty - Hard:
+        - Bombs: margin 4px 0 5px 6px (mines_hundreds)
+        - Face: margin 3px 182px 3px 182px
+        - Time: margin 4px 6px 5px 0 (seconds_ones)
+    - Conclusion:
+        - Difficulty determins what the left and right margins are for face
+        - Easy difficulty: 9x9
+        - Medium difficulty: 16x16
+        - Hard difficulty 16x30
+        - Margin left and right calculation: border.width * 16 - 6 - 6 - (6 * 13) - 26 / 2
+        - Explanation:
+            - (border.width * 16) - calculates total working pixel area without the Borders
+            - First 6 - margin left of the bomb calculator
+            - Second 6 - margin right of the bomb calculator
+            - (6 * 13) - Total amount of time classes multiplied by their width
+            - 26 - width of face
+            - Reduced: ((border.width * 16) - 116) / 2
+
+Board Construction:
+    - class border tl in top left corner
+    - class tb board.width amount of repeats
+    - class border tr in top right corner
+    - class lb followed by bombs left, face, and time
+    - class lb
+    - class border jbl
+    - class tb board.width amount of repeats
+    - class border jbr
+    - class sb followed by cells followed by class sb repeated board.height amount of TimeElapsed
+    - class border bl
+    - class tb board.width amount of repeats
+    - class border br

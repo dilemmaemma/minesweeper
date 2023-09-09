@@ -65,3 +65,18 @@ To Dos:
 
     - Possible Easter Egg:
         - Type xyzzy and press Shift + Enter - pixel at top left of board turns white - turns black if mouse is over a bomb
+
+    - Minesweeper possibilities:
+        - On death:
+            - Clock stops
+            - Can't click anymore squares
+            - Can only click dead face
+        - On victory:
+            - Clock stops
+            - Win message generated from API
+            - Can't click anymore squares
+            - Can only click cool face
+        - On new game:
+            - Time goes to 0 and waits for click
+            - Board resets
+            - Call newGame function
