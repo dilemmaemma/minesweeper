@@ -129,7 +129,7 @@ const CustomBoard = () => {
     return (
         <div>
             <form id='custom-board' onSubmit={onSubmit} onReset={onReset}>
-                <h2>Create Custom Board</h2>
+                <h2 className='custom-heading'>Create Custom Board</h2>
                 <div>
                     <label htmlFor='width'>Width/Rows:&nbsp;</label>
                     <input
