@@ -21,6 +21,7 @@ function Board ({difficulty}) {
     const [userGame, setUserGame] = useState([])
     const [face, setFace] = useState('facesmile')
     const [currentTime, setCurrentTime] = useState(0)
+    const [currentBoard, setCurrentBoard] = useState([])
 
     // Navigate to home with custom error message if DOM unmounts
     if (!['easy', 'medium', 'hard', 'custom'].includes(level)) {
@@ -85,10 +86,23 @@ function Board ({difficulty}) {
         if (difficulty !== 'custom') {
             let bombPlacement = createGameBoard(board)
             setGame(bombPlacement)
-            setUserGame(game)
+            setUserGame(bombPlacement)
+            let newGameData = renderClues(bombPlacement)
+            setGame(newGameData)
         }
-
     }, [difficulty]);
+
+    useEffect(() => {
+        console.clear()
+        console.info('Game has been updated.')
+        console.info('Show placements:')
+        console.table(game)
+        console.info('Hide placements:')
+        console.table(userGame)
+        const data = renderBoard()
+        setCurrentBoard(data)
+    }, [game])
+
 
     localStorage.setItem('board', JSON.stringify(game))
 
@@ -160,10 +174,10 @@ function Board ({difficulty}) {
         setGame([]);
         const newGame = createBoard();
         setGame(newGame);
-        setUserGame(game)
+        setUserGame(game);
+        const newGameData = renderClues(newGame)
+        setGame(newGameData);
     }
-
-    console.log(game)
 
     function dimensionRender() {
         if (difficulty === 'easy') return (
@@ -202,7 +216,126 @@ function Board ({difficulty}) {
         //             console.error(err)
         //         })
         // }
-    }      
+    }
+    
+    function renderClues(game) {
+        const newGame = [...game]
+        let bombs = 0
+        for (let i = 0; i < game.length; i++) {
+            for (let j = 0; j < game[i].length; j++) {
+                bombs = 0;
+                  
+                // Helper function to check if a cell is valid (within bounds)
+                const isValidCell = (row, col) => {
+                    return row >= 0 && row < game.length && col >= 0 && col < game[i].length;
+                };
+                  
+                switch (true) {
+                    case i === 0 && j === 0: // Top-left corner
+                        if (game[i][j] !== 'X') {
+                            if (isValidCell(i, j + 1) && game[i][j + 1] === 'X') bombs++;
+                            if (isValidCell(i + 1, j) && game[i + 1][j] === 'X') bombs++;
+                            if (isValidCell(i + 1, j + 1) && game[i + 1][j + 1] === 'X') bombs++;
+                        } else if (game[i][j] === 'X') {
+                            bombs = 9
+                        }
+                        break;
+                    case i === 0 && j === game[i].length - 1: // Top-right corner
+                        if (game[i][j] !== 'X') {
+                            if (isValidCell(i, j - 1) && game[i][j - 1] === 'X') bombs++;
+                            if (isValidCell(i + 1, j) && game[i + 1][j] === 'X') bombs++;
+                            if (isValidCell(i + 1, j - 1) && game[i + 1][j - 1] === 'X') bombs++;
+                        } else if (game[i][j] === 'X') {
+                            bombs = 9
+                        }
+                        break;
+                    case i === game.length - 1 && j === 0: // Bottom-left corner
+                        if (game[i][j] !== 'X') {
+                            if (isValidCell(i, j + 1) && game[i][j + 1] === 'X') bombs++;
+                            if (isValidCell(i - 1, j) && game[i - 1][j] === 'X') bombs++;
+                            if (isValidCell(i - 1, j - 1) && game[i - 1][j - 1] === 'X') bombs++;
+                        } else if (game[i][j] === 'X') {
+                            bombs = 9
+                        }
+                        break;
+                    case i === game.length - 1 && j === game[i].length - 1: // Bottom-right corner
+                        if (game[i][j] !== 'X') {
+                            if (isValidCell(i, j - 1) && game[i][j - 1] === 'X') bombs++;
+                            if (isValidCell(i - 1, j) && game[i - 1][j] === 'X') bombs++;
+                            if (isValidCell(i - 1, j - 1) && game[i - 1][j - 1] === 'X') bombs++;
+                        } else if (game[i][j] === 'X') {
+                            bombs = 9
+                        }
+                        break;
+                    case i === 0 && (j > 0 && j < game[i].length - 1): // Top edge
+                        if (game[i][j] !== 'X') {
+                            if (isValidCell(i, j + 1) && game[i][j + 1] === 'X') bombs++;
+                            if (isValidCell(i, j - 1) && game[i][j - 1] === 'X') bombs++;
+                            if (isValidCell(i + 1, j) && game[i + 1][j] === 'X') bombs++;
+                            if (isValidCell(i + 1, j + 1) && game[i + 1][j + 1] === 'X') bombs++;
+                            if (isValidCell(i + 1, j - 1) && game[i + 1][j - 1] === 'X') bombs++;
+                        } else if (game[i][j] === 'X') {
+                            bombs = 9
+                        }
+                        break;
+                    case i === game.length - 1 && (j > 0 && j < game[i].length - 1): // Bottom edge
+                        if (game[i][j] !== 'X') {
+                            if (isValidCell(i, j + 1) && game[i][j + 1] === 'X') bombs++;
+                            if (isValidCell(i, j - 1) && game[i][j - 1] === 'X') bombs++;
+                            if (isValidCell(i - 1, j) && game[i - 1][j] === 'X') bombs++;
+                            if (isValidCell(i - 1, j + 1) && game[i - 1][j + 1] === 'X') bombs++;
+                            if (isValidCell(i - 1, j - 1) && game[i - 1][j - 1] === 'X') bombs++;
+                        } else if (game[i][j] === 'X') {
+                            bombs = 9
+                        }
+                        break;
+                    case j === 0 && (i > 0 && i < game.length - 1): // Left edge
+                        if (game[i][j] !== 'X') {
+                            if (isValidCell(i, j + 1) && game[i][j + 1] === 'X') bombs++;
+                            if (isValidCell(i + 1, j) && game[i + 1][j] === 'X') bombs++;
+                            if (isValidCell(i - 1, j) && game[i - 1][j] === 'X') bombs++;
+                            if (isValidCell(i - 1, j + 1) && game[i - 1][j + 1] === 'X') bombs++;
+                            if (isValidCell(i + 1, j + 1) && game[i + 1][j + 1] === 'X') bombs++;
+                        } else if (game[i][j] === 'X') {
+                            bombs = 9
+                        }
+                        break;
+                    case j === game[i].length - 1 && (i > 0 && i < game.length - 1): // Right edge
+                        if (game[i][j] !== 'X') {
+                            if (isValidCell(i, j - 1) && game[i][j - 1] === 'X') bombs++;
+                            if (isValidCell(i - 1, j) && game[i - 1][j] === 'X') bombs++;
+                            if (isValidCell(i + 1, j) && game[i + 1][j] === 'X') bombs++;
+                            if (isValidCell(i + 1, j - 1) && game[i + 1][j - 1] === 'X') bombs++;
+                            if (isValidCell(i - 1, j - 1) && game[i - 1][j - 1] === 'X') bombs++;
+                        } else if (game[i][j] === 'X') {
+                            bombs = 9
+                        }
+                        break;
+                    default: // Middle of the board
+                        if (game[i][j] !== 'X') {
+                            if (isValidCell(i, j + 1) && game[i][j + 1] === 'X') bombs++;
+                            if (isValidCell(i, j - 1) && game[i][j - 1] === 'X') bombs++;
+                            if (isValidCell(i - 1, j) && game[i - 1][j] === 'X') bombs++;
+                            if (isValidCell(i + 1, j) && game[i + 1][j] === 'X') bombs++;
+                            if (isValidCell(i - 1, j - 1) && game[i - 1][j - 1] === 'X') bombs++;
+                            if (isValidCell(i - 1, j + 1) && game[i - 1][j + 1] === 'X') bombs++;
+                            if (isValidCell(i + 1, j - 1) && game[i + 1][j - 1] === 'X') bombs++;
+                            if (isValidCell(i + 1, j + 1) && game[i + 1][j + 1] === 'X') bombs++;
+                        } else if (game[i][j] === 'X') {
+                            bombs = 9
+                        }
+                        break;
+                }
+                  
+                // Update the cell with the bomb count
+                // Assuming 'setGame' is a function that takes a new game state
+                // You should pass the entire updated 'game' array, not just a single cell
+                // Modify this part based on how you update your game state
+                bombs !== 9 ? newGame[i][j] = bombs.toString() : newGame[i][j] = 'X'
+            }
+        }
+        return newGame
+    }
 
     function renderBoard(clicked) { // Change game to user game so that positions are not revealed
         // DimensionRender() runs before this, meaning you can plug in the specific style into face to make things seamless
@@ -284,35 +417,35 @@ function Board ({difficulty}) {
             // Determine the class name based on the cell value
             let className;
             // Rendering start of playing board border
-            if (j === 0) boardElements.push(<div key={`left-border-${i}-${j}`} className='sb' />)
-            if (cellValue === 'X' && clicked === true) { // Convert only after clicking
+            if ( j === 0) boardElements.push(<div key={`left-border-${i}-${j}`} className='sb' />)
+            if ( cellValue === 'X' && clicked === true) { // Convert only after clicking
               className = `square bombdeath`;
-            } else if (cellValue === 'O' ) {
+            } else if ( cellValue === 'O' ) {
               className = `square blank`;
-            } else if (cellValue === '1' && clicked === true) { // Convert only after clicking
+            } else if ( cellValue === '1' ) { // Convert only after clicking
               className = `square open1`;
-            } else if (cellValue === '2' && clicked === true) { // Convert only after clicking
+            } else if ( cellValue === '2' ) { // Convert only after clicking
               className = `square open2`;
-            } else if (cellValue === '3' && clicked === true) { // Convert only after clicking
+            } else if ( cellValue === '3' ) { // Convert only after clicking
                 className = 'square open3'
-            } else if (cellValue === '4' && clicked === true) { // Convert only after clicking
+            } else if ( cellValue === '4' ) { // Convert only after clicking
                 className = 'square open4'
-            } else if (cellValue === '5' && clicked === true) { // Convert only after clicking
+            } else if ( cellValue === '5' ) { // Convert only after clicking
                 className = 'square open5'
-            } else if (cellValue === '6' && clicked === true) { // Convert only after clicking
+            } else if ( cellValue === '6' ) { // Convert only after clicking
                 className = 'square open6'
-            } else if (cellValue === '7' && clicked === true) { // Convert only after clicking
+            } else if ( cellValue === '7' ) { // Convert only after clicking
                 className = 'square open7'
-            } else if (cellValue === '8' && clicked === true) { // Convert only after clicking
+            } else if ( cellValue === '8' ) { // Convert only after clicking
                 className = 'square open8'
-            } else if (cellValue === '0' && clicked === true) { // Convert only after clicking
+            } else if ( cellValue === '0' ) { // Convert only after clicking
                 className = 'square open0'
-            } else if (cellValue === 'F' && clicked === true) { // When cell is clicked, change array value to the letter it was followed by F, ex: OF or XF
+            } else if ( cellValue === 'F' && clicked === true ) { // When cell is clicked, change array value to the letter it was followed by F, ex: OF or XF
                 className = 'square bombflagged'
                 setBombsLeft(bombsLeft - 1)
-            } else if (cellValue === 'FF' && clicked === 'end') { // Upon game ending, if array value has OF, convert it to a falsebomb
+            } else if ( cellValue === 'FF' && clicked === 'end') { // Upon game ending, if array value has OF, convert it to a falsebomb
                 className = 'square falsebomb'
-            } else if ((cellValue === 'R' && clicked === 'end') || node_env === 'development' && (cellValue === 'X' && !clicked)) { // Upon game ending, shift all squares with 'X' to 'R' to show where bombs were
+            } else if ( ( cellValue === 'R' && clicked === 'end' ) || node_env === 'development' && ( cellValue === 'X' && !clicked ) ) { // Upon game ending, shift all squares with 'X' to 'R' to show where bombs were
                 className = 'square bombrevealed'
             }
             // Add JSX elements to the array
@@ -340,10 +473,9 @@ function Board ({difficulty}) {
 
     return (
         <div className='placeholder'>
-            {console.log(style)}
             <br /><br /><br />
             {level !== 'custom' && dimensionRender() && (
-                <div id='game' style={{height: style.height, width: style.width}}>{renderBoard(clicked)}</div>
+                <div id='game' style={{height: style.height, width: style.width}}>{currentBoard}</div>
             )}
             <br/>
             {level === 'custom' ? <CustomBoard /> : <button onClick={newBoard}>Get New Board</button>}
