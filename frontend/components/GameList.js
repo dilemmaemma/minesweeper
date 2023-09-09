@@ -6,7 +6,7 @@ const games = [
     {
         id: 1,
         game: 'Minesweeper',
-        construction: false,
+        construction: true,
         image: 'https://is2-ssl.mzstatic.com/image/thumb/Purple1/v4/12/2a/9b/122a9b30-0bfd-f7d8-3831-f125dbfea919/source/512x512bb.jpg',
         genre: [
             'Logic',
@@ -18,7 +18,7 @@ const games = [
     {
         id: 2,
         game: 'Tic-Tac-Toe', // Have gamemode of ultimate which is a three by three grid of three games. The winner of that marks that square as an X or O until three games are won in a row
-        construction: false,
+        construction: true,
         image: 'https://cdn0.iconfinder.com/data/icons/web-ui-vol-4/64/tic_tac_toe-512.png',
         genre: 'Paper-and-Pencil',
         creator: 'Unknown, originated in the Ancient Roman Empire - first century BC',
@@ -28,7 +28,7 @@ const games = [
     {
         id: 3,
         game: 'Concentration',
-        construction: false,
+        construction: true,
         image: 'https://www.play.vg/g2_imgs/g2_52.gif',
         genre: 'Card Game',
         creator: 'Unknown',
@@ -38,7 +38,7 @@ const games = [
     {
         id: 4,
         game: 'Black Jack',
-        construction: false,
+        construction: true,
         image: 'https://is4-ssl.mzstatic.com/image/thumb/Purple123/v4/98/32/16/98321621-d9c3-42b9-4382-cfbe85f59fa2/source/512x512bb.jpg',
         genre: [
             'Card Game', 
@@ -51,7 +51,7 @@ const games = [
     {
         id: 5,
         game: '2048',
-        construction: false,
+        construction: true,
         image: 'http://gabrielecirulli.github.io/2048/meta/og_image.png',
         genre: 'Puzzle',
         creator: 'Gabriele Cirulli',
@@ -61,7 +61,7 @@ const games = [
     {
         id: 6,
         game: 'Monopoly',
-        construction: false,
+        construction: true,
         image: 'https://is2-ssl.mzstatic.com/image/thumb/Purple125/v4/f4/7d/64/f47d6402-c01f-ecf5-c800-a63f0c3555ea/source/512x512bb.jpg',
         genre: 'Board',
         creator: 'Lizzie Magie and Charles Darrow',
@@ -81,8 +81,8 @@ const GameList = () => {
             <div 
                 key={game.id} 
                 className={`selection ${game.construction ? 'construction' : ''}`} 
-                style={{ cursor: 'pointer' }} 
-                onClick={() => onClick(game.game)}
+                style={{ cursor: !game.construction ? 'pointer' : 'default' }} // If construction is false, able to click
+                onClick={!game.construction ? () => onClick(game.game) : null} // If construction is false, next statements run
             >
               <div className='image-container'>
                 <img
