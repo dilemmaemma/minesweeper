@@ -21,8 +21,9 @@ function Board ({difficulty}) {
     const [prevBombsLeft, setPrevBombsLeft] = useState(0) // Make sure when a user flags a square, before bombsLeft goes down, to set prevBombsLeft to current bombsLeft value, then decrement bombsLeft
     const [userGame, setUserGame] = useState([])
     const [face, setFace] = useState('facesmile')
-    const [currentBoard, setCurrentBoard] = useState([])
+    const [_, setCurrentBoard] = useState([]) //eslint-disable-line
     const [elapsedTime, setElapsedTime] = useState(1)
+    const [divider, setDivider] = useState([])
 
     // Navigate to home with custom error message if DOM unmounts
     if (!['easy', 'medium', 'hard', 'custom'].includes(level)) {
@@ -137,12 +138,12 @@ function Board ({difficulty}) {
                     const updatedBoard = updateBoard()
                     for (let i = 0; i < updatedBoard.boardLocation.length; i++) {
                         
-                        setCurrentBoard((prevBoard) => {
+                        setDivider((prevBoard) => {
                             // Clone the previous board to avoid mutating it directly
                             const updatedBoardCopy = [...prevBoard];
                             
                             for (let i = 0; i < updatedBoard.boardLocation.length; i++) {
-                                updatedBoardCopy[updatedBoard.boardLocation[i]] = updatedBoard.boardElements[i]
+                                updatedBoardCopy[updatedBoard.boardLocation[i]] = updatedBoard.element[i]
                             }
                             
                             return updatedBoardCopy;
@@ -284,27 +285,29 @@ function Board ({difficulty}) {
         // }
     }
 
-    function updateBoard(coords) {
-        setPrevBombsLeft(bombsLeft)
-        setBombsLeft(bombsLeft - 1)
-        if (coords) {
-            let ycord
-            let xcord = coords.split(4, 7)
-            xcord[1] === '-' ? xcord.pop() : null
-            xcord.length === 1 ? ycord = coords.split(7) : ycord = coords.split(8)
-        }
-        console.log(bombsLeft, prevBombsLeft)
-        const boardElements = []
+    function updateBoard(xpos, ypos) {
+        // setPrevBombsLeft(bombsLeft)
+        // setBombsLeft(bombsLeft - 1) // Placeholder
+        const element = []
         // Calculate starting position of time: board.width + 7
         const boardLocation = [board.width + 7, board.width + 8, board.width + 9]
         // Calculate square pressed: (width * xpos) + (xpos * 2) + (width * 2) + ypos + 14
+        if (xpos && ypos) {
+            element.push({key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square open${game[xpos][ypos]}`})
+            boardLocation.push((board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14)
+            console.table(divider)
+            console.log(boardLocation)
+            console.log(element)
+            console.log(`X-cord: ${xpos}\nY-cord: ${ypos}`)
+            console.log(`Answer key board's corresponding position is: ${game[xpos][ypos]}`)
+        }
         // Calculate position of face: board.width + 6
         let time = String(elapsedTime).padStart(3, '0')
         if (elapsedTime >= 1000) time = '999'
 
-        boardElements.push(<div key={'second- hundreds'} className={`time time${time[0]}`} id='seconds_hundreds' />)
-        boardElements.push(<div key={'seconds-tens'} className={`time time${time[1]}`} id='seconds_tens' />)
-        boardElements.push(<div key={'seconds-ones'} className={`time time${time[2]}`} id='seconds_ones' />)
+        element.push({key: 'seconds-hundreds', class: `time time${time[0]}`, id: 'seconds_hundreds'})
+        element.push({key: 'seconds-tens', class: `time time${time[1]}`, id: 'seconds_tens'})
+        element.push({key: 'seconds-ones', class: `time time${time[2]}`, id: 'seconds_ones'})
 
         // Check to see if bomb value has changed
         if (prevBombsLeft !== bombsLeft) {
@@ -318,15 +321,16 @@ function Board ({difficulty}) {
                 bombs = `-${String(Math.abs(bombsLeft))}`
             }
 
-            boardElements.push(<div key={'mines-hundreds'} className={`time time${bombs[0]}`} id='mines_hundreds' />)
-            boardElements.push(<div key={'mines-tens'} className={`time time${bombs[1]}`} id='mines_tens' />)
-            boardElements.push(<div key={'mines-ones'} className={`time time${bombs[2]}`} id='mines_ones' />)
+            element.push({key: 'mines-hundreds', class: `time time${bombs[0]}`, id: 'mines_hundreds'})
+            element.push({key: 'mines-tens', class: `time time${bombs[1]}`, id: 'mines_tens'})
+            element.push({key: 'mines-ones', class: `time time${bombs[2]}`, id: 'mines_ones'})
+
 
             // Calculate starting position of bombs: board.width + 3
             boardLocation.push(board.width + 3, board.width + 4, board.width + 5)
         }
 
-        return {boardElements, boardLocation}
+        return {element, boardLocation}
     }
     
     function renderClues(game) {
@@ -450,7 +454,7 @@ function Board ({difficulty}) {
 
     function renderBoard(clicked) { // Change game to user game so that positions are not revealed
         // DimensionRender() runs before this, meaning you can plug in the specific style into face to make things seamless
-        const boardElements = [];
+        const element = []
 
         // Variable 'board' is unavailable, so use the stylized properties to calculate the total width of the board
         let length = { ...style.width }
@@ -458,19 +462,19 @@ function Board ({difficulty}) {
         length = Number((length) - 20) / 16
 
         // Rendering start of information top border
-        boardElements.push(<div key={'tl-border'} className='border tl' />)
+        element.push({key: 'tl-border', class: 'border tl'})
 
         // Rendering information top border
         for (let i = 0; i < length; i++) {
             let borderNum = i + 1
-            boardElements.push(<div key={`top-border-${borderNum}`} className='tb' />)
+            element.push({key: `top-border-${borderNum}`, class: 'tb'})
         }
 
         // Rendering end of information top border
-        boardElements.push(<div key={'end-info-border'} className='border tr' />)
+        element.push({key: 'end-info-border', class: 'border tr'})
 
         // Rendering start of information container
-        boardElements.push(<div key={'start-info-container'} className='lb' />)
+        element.push({key: 'start-info-container', class: 'lb'})
 
         // Creating a variable to hold how many bombs are left in an array with three digits
         let bombs = bombsLeft
@@ -487,40 +491,38 @@ function Board ({difficulty}) {
 
         // Creating a variable to hold how many seconds have passed in an array with three digits
         let time = String(elapsedTime).padStart(3, '0')
-        // time = String(time).split('')
-        // if (time.length < 2) time.unshift('0', '0')
-        // else if (time.length < 3) time.unshift('0')
 
         if (elapsedTime >= 1000) time = '999'
 
-        //Rendering information container
+        // Rendering information container
+
         // Rendering bomb attributes
-        boardElements.push(<div key={'mines-hundreds'} className={`time time${bombs[0]}`} id='mines_hundreds' />)
-        boardElements.push(<div key={'mines-tens'} className={`time time${bombs[1]}`} id='mines_tens' />)
-        boardElements.push(<div key={'mines-ones'} className={`time time${bombs[2]}`} id='mines_ones' />)
+        element.push({key: 'mines-hundreds', class: `time time${bombs[0]}`, id: 'mines_hundreds'})
+        element.push({key: 'mines-tens', class: `time time${bombs[1]}`, id: 'mines_tens'})
+        element.push({key: 'mines-ones', class: `time time${bombs[2]}`, id: 'mines_ones'})
 
         // Rendering face attributes
-        boardElements.push(<div key={'face'} className={`face ${face}`} style={{marginLeft: style.margin, marginRight: style.margin}} id='face' />)
+        element.push({key: 'face', class: `face ${face}`, style: {marginLeft: style.margin, marginRight: style.margin}, id: 'face'})
 
         // Rendering time attributes
-        boardElements.push(<div key={'second- hundreds'} className={`time time${time[0]}`} id='seconds_hundreds' />)
-        boardElements.push(<div key={'seconds-tens'} className={`time time${time[1]}`} id='seconds_tens' />)
-        boardElements.push(<div key={'seconds-ones'} className={`time time${time[2]}`} id='seconds_ones' />)
+        element.push({key: 'seconds-hundreds', class: `time time${time[0]}`, id: 'seconds_hundreds'})
+        element.push({key: 'seconds-tens', class: `time time${time[1]}`, id: 'seconds_tens'})
+        element.push({key: 'seconds-ones', class: `time time${time[2]}`, id: 'seconds_ones'})
 
         // Rendering end of information container
-        boardElements.push(<div key={'lb-border'} className='lb' />)
+        element.push({key: 'lb-border', class: 'lb'})
 
         // Rendering start of information bottom border
-        boardElements.push(<div key={'jbl-border'} className='border jbl' />)
+        element.push({key: 'jbl-border', class: 'border jbl'})
 
         // Rendering information bottom border
         for (let i = 0; i < length; i++) {
             let borderNum = i + 1
-            boardElements.push(<div key={`info-bottom-border-${borderNum}`} className='tb' />)
+            element.push({key: `info-bottom-border-${borderNum}`, class: 'tb'})
         }
 
         // Rendering end of information bottom border
-        boardElements.push(<div key={'jbr-border'} className='border jbr' />)
+        element.push({key: 'jbr-border', class: 'border jbr'})
       
         for (let i = 0; i < userGame.length; i++) {
           for (let j = 0; j < userGame[i].length; j++) {
@@ -529,7 +531,9 @@ function Board ({difficulty}) {
             // Determine the class name based on the cell value
             let className;
             // Rendering start of playing board border
-            if ( j === 0) boardElements.push(<div key={`left-border-${i}-${j}`} className='sb' />)
+            if ( j === 0) {
+                element.push({key: `left-border-${i}-${j}`, class: 'sb'})
+            }
             if ( cellValue === 'X' && clicked === true) { // Convert only after clicking
               className = `square bombdeath`;
             } else if ( cellValue === 'O' ) {
@@ -561,26 +565,31 @@ function Board ({difficulty}) {
                 className = 'square bombrevealed'
             }
             // Add JSX elements to the array
-            boardElements.push(<div key={`cell-${i}-${j}`} className={className} />);
+            element.push({key: `cell-${i}-${j}`, xpos: i, ypos: j, class: className})
+
             // Rendering end of playing board border
-            if (j === userGame[i].length - 1) boardElements.push(<div key={`right-border-${i}-${j}`} className='sb' />)
+            if (j === userGame[i].length - 1) {
+                element.push({key: `right-border-${i}-${j}`, class: 'sb'})
+            }
           }
         }
 
         // Rendering bottom left of board
-        boardElements.push(<div key={'bl-border'} className='border bl' />)
+        element.push({key: 'bl-border', class: 'border bl'})
 
         // Rendering bottom of board
         for (let i = 0; i < length; i++) {
             let borderNum = i + 1
-            boardElements.push(<div key={`bottom-border-${borderNum}`} className='tb' />)
+            element.push({key: `bottom-border-${borderNum}`, class: 'tb'})
         }
 
         // Rendering bottom right of board
-        boardElements.push(<div key={`br-border`} className='border br' />)
+        element.push({key: 'br-border', class: 'border br'})
+
+        setDivider(element)
       
-        console.table(boardElements)
-        return boardElements;
+        console.table(element)
+        return divider;
     }
 
     return (
@@ -588,7 +597,30 @@ function Board ({difficulty}) {
             <br /><br /><br />
             {/* {playing && <TimeElapsed onTimeUpdate={handleTimeUpdate}/>} */}
             {level !== 'custom' && dimensionRender() && (
-                <div id='game' style={{height: style.height, width: style.width}}>{currentBoard}</div>
+                <div id='game' style={{height: style.height, width: style.width}}>
+                    {
+                        divider.map((item) => (
+                            <div
+                              key={item.key}
+                              className={item.class}
+                              id={item.id ? item.id : undefined}
+                              style={
+                                item.style
+                                  ? {
+                                      marginLeft: `${item.style.marginLeft}`,
+                                      marginRight: `${item.style.marginRight}`,
+                                    }
+                                  : undefined
+                              }
+                              onClick={
+                                item.xpos && item.ypos
+                                  ? () => updateBoard(item.xpos, item.ypos)
+                                  : undefined
+                              }
+                            />
+                        ))
+                    }
+                </div>
             )}
             <br/>
             {level === 'custom' ? <CustomBoard /> : <button onClick={newBoard}>Get New Board</button>}
