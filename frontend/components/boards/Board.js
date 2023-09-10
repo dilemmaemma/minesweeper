@@ -3,6 +3,7 @@ import { Navigate } from 'react-router'
 // import axios from 'axios'
 
 import CustomBoard from './CustomBoard'
+import TimeElapsed from '../TimeElapsed'
 // import GenerateBoard from './GenerateBoard'
 
 import '../../css/board.css'
@@ -12,6 +13,8 @@ let board
 let style
 let clicked = false
 let node_env = 'development'
+let playing = true
+let updatedData
 
 function Board ({difficulty}) {
 
@@ -20,8 +23,8 @@ function Board ({difficulty}) {
     const [bombsLeft, setBombsLeft] = useState(0)
     const [userGame, setUserGame] = useState([])
     const [face, setFace] = useState('facesmile')
-    const [currentTime, setCurrentTime] = useState(0)
     const [currentBoard, setCurrentBoard] = useState([])
+    const [elapsedTime, setElapsedTime] = useState(0)
 
     // Navigate to home with custom error message if DOM unmounts
     if (!['easy', 'medium', 'hard', 'custom'].includes(level)) {
@@ -109,7 +112,7 @@ function Board ({difficulty}) {
     }, [difficulty]);
 
     useEffect(() => {
-        console.clear()
+        // console.clear()
         console.info('Game has been updated.')
         console.info('Show placements:')
         console.table(game)
@@ -121,6 +124,35 @@ function Board ({difficulty}) {
         } // Placeholder statement
     }, [game])
 
+    useEffect(() => {
+        if (playing) {
+            const intervalId = setInterval(() => {
+                setElapsedTime((prevTime) => prevTime + 1);
+                if (difficulty !== 'custom') {
+                    const updatedBoard = updateBoard()
+                    for (let i = 0; i < updatedBoard.boardLocation.length; i++) {
+                        
+                        setCurrentBoard((prevBoard) => {
+                            // Clone the previous board to avoid mutating it directly
+                            const updatedBoardCopy = [...prevBoard];
+                            
+                            for (let i = 0; i < updatedBoard.boardLocation.length; i++) {
+                                updatedBoardCopy[updatedBoard.boardLocation[i]] = updatedBoard.boardElements[i]
+                            }
+                            
+                            return updatedBoardCopy;
+                        });
+                    }
+                } // Placeholder statement
+            }, 1000);
+    
+            return () => {
+                clearInterval(intervalId);
+            };
+        }
+    }, [playing, elapsedTime]);
+    
+    
 
     localStorage.setItem('board', JSON.stringify(game))
 
@@ -245,6 +277,19 @@ function Board ({difficulty}) {
         //             console.error(err)
         //         })
         // }
+    }
+
+    function updateBoard() {
+        const boardElements = []
+        const boardLocation = [16, 17, 18]
+        let time = String(elapsedTime).padStart(3, '0')
+        if (elapsedTime >= 1000) time = '999'
+
+        boardElements.push(<div key={'second- hundreds'} className={`time time${time[0]}`} id='seconds_hundreds' />)
+        boardElements.push(<div key={'seconds-tens'} className={`time time${time[1]}`} id='seconds_tens' />)
+        boardElements.push(<div key={'seconds-ones'} className={`time time${time[2]}`} id='seconds_ones' />)
+
+        return {boardElements, boardLocation}
     }
     
     function renderClues(game) {
@@ -404,11 +449,12 @@ function Board ({difficulty}) {
         }
 
         // Creating a variable to hold how many seconds have passed in an array with three digits
-        let time = String(currentTime).split('')
-        if (time.length < 2) time.unshift('0', '0')
-        else if (time.length < 3) time.unshift('0')
+        let time = String(elapsedTime).padStart(3, '0')
+        // time = String(time).split('')
+        // if (time.length < 2) time.unshift('0', '0')
+        // else if (time.length < 3) time.unshift('0')
 
-        if (currentTime >= 1000) time = ['9', '9', '9']
+        if (elapsedTime >= 1000) time = '999'
 
         //Rendering information container
         // Rendering bomb attributes
@@ -439,9 +485,9 @@ function Board ({difficulty}) {
         // Rendering end of information bottom border
         boardElements.push(<div key={'jbr-border'} className='border jbr' />)
       
-        for (let i = 0; i < game.length; i++) {
-          for (let j = 0; j < game[i].length; j++) {
-            const cellValue = game[i][j];
+        for (let i = 0; i < userGame.length; i++) {
+          for (let j = 0; j < userGame[i].length; j++) {
+            const cellValue = userGame[i][j];
       
             // Determine the class name based on the cell value
             let className;
@@ -480,7 +526,7 @@ function Board ({difficulty}) {
             // Add JSX elements to the array
             boardElements.push(<div key={`cell-${i}-${j}`} className={className} />);
             // Rendering end of playing board border
-            if (j === game[i].length - 1) boardElements.push(<div key={`right-border-${i}-${j}`} className='sb' />)
+            if (j === userGame[i].length - 1) boardElements.push(<div key={`right-border-${i}-${j}`} className='sb' />)
           }
         }
 
@@ -498,11 +544,11 @@ function Board ({difficulty}) {
       
         return boardElements;
     }
-      
 
     return (
         <div className='placeholder'>
             <br /><br /><br />
+            {/* {playing && <TimeElapsed onTimeUpdate={handleTimeUpdate}/>} */}
             {level !== 'custom' && dimensionRender() && (
                 <div id='game' style={{height: style.height, width: style.width}}>{currentBoard}</div>
             )}
