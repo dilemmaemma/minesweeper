@@ -1,8 +1,6 @@
 import React from 'react'
 import {useLocation} from 'react-router-dom'
 
-import TimeElapsed from './TimeElapsed';
-
 import '../css/home.css';
 import GameList from './GameList';
 
@@ -26,7 +24,6 @@ function Home () {
                 </div>
             )}
 
-            <TimeElapsed />
             <GameList />
         </div>
     )
