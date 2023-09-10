@@ -3,7 +3,6 @@ import { Navigate } from 'react-router'
 // import axios from 'axios'
 
 import CustomBoard from './CustomBoard'
-import TimeElapsed from '../TimeElapsed'
 // import GenerateBoard from './GenerateBoard'
 
 import '../../css/board.css'
@@ -11,20 +10,19 @@ import '../../css/board.css'
 // Set board up with false values to trick the parser into moving on to the next step when Custom Board is called before other gamemodes
 let board
 let style
-let clicked = false
 let node_env = 'development'
 let playing = true
-let updatedData
 
 function Board ({difficulty}) {
 
     const [game, setGame] = useState([])
     const [level, setLevel] = useState(difficulty)
     const [bombsLeft, setBombsLeft] = useState(0)
+    const [prevBombsLeft, setPrevBombsLeft] = useState(0) // Make sure when a user flags a square, before bombsLeft goes down, to set prevBombsLeft to current bombsLeft value, then decrement bombsLeft
     const [userGame, setUserGame] = useState([])
     const [face, setFace] = useState('facesmile')
     const [currentBoard, setCurrentBoard] = useState([])
-    const [elapsedTime, setElapsedTime] = useState(0)
+    const [elapsedTime, setElapsedTime] = useState(1)
 
     // Navigate to home with custom error message if DOM unmounts
     if (!['easy', 'medium', 'hard', 'custom'].includes(level)) {
@@ -48,6 +46,7 @@ function Board ({difficulty}) {
                 height: 9,
             }
             setBombsLeft(10)
+            setPrevBombsLeft(10)
         } else if (difficulty === 'medium') {
             board = {
                 bombs: 40,
@@ -55,6 +54,7 @@ function Board ({difficulty}) {
                 height: 16,
             }
             setBombsLeft(40)
+            setPrevBombsLeft(40)
         } else if (difficulty === 'hard') {
             board = {
                 bombs: 99,
@@ -62,13 +62,15 @@ function Board ({difficulty}) {
                 height: 16,
             }
             setBombsLeft(99)
+            setPrevBombsLeft(99)
         } else if (difficulty === 'custom') {
             board = {
                 bombs: 8,
                 width: 8,
                 height: 8,
             }; 
-            setBombsLeft(8); // Placeholder info
+            setBombsLeft(8);
+            setPrevBombsLeft(8); // Placeholder info
             <CustomBoard/>
             // axios get from custom board api
             // axios.get('localhost:9000/api/custom/board')
@@ -90,6 +92,7 @@ function Board ({difficulty}) {
                 height: 10,
             }
             setBombsLeft(8)
+            setPrevBombsLeft(bombsLeft)
         }
 
         // Sets the game that the user will see. Updates with values that correspond to the game state
@@ -108,6 +111,8 @@ function Board ({difficulty}) {
         setUserGame(hiddenGame)
         let newGameData = renderClues(bombPlacement)
         setGame(newGameData)
+
+        setElapsedTime(0)
         
     }, [difficulty]);
 
@@ -198,25 +203,23 @@ function Board ({difficulty}) {
                 width: 9,
                 height: 9,
             };
-            const bombPlacement = createGameBoard(board);
-            return bombPlacement;
         } else if (level === 'medium') {
             board = {
                 bombs: 40,
                 width: 16,
                 height: 16,
             };
-            const bombPlacement = createGameBoard(board);
-            return bombPlacement;
         } else if (difficulty === 'hard') {
             board = {
                 bombs: 99,
                 width: 30,
                 height: 16,
             }
-            const bombPlacement = createGameBoard(board);
-            return bombPlacement;
         }
+        setBombsLeft(board.bombs)
+        setPrevBombsLeft(bombsLeft)
+        const bombPlacement = createGameBoard(board);
+        return bombPlacement;
     }
 
     // Function to start a new board
@@ -238,6 +241,8 @@ function Board ({difficulty}) {
         setUserGame(hiddenGame)
         const newGameData = renderClues(newGame)
         setGame(newGameData);
+
+        setElapsedTime(0)
     }
 
     function dimensionRender() {
@@ -279,15 +284,47 @@ function Board ({difficulty}) {
         // }
     }
 
-    function updateBoard() {
+    function updateBoard(coords) {
+        setPrevBombsLeft(bombsLeft)
+        setBombsLeft(bombsLeft - 1)
+        if (coords) {
+            let ycord
+            let xcord = coords.split(4, 7)
+            xcord[1] === '-' ? xcord.pop() : null
+            xcord.length === 1 ? ycord = coords.split(7) : ycord = coords.split(8)
+        }
+        console.log(bombsLeft, prevBombsLeft)
         const boardElements = []
-        const boardLocation = [16, 17, 18]
+        // Calculate starting position of time: board.width + 7
+        const boardLocation = [board.width + 7, board.width + 8, board.width + 9]
+        // Calculate square pressed: (width * xpos) + (xpos * 2) + (width * 2) + ypos + 14
+        // Calculate position of face: board.width + 6
         let time = String(elapsedTime).padStart(3, '0')
         if (elapsedTime >= 1000) time = '999'
 
         boardElements.push(<div key={'second- hundreds'} className={`time time${time[0]}`} id='seconds_hundreds' />)
         boardElements.push(<div key={'seconds-tens'} className={`time time${time[1]}`} id='seconds_tens' />)
         boardElements.push(<div key={'seconds-ones'} className={`time time${time[2]}`} id='seconds_ones' />)
+
+        // Check to see if bomb value has changed
+        if (prevBombsLeft !== bombsLeft) {
+            let bombs = String(bombsLeft).padStart(3, '0');
+
+            if (bombsLeft < -99) {
+                bombs = '-99';
+            } else if (bombsLeft < 0 && bombsLeft > -10) {
+                bombs = `-0${String(Math.abs(bombsLeft))}`;
+            } else if (bombsLeft <= -10 && bombsLeft > -100) {
+                bombs = `-${String(Math.abs(bombsLeft))}`
+            }
+
+            boardElements.push(<div key={'mines-hundreds'} className={`time time${bombs[0]}`} id='mines_hundreds' />)
+            boardElements.push(<div key={'mines-tens'} className={`time time${bombs[1]}`} id='mines_tens' />)
+            boardElements.push(<div key={'mines-ones'} className={`time time${bombs[2]}`} id='mines_ones' />)
+
+            // Calculate starting position of bombs: board.width + 3
+            boardLocation.push(board.width + 3, board.width + 4, board.width + 5)
+        }
 
         return {boardElements, boardLocation}
     }
@@ -542,6 +579,7 @@ function Board ({difficulty}) {
         // Rendering bottom right of board
         boardElements.push(<div key={`br-border`} className='border br' />)
       
+        console.table(boardElements)
         return boardElements;
     }
 
