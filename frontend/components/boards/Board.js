@@ -171,7 +171,16 @@ function Board ({difficulty}) {
         function handleKeyPress(event) {
             if (event.key === 'F2') {
                 newBoard()
-            }
+            } else if (
+                (event.shiftKey 
+                    && (event.keyCode === 13 
+                    || event.key === ' ')) 
+                || (event.keyCode === 1
+                    || (event.keyCode === 0 
+                    && event.keyCode === 2)) // Double check that left + right and middle clicks work
+            ) {
+                    handleMiddleClick()
+                }
         }
 
         startKeyListener(handleKeyPress)
@@ -267,6 +276,10 @@ function Board ({difficulty}) {
         setGame(newGameData);
 
         setElapsedTime(1)
+    }
+
+    function handleMiddleClick() {
+        console.log('Middle button/equivalent pressed')
     }
 
     function dimensionRender() {
@@ -669,7 +682,6 @@ function Board ({difficulty}) {
                 </div>
             )}
             <br/>
-            {level === 'custom' ? <CustomBoard /> : <button onClick={newBoard}>Get New Board</button>}
         </div>
     );
 }
