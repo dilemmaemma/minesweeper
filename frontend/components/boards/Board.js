@@ -5,6 +5,8 @@ import { Navigate } from 'react-router'
 import CustomBoard from './CustomBoard'
 // import GenerateBoard from './GenerateBoard'
 
+import { startKeyListener, stopKeyListener } from '../keyPressListener'
+
 import '../../css/board.css'
 
 // Set board up with false values to trick the parser into moving on to the next step when Custom Board is called before other gamemodes
@@ -40,6 +42,7 @@ function Board ({difficulty}) {
         )
     }
 
+    // Sets board dimensions on first render
     useEffect(() => {
         setLevel(difficulty)
 
@@ -120,6 +123,7 @@ function Board ({difficulty}) {
         
     }, [difficulty]);
 
+    // For dev use only - shows board placements
     useEffect(() => {
         // console.clear()
         console.info('Game has been updated.')
@@ -133,6 +137,7 @@ function Board ({difficulty}) {
         } // Placeholder statement
     }, [game])
 
+    // Updates board
     useEffect(() => {
         if (playing && start) {
             const intervalId = setInterval(() => {
@@ -161,7 +166,21 @@ function Board ({difficulty}) {
         }
     }, [playing, start, elapsedTime]);
     
-    
+    // Checks for certain key presses
+    useEffect(() => {
+        function handleKeyPress(event) {
+            if (event.key === 'F2') {
+                newBoard()
+            }
+        }
+
+        startKeyListener(handleKeyPress)
+
+        return () => {
+            // Remove the event listener when the component unmounts
+            stopKeyListener(handleKeyPress)
+        }
+    })
 
     localStorage.setItem('board', JSON.stringify(game))
 
@@ -289,9 +308,8 @@ function Board ({difficulty}) {
         // }
     }
 
-    function updateBoard(xpos, ypos) {
+    function updateBoard(xpos, ypos, id) {
         // Tests to see if it is the first click. If it is, time starts
-        console.log(time, clicks)
         if (clicks === 1 && time === undefined) {
             setElapsedTime(1)
             time = 1
@@ -323,6 +341,11 @@ function Board ({difficulty}) {
             element.push({key: 'seconds-ones', class: `time time${time[2]}`, id: 'seconds_ones'})
 
             boardLocation.push(board.width + 7, board.width + 8, board.width + 9)
+        }
+
+        // Changes face if pressed
+        if (id === 'face') {
+            element.push({key: 'face', class: 'face facepressed', style: {marginLeft: style.margin, marginRight: style.margin}, id: 'face'})
         }
 
         // Check to see if bomb value has changed
@@ -630,11 +653,13 @@ function Board ({difficulty}) {
                                   : undefined
                               }
                               onClick={
-                                item.xpos && item.ypos
+                                (item.xpos && item.ypos) || item.id
                                   ? () => {
                                     start = true;
                                     clicks++;
-                                    updateBoard(item.xpos, item.ypos)
+                                    item.id
+                                        ? updateBoard(item.xpos, item.ypos, item.id)
+                                        : updateBoard(item.xpos, item.ypos)
                                   }
                                   : undefined
                               }
