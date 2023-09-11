@@ -17,12 +17,15 @@ let node_env = 'development'
 let playing = true
 let start = false
 let clicks = 0
+let isFlagged = false
+let currentBombs = 0
+let initialBombs = 0
 
 function Board ({difficulty}) {
 
     const [game, setGame] = useState([])
     const [level, setLevel] = useState(difficulty)
-    const [bombsLeft, setBombsLeft] = useState(0)
+    // const [bombsLeft, setBombsLeft] = useState(0)
     const [prevBombsLeft, setPrevBombsLeft] = useState(0) // Make sure when a user flags a square, before bombsLeft goes down, to set prevBombsLeft to current bombsLeft value, then decrement bombsLeft
     const [userGame, setUserGame] = useState([])
     const [face, setFace] = useState('facesmile')
@@ -53,7 +56,8 @@ function Board ({difficulty}) {
                 width: 9,
                 height: 9,
             }
-            setBombsLeft(10)
+            currentBombs = 10
+            initialBombs = currentBombs
             setPrevBombsLeft(10)
         } else if (difficulty === 'medium') {
             board = {
@@ -61,7 +65,8 @@ function Board ({difficulty}) {
                 width: 16,
                 height: 16,
             }
-            setBombsLeft(40)
+            currentBombs = 40
+            initialBombs = currentBombs
             setPrevBombsLeft(40)
         } else if (difficulty === 'hard') {
             board = {
@@ -69,7 +74,8 @@ function Board ({difficulty}) {
                 width: 30,
                 height: 16,
             }
-            setBombsLeft(99)
+            currentBombs = 99
+            initialBombs = currentBombs
             setPrevBombsLeft(99)
         } else if (difficulty === 'custom') {
             board = {
@@ -77,7 +83,8 @@ function Board ({difficulty}) {
                 width: 8,
                 height: 8,
             }; 
-            setBombsLeft(8);
+            currentBombs = 8;
+            initialBombs = currentBombs;
             setPrevBombsLeft(8); // Placeholder info
             <CustomBoard/>
             // axios get from custom board api
@@ -99,8 +106,9 @@ function Board ({difficulty}) {
                 width: 8,
                 height: 10,
             }
-            setBombsLeft(8)
-            setPrevBombsLeft(bombsLeft)
+            currentBombs = 8
+            initialBombs = currentBombs
+            setPrevBombsLeft(8)
         }
 
         // Sets the game that the user will see. Updates with values that correspond to the game state
@@ -170,7 +178,6 @@ function Board ({difficulty}) {
     // Checks for certain key presses
     useEffect(() => {
         function handleKeyPress(event) {
-            if (event) console.log(event)
 
             if (event.key === 'F2') {
                 newBoard()
@@ -196,9 +203,27 @@ function Board ({difficulty}) {
 
                 return divider;
             }
-            else if (event.button === 2) {
-                console.log(coords)
-            }              
+            // else if (event.button === 2) {
+            //     setDivider((prevBoard) => {
+            //         const updatedBoardCopy = [...prevBoard]
+
+            //         let bombs = String(bombsLeft).padStart(3, '0');
+
+            //         if (bombsLeft < -99) {
+            //             bombs = '-99';
+            //         } else if (bombsLeft < 0 && bombsLeft > -10) {
+            //             bombs = `-0${String(Math.abs(bombsLeft))}`;
+            //         } else if (bombsLeft <= -10 && bombsLeft > -100) {
+            //             bombs = `-${String(Math.abs(bombsLeft))}`
+            //         }
+
+            //         updatedBoardCopy[board.width + 3] = {key: 'mines-hundreds', class: `time time${bombs[0]}`, id: 'mines_hundreds'}
+            //         updatedBoardCopy[board.width + 4] = {key: 'mines-tens', class: `time time${bombs[1]}`, id: 'mines_tens'}
+            //         updatedBoardCopy[board.width + 5] = {key: 'mines-ones', class: `time time${bombs[2]}`, id: 'mines_ones'}
+
+            //         return updatedBoardCopy
+            //     })
+            // }              
         }
 
         startKeyListener(handleKeyPress)
@@ -207,7 +232,7 @@ function Board ({difficulty}) {
             // Remove the event listener when the component unmounts
             stopKeyListener(handleKeyPress)
         }
-    }, [])
+    }, [coords])
 
     // Checks for changes in face
     useEffect(() => {
@@ -368,13 +393,12 @@ function Board ({difficulty}) {
             setElapsedTime(1)
             time = 1
         }
-        setPrevBombsLeft(bombsLeft)
-        setBombsLeft(bombsLeft - 1) // Placeholder
+
         const element = []
         const boardLocation = []
         
         // Calculate square pressed: (width * xpos) + (xpos * 2) + (width * 2) + ypos + 14
-        if (xpos && ypos) { // Edges of board do not work still
+        if (xpos && ypos && id !== 'flagged') { // Edges of board do not work still
             start = true
             element.push({key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square open${game[xpos][ypos]}`})
             boardLocation.push((board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14)
@@ -398,15 +422,15 @@ function Board ({difficulty}) {
         }
 
         // Check to see if bomb value has changed
-        if (prevBombsLeft !== bombsLeft) {
-            let bombs = String(bombsLeft).padStart(3, '0');
+        if (prevBombsLeft !== currentBombs) {
+            let bombs = String(currentBombs).padStart(3, '0');
 
-            if (bombsLeft < -99) {
+            if (currentBombs < -99) {
                 bombs = '-99';
-            } else if (bombsLeft < 0 && bombsLeft > -10) {
-                bombs = `-0${String(Math.abs(bombsLeft))}`;
-            } else if (bombsLeft <= -10 && bombsLeft > -100) {
-                bombs = `-${String(Math.abs(bombsLeft))}`
+            } else if (currentBombs < 0 && currentBombs > -10) {
+                bombs = `-0${String(Math.abs(currentBombs))}`;
+            } else if (currentBombs <= -10 && currentBombs > -100) {
+                bombs = `-${String(Math.abs(currentBombs))}`
             }
 
             element.push({key: 'mines-hundreds', class: `time time${bombs[0]}`, id: 'mines_hundreds'})
@@ -565,14 +589,14 @@ function Board ({difficulty}) {
         element.push({key: 'start-info-container', class: 'lb'})
 
         // Creating a variable to hold how many bombs are left in an array with three digits
-        let bombs = bombsLeft
+        let bombs = currentBombs
         bombs = bombs.toString().split('')
         if (bombs.length < 2) bombs.unshift('0', '0')
         else if (bombs.length < 3) bombs.unshift('0')
 
-        if (bombsLeft < -99) bombs = ['-', '9', '9']
+        if (currentBombs < -99) bombs = ['-', '9', '9']
         
-        if (bombsLeft < 0) {
+        if (currentBombs < 0) {
             bombs.shift()
             bombs.unshift('-')
         }
@@ -647,7 +671,7 @@ function Board ({difficulty}) {
                 className = 'square open0'
             } else if ( cellValue === 'F' && clicked === true ) { // When cell is clicked, change array value to the letter it was followed by F, ex: OF or XF
                 className = 'square bombflagged'
-                setBombsLeft(bombsLeft - 1)
+                currentBombs -= 1
             } else if ( cellValue === 'FF' && clicked === 'end') { // Upon game ending, if array value has OF, convert it to a falsebomb
                 className = 'square falsebomb'
             } else if ( ( cellValue === 'R' && clicked === 'end' ) || node_env === 'development' && ( cellValue === 'X' && !clicked ) ) { // Upon game ending, shift all squares with 'X' to 'R' to show where bombs were
@@ -681,6 +705,60 @@ function Board ({difficulty}) {
         return divider;
     }
 
+    function setBombs() {
+        if (isFlagged) {
+            setPrevBombsLeft(currentBombs + 2)
+            currentBombs += 1
+            isFlagged = false
+            setDivider((prevBoard) => {
+                const updatedBoardCopy = prevBoard
+
+                let bombs = String(currentBombs).padStart(3, '0');
+
+                if (currentBombs < -99) {
+                    bombs = '-99';
+                } else if (currentBombs < 0 && currentBombs > -10) {
+                    bombs = `-0${String(Math.abs(currentBombs))}`;
+                } else if (currentBombs <= -10 && currentBombs > -100) {
+                    bombs = `-${String(Math.abs(currentBombs))}`
+                }
+
+                updatedBoardCopy[board.width + 3] = {key: 'mines-hundreds', class: `time time${bombs[0]}`, id: 'mines_hundreds'}
+                updatedBoardCopy[board.width + 4] = {key: 'mines-tens', class: `time time${bombs[1]}`, id: 'mines_tens'}
+                updatedBoardCopy[board.width + 5] = {key: 'mines-ones', class: `time time${bombs[2]}`, id: 'mines_ones'}
+
+                updatedBoardCopy[(board.width * coords[0]) + (coords[0] * 2) + (board.width * 2) + coords[1] + 14] = {key: `cell-${coords[0]}-${coords[1]}`, xpos: coords[0], ypos: coords[1], class: 'square blank'}
+
+                return updatedBoardCopy
+            })
+        } else if (!isFlagged) {
+            setPrevBombsLeft(currentBombs)
+            currentBombs -= 1
+
+            setDivider((prevBoard) => {
+                const updatedBoardCopy = prevBoard
+
+                let bombs = String(currentBombs).padStart(3, '0');
+
+                if (currentBombs < -99) {
+                    bombs = '-99';
+                } else if (currentBombs < 0 && currentBombs > -10) {
+                    bombs = `-0${String(Math.abs(currentBombs))}`;
+                } else if (currentBombs <= -10 && currentBombs > -100) {
+                    bombs = `-${String(Math.abs(currentBombs))}`
+                }
+
+                updatedBoardCopy[board.width + 3] = {key: 'mines-hundreds', class: `time time${bombs[0]}`, id: 'mines_hundreds'}
+                updatedBoardCopy[board.width + 4] = {key: 'mines-tens', class: `time time${bombs[1]}`, id: 'mines_tens'}
+                updatedBoardCopy[board.width + 5] = {key: 'mines-ones', class: `time time${bombs[2]}`, id: 'mines_ones'}
+
+                updatedBoardCopy[(board.width * coords[0]) + (coords[0] * 2) + (board.width * 2) + coords[1] + 14] = {key: `cell-${coords[0]}-${coords[1]}`, xpos: coords[0], ypos: coords[1], class: 'square bombflagged', id: 'flagged'}
+
+                return updatedBoardCopy
+            })
+        }
+    }
+
     return (
         <div className='placeholder'>
             <br /><br /><br />
@@ -690,37 +768,43 @@ function Board ({difficulty}) {
                     {
                         divider.map((item) => (
                             <div
-                              key={item.key}
-                              className={item.class}
-                              id={item.id ? item.id : undefined}
-                              style={
-                                item.style
-                                  ? {
-                                      marginLeft: `${item.style.marginLeft}`,
-                                      marginRight: `${item.style.marginRight}`,
-                                    }
-                                  : undefined
-                              }
-                              onClick={
-                                (item.xpos && item.ypos) || item.id
-                                  ? () => {
-                                    start = true;
-                                    item.id !== 'face' 
-                                        ? clicks++
-                                        : undefined;
-                                    item.id
-                                        ? updateBoard(item.xpos, item.ypos, item.id)
-                                        : updateBoard(item.xpos, item.ypos)
-                                  }
-                                  : undefined
-                              }
-                              onMouseOver={
-                                (item.xpos && item.ypos)
+                                key={item.key}
+                                className={item.class}
+                                id={item.id ? item.id : undefined}
+                                style={
+                                    item.style
+                                    ? {
+                                        marginLeft: `${item.style.marginLeft}`,
+                                        marginRight: `${item.style.marginRight}`,
+                                        }
+                                    : undefined
+                                }
+                                onContextMenu={(e) => {
+                                    e.preventDefault();
+                                    item.id === 'flagged' ? isFlagged = true : null
+                                    setBombs()
+                                    return false;
+                                  }}
+                                onClick={
+                                    (item.xpos && item.ypos) || item.id
                                     ? () => {
-                                        setCoords([item.xpos, item.ypos])
+                                        start = true;
+                                        item.id !== 'face' 
+                                            ? clicks++
+                                            : undefined;
+                                        item.id
+                                            ? updateBoard(item.xpos, item.ypos, item.id)
+                                            : updateBoard(item.xpos, item.ypos)
                                     }
                                     : undefined
-                              }
+                                }
+                                onMouseOver={
+                                    (item.xpos && item.ypos)
+                                        ? () => {
+                                            setCoords([item.xpos, item.ypos])
+                                        }
+                                        : undefined
+                                }
                             />
                         ))
                     }
