@@ -13,7 +13,6 @@ import '../../css/board.css'
 let board
 let style
 let time
-let node_env = 'development'
 let playing = true
 let start = false
 let clicks = 0
@@ -148,8 +147,7 @@ function Board ({difficulty}) {
 
     // Updates board
     useEffect(() => {
-        console.log('Effect is running', playing, start, elapsedTime)
-        if (playing && start) {
+        if (start) {
           const intervalId = setInterval(() => {
             setElapsedTime((prevTime) => prevTime + 1);
             if (difficulty !== 'custom') {
@@ -172,7 +170,7 @@ function Board ({difficulty}) {
             clearInterval(intervalId);
           };
         }
-      }, [playing, start, elapsedTime]);
+      }, [start, elapsedTime]);
       
     
     // Checks for certain key presses
@@ -302,6 +300,7 @@ function Board ({difficulty}) {
         start = false
         clicks = 0
         time = null
+        currentBombs = initialBombs
         setGame([]);
         const newGame = createBoard();
         setGame(newGame);
@@ -369,7 +368,6 @@ function Board ({difficulty}) {
     function updateBoard(xpos, ypos, id) {
         // Tests to see if it is the first click. If it is, time starts
         if (clicks === 1 && (time === undefined || time === null)) {
-            setElapsedTime(1)
             time = 1
         }
 
@@ -378,7 +376,6 @@ function Board ({difficulty}) {
         
         // Calculate square pressed: (width * xpos) + (xpos * 2) + (width * 2) + ypos + 14
         if (xpos && ypos && id !== 'flagged') { // Edges of board do not work still
-            start = true
             element.push({key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square open${game[xpos][ypos]}`})
             boardLocation.push((board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14)
             console.table(divider)
@@ -543,7 +540,7 @@ function Board ({difficulty}) {
         return newGame
     }
 
-    function renderBoard(clicked) { // Change game to user game so that positions are not revealed
+    function renderBoard() { // Change game to user game so that positions are not revealed
         // DimensionRender() runs before this, meaning you can plug in the specific style into face to make things seamless
         const element = []
 
@@ -621,36 +618,6 @@ function Board ({difficulty}) {
             if ( cellValue === 'O' ) {
                 className = 'square blank'
             }
-            // if ( cellValue === 'X' && clicked === true) { // Convert only after clicking
-            //   className = `square bombdeath`;
-            // } else if ( cellValue === 'O' ) {
-            //   className = `square blank`;
-            // } else if ( cellValue === '1' ) { // Convert only after clicking
-            //   className = `square open1`;
-            // } else if ( cellValue === '2' ) { // Convert only after clicking
-            //   className = `square open2`;
-            // } else if ( cellValue === '3' ) { // Convert only after clicking
-            //     className = 'square open3'
-            // } else if ( cellValue === '4' ) { // Convert only after clicking
-            //     className = 'square open4'
-            // } else if ( cellValue === '5' ) { // Convert only after clicking
-            //     className = 'square open5'
-            // } else if ( cellValue === '6' ) { // Convert only after clicking
-            //     className = 'square open6'
-            // } else if ( cellValue === '7' ) { // Convert only after clicking
-            //     className = 'square open7'
-            // } else if ( cellValue === '8' ) { // Convert only after clicking
-            //     className = 'square open8'
-            // } else if ( cellValue === '0' ) { // Convert only after clicking
-            //     className = 'square open0'
-            // } else if ( cellValue === 'F' && clicked === true ) { // When cell is clicked, change array value to the letter it was followed by F, ex: OF or XF
-            //     className = 'square bombflagged'
-            //     currentBombs -= 1
-            // } else if ( cellValue === 'FF' && clicked === 'end') { // Upon game ending, if array value has OF, convert it to a falsebomb
-            //     className = 'square falsebomb'
-            // } else if ( ( cellValue === 'R' && clicked === 'end' ) || node_env === 'development' && ( cellValue === 'X' && !clicked ) ) { // Upon game ending, shift all squares with 'X' to 'R' to show where bombs were
-            //     className = 'square bombrevealed'
-            // }
             // Add JSX elements to the array
             element.push({key: `cell-${i}-${j}`, xpos: i, ypos: j, class: className})
 
@@ -763,12 +730,12 @@ function Board ({difficulty}) {
                                     (item.xpos && item.ypos) || item.id
                                     ? () => {
                                         start = true;
-                                        item.id !== 'face' 
-                                            ? clicks++
-                                            : undefined;
+                                        item.id !== 'face' || item.class.includes('square')
+                                            ? clicks ++
+                                            : start = false;
                                         item.id
                                             ? updateBoard(item.xpos, item.ypos, item.id)
-                                            : updateBoard(item.xpos, item.ypos)
+                                            : console.clear()
                                     }
                                     : undefined
                                 }
