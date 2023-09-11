@@ -143,8 +143,6 @@ function Board ({difficulty}) {
                         
                         setDivider((prevBoard) => {
                             // Clone the previous board to avoid mutating it directly
-                            console.table(updatedBoard.boardLocation)
-                            console.table(updatedBoard.element)
                             const updatedBoardCopy = [...prevBoard];
                             
                             for (let i = 0; i < updatedBoard.boardLocation.length; i++) {
@@ -230,6 +228,7 @@ function Board ({difficulty}) {
 
     // Function to start a new board
     function newBoard() {
+        start = false
         setGame([]);
         const newGame = createBoard();
         setGame(newGame);
