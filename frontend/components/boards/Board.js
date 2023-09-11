@@ -168,8 +168,9 @@ function Board ({difficulty}) {
     
     // Checks for certain key presses
     useEffect(() => {
-        let keysPressed = []
         function handleKeyPress(event) {
+            if (event) console.log(event)
+
             if (event.key === 'F2') {
                 newBoard()
             } 
@@ -178,32 +179,22 @@ function Board ({difficulty}) {
                 (event.shiftKey 
                     && (event.keyCode === 13 
                     || event.key === ' ')) 
-                || (event.keyCode === 1
-                    || (event.keyCode === 0 
-                    && event.keyCode === 2)) // Double check that left + right and middle clicks work
+                || (event.button === 1) // Double check that left + right and middle clicks work
             ) {
                     handleMiddleClick()
             }
-            // Easter Egg sequence
-            else if (event.key === 'x' || event.key === 'y' || event.key === 'z' || event.shiftKey || event.keyCode === 13) {
-                keysPressed.push(event.key);
-                console.log(keysPressed);
+            else if (event.button === 0 && event.clientX >= 380 && event.clientX <= 410 && event.clientY >= 70 && event.clientY <= 90) {
+                setFace('facepressed')
+            
+                newBoard();
+              
+                setTimeout(() => {
+                      setFace('facesmile')
+                      console.log(face)
+                }, 100);
 
-                // Check for the desired sequence (xyzzyShiftEnter)
-                if (
-                    keysPressed.join('') === 'xyzzyShiftEnter'
-                ) {
-                    if (keysPressed.join('') === 'xyzzyShiftEnter') {
-                    handleEasterEgg();
-                    keysPressed = []; // Reset keysPressed after easter egg is triggered
-                    }
-                } else {
-                    // Clear keysPressed if the sequence is not correct or takes longer than 1.5 seconds
-                    setTimeout(() => {
-                    keysPressed = [];
-                    }, 1500);
-                }
-            }
+                return divider;
+            }              
         }
 
         startKeyListener(handleKeyPress)
@@ -213,6 +204,27 @@ function Board ({difficulty}) {
             stopKeyListener(handleKeyPress)
         }
     }, [])
+
+    // Checks for changes in face
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+          if (face !== 'facesmile') {
+            setFace('facesmile');
+          }
+          setDivider((prevBoard) => {
+            const updatedBoardCopy = [...prevBoard]
+
+            updatedBoardCopy[board.width + 6] = {key: 'face', class: `face ${face}`, style: { marginLeft: style.margin, marginRight: style.margin}, id: 'face'}
+
+            return updatedBoardCopy
+          })
+        }, 500);
+      
+        return () => {
+          clearInterval(intervalId);
+        };
+      }, [face]);
+      
 
     localStorage.setItem('board', JSON.stringify(game))
 
@@ -305,10 +317,6 @@ function Board ({difficulty}) {
         console.log('Middle button/equivalent pressed')
     }
 
-    function handleEasterEgg() {
-        console.log('Easter egg activated')
-    }
-
     function dimensionRender() {
         if (difficulty === 'easy') return (
             style = { 
@@ -357,7 +365,6 @@ function Board ({difficulty}) {
         setPrevBombsLeft(bombsLeft)
         setBombsLeft(bombsLeft - 1) // Placeholder
         const element = []
-        // Calculate starting position of time: board.width + 7
         const boardLocation = []
         
         // Calculate square pressed: (width * xpos) + (xpos * 2) + (width * 2) + ypos + 14
@@ -371,7 +378,8 @@ function Board ({difficulty}) {
             console.log(`X-cord: ${xpos}\nY-cord: ${ypos}`)
             console.log(`Answer key board's corresponding position is: ${game[xpos][ypos]}`)
         }
-        // Calculate position of face: board.width + 6
+
+        // Calculate starting position of time: board.width + 7
         if (time) {
             time = String(elapsedTime).padStart(3, '0')
             if (elapsedTime >= 1000) time = '999'
@@ -381,11 +389,6 @@ function Board ({difficulty}) {
             element.push({key: 'seconds-ones', class: `time time${time[2]}`, id: 'seconds_ones'})
 
             boardLocation.push(board.width + 7, board.width + 8, board.width + 9)
-        }
-
-        // Changes face if pressed
-        if (id === 'face') {
-            element.push({key: 'face', class: 'face facepressed', style: {marginLeft: style.margin, marginRight: style.margin}, id: 'face'})
         }
 
         // Check to see if bomb value has changed
