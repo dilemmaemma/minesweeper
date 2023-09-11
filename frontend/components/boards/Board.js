@@ -148,32 +148,32 @@ function Board ({difficulty}) {
 
     // Updates board
     useEffect(() => {
+        console.log('Effect is running', playing, start, elapsedTime)
         if (playing && start) {
-            const intervalId = setInterval(() => {
-                setElapsedTime((prevTime) => prevTime + 1);
-                if (difficulty !== 'custom') {
-                    const updatedBoard = updateBoard()
-                    for (let i = 0; i < updatedBoard.boardLocation.length; i++) {
-                        
-                        setDivider((prevBoard) => {
-                            // Clone the previous board to avoid mutating it directly
-                            const updatedBoardCopy = [...prevBoard];
-                            
-                            for (let i = 0; i < updatedBoard.boardLocation.length; i++) {
-                                updatedBoardCopy[updatedBoard.boardLocation[i]] = updatedBoard.element[i]
-                            }
-                            
-                            return updatedBoardCopy;
-                        });
-                    }
-                } // Placeholder statement
-            }, 1000);
-    
-            return () => {
-                clearInterval(intervalId);
-            };
+          const intervalId = setInterval(() => {
+            setElapsedTime((prevTime) => prevTime + 1);
+            if (difficulty !== 'custom') {
+              const updatedBoard = updateBoard();
+              
+              setDivider((prevBoard) => {
+                // Clone the previous board to avoid mutating it directly
+                const updatedBoardCopy = [...prevBoard];
+                
+                for (let i = 0; i < updatedBoard.boardLocation.length; i++) {
+                  updatedBoardCopy[updatedBoard.boardLocation[i]] = updatedBoard.element[i];
+                }
+                
+                return updatedBoardCopy;
+              });
+            } // Placeholder statement
+          }, 1000);
+      
+          return () => {
+            clearInterval(intervalId);
+          };
         }
-    }, [playing, start, elapsedTime]);
+      }, [playing, start, elapsedTime]);
+      
     
     // Checks for certain key presses
     useEffect(() => {
@@ -202,28 +202,7 @@ function Board ({difficulty}) {
                 }, 100);
 
                 return divider;
-            }
-            // else if (event.button === 2) {
-            //     setDivider((prevBoard) => {
-            //         const updatedBoardCopy = [...prevBoard]
-
-            //         let bombs = String(bombsLeft).padStart(3, '0');
-
-            //         if (bombsLeft < -99) {
-            //             bombs = '-99';
-            //         } else if (bombsLeft < 0 && bombsLeft > -10) {
-            //             bombs = `-0${String(Math.abs(bombsLeft))}`;
-            //         } else if (bombsLeft <= -10 && bombsLeft > -100) {
-            //             bombs = `-${String(Math.abs(bombsLeft))}`
-            //         }
-
-            //         updatedBoardCopy[board.width + 3] = {key: 'mines-hundreds', class: `time time${bombs[0]}`, id: 'mines_hundreds'}
-            //         updatedBoardCopy[board.width + 4] = {key: 'mines-tens', class: `time time${bombs[1]}`, id: 'mines_tens'}
-            //         updatedBoardCopy[board.width + 5] = {key: 'mines-ones', class: `time time${bombs[2]}`, id: 'mines_ones'}
-
-            //         return updatedBoardCopy
-            //     })
-            // }              
+            }            
         }
 
         startKeyListener(handleKeyPress)
@@ -312,8 +291,8 @@ function Board ({difficulty}) {
                 height: 16,
             }
         }
-        setBombsLeft(board.bombs)
-        setPrevBombsLeft(bombsLeft)
+        currentBombs = board.bombs
+        setPrevBombsLeft(currentBombs)
         const bombPlacement = createGameBoard(board);
         return bombPlacement;
     }
@@ -589,17 +568,9 @@ function Board ({difficulty}) {
         element.push({key: 'start-info-container', class: 'lb'})
 
         // Creating a variable to hold how many bombs are left in an array with three digits
-        let bombs = currentBombs
-        bombs = bombs.toString().split('')
-        if (bombs.length < 2) bombs.unshift('0', '0')
-        else if (bombs.length < 3) bombs.unshift('0')
+        let bombs = String(currentBombs).padStart(3, '0')
 
-        if (currentBombs < -99) bombs = ['-', '9', '9']
-        
-        if (currentBombs < 0) {
-            bombs.shift()
-            bombs.unshift('-')
-        }
+        if (currentBombs <= -99) bombs = '-99'
 
         // Creating a variable to hold how many seconds have passed in an array with three digits
         let time = String(elapsedTime).padStart(3, '0')
@@ -647,36 +618,39 @@ function Board ({difficulty}) {
             if ( j === 0) {
                 element.push({key: `left-border-${i}-${j}`, class: 'sb'})
             }
-            if ( cellValue === 'X' && clicked === true) { // Convert only after clicking
-              className = `square bombdeath`;
-            } else if ( cellValue === 'O' ) {
-              className = `square blank`;
-            } else if ( cellValue === '1' ) { // Convert only after clicking
-              className = `square open1`;
-            } else if ( cellValue === '2' ) { // Convert only after clicking
-              className = `square open2`;
-            } else if ( cellValue === '3' ) { // Convert only after clicking
-                className = 'square open3'
-            } else if ( cellValue === '4' ) { // Convert only after clicking
-                className = 'square open4'
-            } else if ( cellValue === '5' ) { // Convert only after clicking
-                className = 'square open5'
-            } else if ( cellValue === '6' ) { // Convert only after clicking
-                className = 'square open6'
-            } else if ( cellValue === '7' ) { // Convert only after clicking
-                className = 'square open7'
-            } else if ( cellValue === '8' ) { // Convert only after clicking
-                className = 'square open8'
-            } else if ( cellValue === '0' ) { // Convert only after clicking
-                className = 'square open0'
-            } else if ( cellValue === 'F' && clicked === true ) { // When cell is clicked, change array value to the letter it was followed by F, ex: OF or XF
-                className = 'square bombflagged'
-                currentBombs -= 1
-            } else if ( cellValue === 'FF' && clicked === 'end') { // Upon game ending, if array value has OF, convert it to a falsebomb
-                className = 'square falsebomb'
-            } else if ( ( cellValue === 'R' && clicked === 'end' ) || node_env === 'development' && ( cellValue === 'X' && !clicked ) ) { // Upon game ending, shift all squares with 'X' to 'R' to show where bombs were
-                className = 'square bombrevealed'
+            if ( cellValue === 'O' ) {
+                className = 'square blank'
             }
+            // if ( cellValue === 'X' && clicked === true) { // Convert only after clicking
+            //   className = `square bombdeath`;
+            // } else if ( cellValue === 'O' ) {
+            //   className = `square blank`;
+            // } else if ( cellValue === '1' ) { // Convert only after clicking
+            //   className = `square open1`;
+            // } else if ( cellValue === '2' ) { // Convert only after clicking
+            //   className = `square open2`;
+            // } else if ( cellValue === '3' ) { // Convert only after clicking
+            //     className = 'square open3'
+            // } else if ( cellValue === '4' ) { // Convert only after clicking
+            //     className = 'square open4'
+            // } else if ( cellValue === '5' ) { // Convert only after clicking
+            //     className = 'square open5'
+            // } else if ( cellValue === '6' ) { // Convert only after clicking
+            //     className = 'square open6'
+            // } else if ( cellValue === '7' ) { // Convert only after clicking
+            //     className = 'square open7'
+            // } else if ( cellValue === '8' ) { // Convert only after clicking
+            //     className = 'square open8'
+            // } else if ( cellValue === '0' ) { // Convert only after clicking
+            //     className = 'square open0'
+            // } else if ( cellValue === 'F' && clicked === true ) { // When cell is clicked, change array value to the letter it was followed by F, ex: OF or XF
+            //     className = 'square bombflagged'
+            //     currentBombs -= 1
+            // } else if ( cellValue === 'FF' && clicked === 'end') { // Upon game ending, if array value has OF, convert it to a falsebomb
+            //     className = 'square falsebomb'
+            // } else if ( ( cellValue === 'R' && clicked === 'end' ) || node_env === 'development' && ( cellValue === 'X' && !clicked ) ) { // Upon game ending, shift all squares with 'X' to 'R' to show where bombs were
+            //     className = 'square bombrevealed'
+            // }
             // Add JSX elements to the array
             element.push({key: `cell-${i}-${j}`, xpos: i, ypos: j, class: className})
 
