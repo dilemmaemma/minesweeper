@@ -29,6 +29,7 @@ function Board ({difficulty}) {
     const [_, setCurrentBoard] = useState([]) //eslint-disable-line
     const [elapsedTime, setElapsedTime] = useState(1)
     const [divider, setDivider] = useState([])
+    const [coords, setCoords] = useState([])
 
     // Navigate to home with custom error message if DOM unmounts
     if (!['easy', 'medium', 'hard', 'custom'].includes(level)) {
@@ -194,6 +195,9 @@ function Board ({difficulty}) {
                 }, 100);
 
                 return divider;
+            }
+            else if (event.button === 2) {
+                console.log(coords)
             }              
         }
 
@@ -292,6 +296,8 @@ function Board ({difficulty}) {
     // Function to start a new board
     function newBoard() {
         start = false
+        clicks = 0
+        time = null
         setGame([]);
         const newGame = createBoard();
         setGame(newGame);
@@ -358,7 +364,7 @@ function Board ({difficulty}) {
 
     function updateBoard(xpos, ypos, id) {
         // Tests to see if it is the first click. If it is, time starts
-        if (clicks === 1 && time === undefined) {
+        if (clicks === 1 && (time === undefined || time === null)) {
             setElapsedTime(1)
             time = 1
         }
@@ -699,12 +705,21 @@ function Board ({difficulty}) {
                                 (item.xpos && item.ypos) || item.id
                                   ? () => {
                                     start = true;
-                                    clicks++;
+                                    item.id !== 'face' 
+                                        ? clicks++
+                                        : undefined;
                                     item.id
                                         ? updateBoard(item.xpos, item.ypos, item.id)
                                         : updateBoard(item.xpos, item.ypos)
                                   }
                                   : undefined
+                              }
+                              onMouseOver={
+                                (item.xpos && item.ypos)
+                                    ? () => {
+                                        setCoords([item.xpos, item.ypos])
+                                    }
+                                    : undefined
                               }
                             />
                         ))
