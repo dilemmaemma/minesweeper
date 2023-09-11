@@ -8,7 +8,7 @@ Minesweeper is a logic puzzle video game genre generally played on personal comp
 
 - Left-click: reveal square
 - Right-click: flag square
-- Middle-click or shift + enter: reveal all neighboring squares
+- Middle-click, shift + enter, or shift + space: reveal all neighboring squares
 - F2: start new game
 
 ## Tools
