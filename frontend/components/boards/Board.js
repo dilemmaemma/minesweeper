@@ -168,10 +168,13 @@ function Board ({difficulty}) {
     
     // Checks for certain key presses
     useEffect(() => {
+        let keysPressed = []
         function handleKeyPress(event) {
             if (event.key === 'F2') {
                 newBoard()
-            } else if (
+            } 
+            // Middle Click sequence
+            else if (
                 (event.shiftKey 
                     && (event.keyCode === 13 
                     || event.key === ' ')) 
@@ -180,7 +183,27 @@ function Board ({difficulty}) {
                     && event.keyCode === 2)) // Double check that left + right and middle clicks work
             ) {
                     handleMiddleClick()
+            }
+            // Easter Egg sequence
+            else if (event.key === 'x' || event.key === 'y' || event.key === 'z' || event.shiftKey || event.keyCode === 13) {
+                keysPressed.push(event.key);
+                console.log(keysPressed);
+
+                // Check for the desired sequence (xyzzyShiftEnter)
+                if (
+                    keysPressed.join('') === 'xyzzyShiftEnter'
+                ) {
+                    if (keysPressed.join('') === 'xyzzyShiftEnter') {
+                    handleEasterEgg();
+                    keysPressed = []; // Reset keysPressed after easter egg is triggered
+                    }
+                } else {
+                    // Clear keysPressed if the sequence is not correct or takes longer than 1.5 seconds
+                    setTimeout(() => {
+                    keysPressed = [];
+                    }, 1500);
                 }
+            }
         }
 
         startKeyListener(handleKeyPress)
@@ -189,7 +212,7 @@ function Board ({difficulty}) {
             // Remove the event listener when the component unmounts
             stopKeyListener(handleKeyPress)
         }
-    })
+    }, [])
 
     localStorage.setItem('board', JSON.stringify(game))
 
@@ -280,6 +303,10 @@ function Board ({difficulty}) {
 
     function handleMiddleClick() {
         console.log('Middle button/equivalent pressed')
+    }
+
+    function handleEasterEgg() {
+        console.log('Easter egg activated')
     }
 
     function dimensionRender() {
