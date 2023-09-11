@@ -10,8 +10,11 @@ import '../../css/board.css'
 // Set board up with false values to trick the parser into moving on to the next step when Custom Board is called before other gamemodes
 let board
 let style
+let time
 let node_env = 'development'
 let playing = true
+let start = false
+let clicks = 0
 
 function Board ({difficulty}) {
 
@@ -113,7 +116,7 @@ function Board ({difficulty}) {
         let newGameData = renderClues(bombPlacement)
         setGame(newGameData)
 
-        setElapsedTime(0)
+        setElapsedTime(1)
         
     }, [difficulty]);
 
@@ -131,7 +134,7 @@ function Board ({difficulty}) {
     }, [game])
 
     useEffect(() => {
-        if (playing) {
+        if (playing && start) {
             const intervalId = setInterval(() => {
                 setElapsedTime((prevTime) => prevTime + 1);
                 if (difficulty !== 'custom') {
@@ -140,6 +143,8 @@ function Board ({difficulty}) {
                         
                         setDivider((prevBoard) => {
                             // Clone the previous board to avoid mutating it directly
+                            console.table(updatedBoard.boardLocation)
+                            console.table(updatedBoard.element)
                             const updatedBoardCopy = [...prevBoard];
                             
                             for (let i = 0; i < updatedBoard.boardLocation.length; i++) {
@@ -156,7 +161,7 @@ function Board ({difficulty}) {
                 clearInterval(intervalId);
             };
         }
-    }, [playing, elapsedTime]);
+    }, [playing, start, elapsedTime]);
     
     
 
@@ -243,7 +248,7 @@ function Board ({difficulty}) {
         const newGameData = renderClues(newGame)
         setGame(newGameData);
 
-        setElapsedTime(0)
+        setElapsedTime(1)
     }
 
     function dimensionRender() {
@@ -286,13 +291,21 @@ function Board ({difficulty}) {
     }
 
     function updateBoard(xpos, ypos) {
-        // setPrevBombsLeft(bombsLeft)
-        // setBombsLeft(bombsLeft - 1) // Placeholder
+        // Tests to see if it is the first click. If it is, time starts
+        console.log(time, clicks)
+        if (clicks === 1 && time === undefined) {
+            setElapsedTime(1)
+            time = 1
+        }
+        setPrevBombsLeft(bombsLeft)
+        setBombsLeft(bombsLeft - 1) // Placeholder
         const element = []
         // Calculate starting position of time: board.width + 7
-        const boardLocation = [board.width + 7, board.width + 8, board.width + 9]
+        const boardLocation = []
+        
         // Calculate square pressed: (width * xpos) + (xpos * 2) + (width * 2) + ypos + 14
-        if (xpos && ypos) {
+        if (xpos && ypos) { // Edges of board do not work still
+            start = true
             element.push({key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square open${game[xpos][ypos]}`})
             boardLocation.push((board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14)
             console.table(divider)
@@ -302,12 +315,16 @@ function Board ({difficulty}) {
             console.log(`Answer key board's corresponding position is: ${game[xpos][ypos]}`)
         }
         // Calculate position of face: board.width + 6
-        let time = String(elapsedTime).padStart(3, '0')
-        if (elapsedTime >= 1000) time = '999'
+        if (time) {
+            time = String(elapsedTime).padStart(3, '0')
+            if (elapsedTime >= 1000) time = '999'
+    
+            element.push({key: 'seconds-hundreds', class: `time time${time[0]}`, id: 'seconds_hundreds'})
+            element.push({key: 'seconds-tens', class: `time time${time[1]}`, id: 'seconds_tens'})
+            element.push({key: 'seconds-ones', class: `time time${time[2]}`, id: 'seconds_ones'})
 
-        element.push({key: 'seconds-hundreds', class: `time time${time[0]}`, id: 'seconds_hundreds'})
-        element.push({key: 'seconds-tens', class: `time time${time[1]}`, id: 'seconds_tens'})
-        element.push({key: 'seconds-ones', class: `time time${time[2]}`, id: 'seconds_ones'})
+            boardLocation.push(board.width + 7, board.width + 8, board.width + 9)
+        }
 
         // Check to see if bomb value has changed
         if (prevBombsLeft !== bombsLeft) {
@@ -499,7 +516,7 @@ function Board ({difficulty}) {
         // Rendering bomb attributes
         element.push({key: 'mines-hundreds', class: `time time${bombs[0]}`, id: 'mines_hundreds'})
         element.push({key: 'mines-tens', class: `time time${bombs[1]}`, id: 'mines_tens'})
-        element.push({key: 'mines-ones', class: `time time${bombs[2]}`, id: 'mines_ones'})
+        element.push({key: 'mines-ones', class: `time time${bombs[2]}}`, id: 'mines_ones'})
 
         // Rendering face attributes
         element.push({key: 'face', class: `face ${face}`, style: {marginLeft: style.margin, marginRight: style.margin}, id: 'face'})
@@ -507,7 +524,8 @@ function Board ({difficulty}) {
         // Rendering time attributes
         element.push({key: 'seconds-hundreds', class: `time time${time[0]}`, id: 'seconds_hundreds'})
         element.push({key: 'seconds-tens', class: `time time${time[1]}`, id: 'seconds_tens'})
-        element.push({key: 'seconds-ones', class: `time time${time[2]}`, id: 'seconds_ones'})
+        // Hard coded so that it will display 0 until a cell is clicked
+        element.push({key: 'seconds-ones', class: `time time0`, id: 'seconds_ones'})
 
         // Rendering end of information container
         element.push({key: 'lb-border', class: 'lb'})
@@ -614,7 +632,11 @@ function Board ({difficulty}) {
                               }
                               onClick={
                                 item.xpos && item.ypos
-                                  ? () => updateBoard(item.xpos, item.ypos)
+                                  ? () => {
+                                    start = true;
+                                    clicks++;
+                                    updateBoard(item.xpos, item.ypos)
+                                  }
                                   : undefined
                               }
                             />
