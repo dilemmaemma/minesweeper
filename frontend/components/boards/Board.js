@@ -162,7 +162,7 @@ function Board ({difficulty}) {
                 const updatedBoardCopy = [...prevBoard];
                 
                 for (let i = 0; i < updatedBoard.boardLocation.length; i++) {
-                  updatedBoardCopy[updatedBoard.boardLocation[i]] = updatedBoard.element[i];
+                    updatedBoardCopy[updatedBoard.boardLocation[i]] = updatedBoard.element[i];
                 }
                 
                 return updatedBoardCopy;
@@ -193,7 +193,12 @@ function Board ({difficulty}) {
             ) {
                     handleMiddleClick()
             }
-            else if (event.button === 0 && event.clientX >= 380 && event.clientX <= 410 && event.clientY >= 70 && event.clientY <= 90) {
+            else if (event.button === 0 && 
+                event.clientX >= 380 && 
+                event.clientX <= 410 && 
+                event.clientY >= 70 && 
+                event.clientY <= 90) 
+            {
                 setFace('facepressed')
             
                 newBoard();
@@ -248,7 +253,16 @@ function Board ({difficulty}) {
           setDivider((prevBoard) => {
             const updatedBoardCopy = [...prevBoard]
 
-            updatedBoardCopy[board.width + 6] = {key: 'face', class: `face ${face}`, style: { marginLeft: style.margin, marginRight: style.margin}, id: 'face'}
+            updatedBoardCopy[board.width + 6] = 
+                {
+                    key: 'face', 
+                    class: `face ${face}`, 
+                    style: { 
+                        marginLeft: style.margin, 
+                        marginRight: style.margin
+                    }, 
+                    id: 'face'
+                }
 
             return updatedBoardCopy
           })
@@ -266,8 +280,14 @@ function Board ({difficulty}) {
         const bombPositions = [];
       
         while (bombPositions.length < board.bombs) {
-            const x = Math.floor(Math.random() * board.width);
-            const y = Math.floor(Math.random() * board.height);
+            const x = Math.floor(
+                Math.random() * 
+                board.width
+            );
+            const y = Math.floor(
+                Math.random() * 
+                board.height
+            );
             const position = `${x}-${y}`;
           
             // Ensure there are no duplicates
@@ -396,22 +416,32 @@ function Board ({difficulty}) {
 
     function updateBoard(xpos, ypos, id) {
         // Tests to see if it is the first click. If it is, time starts
-        if (clicks === 1 && (time === undefined || time === null)) {
-            time = 1
-        }
+        if (clicks === 1 && 
+            (time === undefined || 
+                time === null)) 
+            {
+                time = 1
+            }
 
         const element = []
         const boardLocation = []
         
         // Calculate square pressed: (width * xpos) + (xpos * 2) + (width * 2) + ypos + 14
-        if (xpos && ypos && id !== 'flagged') { // Edges of board do not work still
-            element.push({key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square open${game[xpos][ypos]}`})
-            boardLocation.push((board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14)
-            console.table(divider)
-            console.log(boardLocation)
-            console.log(element)
-            console.log(`X-cord: ${xpos}\nY-cord: ${ypos}`)
-            console.log(`Answer key board's corresponding position is: ${game[xpos][ypos]}`)
+        if (xpos && ypos && id !== 'flagged') {
+            element.push({
+                key: `cell-${xpos}-${ypos}`, 
+                xpos: xpos, 
+                ypos: ypos, 
+                class: `square open${
+                    game[xpos][ypos]
+                }`
+            })
+            boardLocation.push(
+                (board.width * xpos) + 
+                (xpos * 2) + 
+                (board.width * 2) + 
+                ypos + 14
+            )
         }
 
         // Calculate starting position of time: board.width + 7
@@ -419,11 +449,27 @@ function Board ({difficulty}) {
             time = String(elapsedTime).padStart(3, '0')
             if (elapsedTime >= 1000) time = '999'
     
-            element.push({key: 'seconds-hundreds', class: `time time${time[0]}`, id: 'seconds_hundreds'})
-            element.push({key: 'seconds-tens', class: `time time${time[1]}`, id: 'seconds_tens'})
-            element.push({key: 'seconds-ones', class: `time time${time[2]}`, id: 'seconds_ones'})
+            element.push({
+                key: 'seconds-hundreds', 
+                class: `time time${time[0]}`, 
+                id: 'seconds_hundreds'
+            })
+            element.push({
+                key: 'seconds-tens', 
+                class: `time time${time[1]}`, 
+                id: 'seconds_tens'
+            })
+            element.push({
+                key: 'seconds-ones', 
+                class: `time time${time[2]}`, 
+                id: 'seconds_ones'
+            })
 
-            boardLocation.push(board.width + 7, board.width + 8, board.width + 9)
+            boardLocation.push(
+                board.width + 7, 
+                board.width + 8, 
+                board.width + 9
+            )
         }
 
         // Check to see if bomb value has changed
@@ -432,24 +478,46 @@ function Board ({difficulty}) {
 
             if (currentBombs < -99) {
                 bombs = '-99';
-            } else if (currentBombs < 0 && currentBombs > -10) {
-                bombs = `-0${String(Math.abs(currentBombs))}`;
-            } else if (currentBombs <= -10 && currentBombs > -100) {
-                bombs = `-${String(Math.abs(currentBombs))}`
-            }
+            } else if (currentBombs < 0 
+                && currentBombs > -10) 
+                {
+                    bombs = `-0${String(Math.abs(currentBombs))}`;
+                } 
+            else if (currentBombs <= -10 
+                && currentBombs > -100) 
+                {
+                    bombs = `-${String(Math.abs(currentBombs))}`
+                }
 
-            element.push({key: 'mines-hundreds', class: `time time${bombs[0]}`, id: 'mines_hundreds'})
-            element.push({key: 'mines-tens', class: `time time${bombs[1]}`, id: 'mines_tens'})
-            element.push({key: 'mines-ones', class: `time time${bombs[2]}`, id: 'mines_ones'})
+            element.push({
+                key: 'mines-hundreds', 
+                class: `time time${bombs[0]}`, 
+                id: 'mines_hundreds'
+            })
+            element.push({
+                key: 'mines-tens', 
+                class: `time time${bombs[1]}`, 
+                id: 'mines_tens'
+            })
+            element.push({
+                key: 'mines-ones', 
+                class: `time time${bombs[2]}`, 
+                id: 'mines_ones'
+            })
 
 
             // Calculate starting position of bombs: board.width + 3
-            boardLocation.push(board.width + 3, board.width + 4, board.width + 5)
+            boardLocation.push(
+                board.width + 3, 
+                board.width + 4, 
+                board.width + 5
+            )
         }
 
         return {element, boardLocation}
     }
     
+    // Creates the numbers on the board that give the user clues to bomb placements
     function renderClues(game) {
         const newGame = [...game]
         let bombs = 0
@@ -459,139 +527,315 @@ function Board ({difficulty}) {
                   
                 // Helper function to check if a cell is valid (within bounds)
                 const isValidCell = (row, col) => {
-                    return row >= 0 && row < game.length && col >= 0 && col < game[i].length;
+                    return row >= 0 
+                        && row < game.length 
+                        && col >= 0 
+                        && col < game[i].length;
                 };
                   
                 switch (true) {
                     case i === 0 && j === 0: // Top-left corner
                         if (game[i][j] !== 'X') {
-                            if (isValidCell(i, j + 1) && game[i][j + 1] === 'X') bombs++;
-                            if (isValidCell(i + 1, j) && game[i + 1][j] === 'X') bombs++;
-                            if (isValidCell(i + 1, j + 1) && game[i + 1][j + 1] === 'X') bombs++;
-                        } else if (game[i][j] === 'X') {
-                            bombs = 9
-                        }
+                            if (
+                                isValidCell(i, j + 1) 
+                                && game[i][j + 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j) 
+                                && game[i + 1][j] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j + 1) 
+                                && game[i + 1][j + 1] === 'X'
+                            ) bombs++;
+                        } else if (
+                            game[i][j] === 'X'
+                        ) 
+                            {
+                                bombs = 9
+                            }
                         break;
                     case i === 0 && j === game[i].length - 1: // Top-right corner
                         if (game[i][j] !== 'X') {
-                            if (isValidCell(i, j - 1) && game[i][j - 1] === 'X') bombs++;
-                            if (isValidCell(i + 1, j) && game[i + 1][j] === 'X') bombs++;
-                            if (isValidCell(i + 1, j - 1) && game[i + 1][j - 1] === 'X') bombs++;
-                        } else if (game[i][j] === 'X') {
-                            bombs = 9
-                        }
+                            if (
+                                isValidCell(i, j - 1) 
+                                && game[i][j - 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j) 
+                                && game[i + 1][j] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j - 1) 
+                                && game[i + 1][j - 1] === 'X'
+                            ) bombs++;
+                        } else if (
+                            game[i][j] === 'X'
+                        ) 
+                            {
+                                bombs = 9
+                            }
                         break;
                     case i === game.length - 1 && j === 0: // Bottom-left corner
                         if (game[i][j] !== 'X') {
-                            if (isValidCell(i, j + 1) && game[i][j + 1] === 'X') bombs++;
-                            if (isValidCell(i - 1, j) && game[i - 1][j] === 'X') bombs++;
-                            if (isValidCell(i - 1, j - 1) && game[i - 1][j - 1] === 'X') bombs++;
-                        } else if (game[i][j] === 'X') {
-                            bombs = 9
-                        }
+                            if (
+                                isValidCell(i, j + 1) 
+                                && game[i][j + 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j) 
+                                && game[i - 1][j] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j - 1) 
+                                && game[i - 1][j - 1] === 'X'
+                            ) bombs++;
+                        } else if (
+                            game[i][j] === 'X'
+                        ) 
+                            {
+                                bombs = 9
+                            }
                         break;
                     case i === game.length - 1 && j === game[i].length - 1: // Bottom-right corner
                         if (game[i][j] !== 'X') {
-                            if (isValidCell(i, j - 1) && game[i][j - 1] === 'X') bombs++;
-                            if (isValidCell(i - 1, j) && game[i - 1][j] === 'X') bombs++;
-                            if (isValidCell(i - 1, j - 1) && game[i - 1][j - 1] === 'X') bombs++;
-                        } else if (game[i][j] === 'X') {
-                            bombs = 9
-                        }
+                            if (
+                                isValidCell(i, j - 1) 
+                                && game[i][j - 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j) 
+                                && game[i - 1][j] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j - 1) 
+                                && game[i - 1][j - 1] === 'X'
+                            ) bombs++;
+                        } else if (
+                            game[i][j] === 'X'
+                        ) 
+                            {
+                                bombs = 9
+                            }
                         break;
-                    case i === 0 && (j > 0 && j < game[i].length - 1): // Top edge
+                    case i === 0 && 
+                        (
+                            j > 0 
+                            && j < game[i].length - 1
+                        ): // Top edge
                         if (game[i][j] !== 'X') {
-                            if (isValidCell(i, j + 1) && game[i][j + 1] === 'X') bombs++;
-                            if (isValidCell(i, j - 1) && game[i][j - 1] === 'X') bombs++;
-                            if (isValidCell(i + 1, j) && game[i + 1][j] === 'X') bombs++;
-                            if (isValidCell(i + 1, j + 1) && game[i + 1][j + 1] === 'X') bombs++;
-                            if (isValidCell(i + 1, j - 1) && game[i + 1][j - 1] === 'X') bombs++;
-                        } else if (game[i][j] === 'X') {
-                            bombs = 9
-                        }
+                            if (
+                                isValidCell(i, j + 1) 
+                                && game[i][j + 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i, j - 1) 
+                                && game[i][j - 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j) 
+                                && game[i + 1][j] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j + 1) 
+                                && game[i + 1][j + 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j - 1) 
+                                && game[i + 1][j - 1] === 'X'
+                            ) bombs++;
+                        } else if (
+                            game[i][j] === 'X'
+                        ) 
+                            {
+                                bombs = 9
+                            }
                         break;
-                    case i === game.length - 1 && (j > 0 && j < game[i].length - 1): // Bottom edge
+                    case i === game.length - 1 && 
+                        (
+                            j > 0 
+                            && j < game[i].length - 1
+                        ): // Bottom edge
                         if (game[i][j] !== 'X') {
-                            if (isValidCell(i, j + 1) && game[i][j + 1] === 'X') bombs++;
-                            if (isValidCell(i, j - 1) && game[i][j - 1] === 'X') bombs++;
-                            if (isValidCell(i - 1, j) && game[i - 1][j] === 'X') bombs++;
-                            if (isValidCell(i - 1, j + 1) && game[i - 1][j + 1] === 'X') bombs++;
-                            if (isValidCell(i - 1, j - 1) && game[i - 1][j - 1] === 'X') bombs++;
-                        } else if (game[i][j] === 'X') {
-                            bombs = 9
-                        }
+                            if (
+                                isValidCell(i, j + 1) 
+                                && game[i][j + 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i, j - 1) 
+                                && game[i][j - 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j) 
+                                && game[i - 1][j] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j + 1) 
+                                && game[i - 1][j + 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j - 1) 
+                                && game[i - 1][j - 1] === 'X'
+                            ) bombs++;
+                        } else if (
+                            game[i][j] === 'X'
+                        ) 
+                            {
+                                bombs = 9
+                            }
                         break;
-                    case j === 0 && (i > 0 && i < game.length - 1): // Left edge
+                    case j === 0 && 
+                        (
+                            i > 0 
+                            && i < game.length - 1
+                        ): // Left edge
                         if (game[i][j] !== 'X') {
-                            if (isValidCell(i, j + 1) && game[i][j + 1] === 'X') bombs++;
-                            if (isValidCell(i + 1, j) && game[i + 1][j] === 'X') bombs++;
-                            if (isValidCell(i - 1, j) && game[i - 1][j] === 'X') bombs++;
-                            if (isValidCell(i - 1, j + 1) && game[i - 1][j + 1] === 'X') bombs++;
-                            if (isValidCell(i + 1, j + 1) && game[i + 1][j + 1] === 'X') bombs++;
-                        } else if (game[i][j] === 'X') {
-                            bombs = 9
-                        }
+                            if (
+                                isValidCell(i, j + 1) 
+                                && game[i][j + 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j) 
+                                && game[i + 1][j] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j) 
+                                && game[i - 1][j] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j + 1) 
+                                && game[i - 1][j + 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j + 1) 
+                                && game[i + 1][j + 1] === 'X'
+                            ) bombs++;
+                        } else if (
+                            game[i][j] === 'X'
+                        ) 
+                            {
+                                bombs = 9
+                            }
                         break;
-                    case j === game[i].length - 1 && (i > 0 && i < game.length - 1): // Right edge
+                    case j === game[i].length - 1 && 
+                        (
+                            i > 0 
+                            && i < game.length - 1
+                        ): // Right edge
                         if (game[i][j] !== 'X') {
-                            if (isValidCell(i, j - 1) && game[i][j - 1] === 'X') bombs++;
-                            if (isValidCell(i - 1, j) && game[i - 1][j] === 'X') bombs++;
-                            if (isValidCell(i + 1, j) && game[i + 1][j] === 'X') bombs++;
-                            if (isValidCell(i + 1, j - 1) && game[i + 1][j - 1] === 'X') bombs++;
-                            if (isValidCell(i - 1, j - 1) && game[i - 1][j - 1] === 'X') bombs++;
-                        } else if (game[i][j] === 'X') {
-                            bombs = 9
-                        }
+                            if (
+                                isValidCell(i, j - 1) 
+                                && game[i][j - 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j) 
+                                && game[i - 1][j] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j) 
+                                && game[i + 1][j] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j - 1) 
+                                && game[i + 1][j - 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j - 1) 
+                                && game[i - 1][j - 1] === 'X'
+                            ) bombs++;
+                        } else if (
+                            game[i][j] === 'X'
+                        ) 
+                            {
+                                bombs = 9
+                            }
                         break;
                     default: // Middle of the board
                         if (game[i][j] !== 'X') {
-                            if (isValidCell(i, j + 1) && game[i][j + 1] === 'X') bombs++;
-                            if (isValidCell(i, j - 1) && game[i][j - 1] === 'X') bombs++;
-                            if (isValidCell(i - 1, j) && game[i - 1][j] === 'X') bombs++;
-                            if (isValidCell(i + 1, j) && game[i + 1][j] === 'X') bombs++;
-                            if (isValidCell(i - 1, j - 1) && game[i - 1][j - 1] === 'X') bombs++;
-                            if (isValidCell(i - 1, j + 1) && game[i - 1][j + 1] === 'X') bombs++;
-                            if (isValidCell(i + 1, j - 1) && game[i + 1][j - 1] === 'X') bombs++;
-                            if (isValidCell(i + 1, j + 1) && game[i + 1][j + 1] === 'X') bombs++;
-                        } else if (game[i][j] === 'X') {
-                            bombs = 9
-                        }
+                            if (
+                                isValidCell(i, j + 1) 
+                                && game[i][j + 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i, j - 1) 
+                                && game[i][j - 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j) 
+                                && game[i - 1][j] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j) 
+                                && game[i + 1][j] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j - 1) 
+                                && game[i - 1][j - 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i - 1, j + 1) 
+                                && game[i - 1][j + 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j - 1) 
+                                && game[i + 1][j - 1] === 'X'
+                            ) bombs++;
+                            if (
+                                isValidCell(i + 1, j + 1) 
+                                && game[i + 1][j + 1] === 'X'
+                            ) bombs++;
+                        } else if (
+                            game[i][j] === 'X'
+                        ) 
+                            {
+                                bombs = 9
+                            }
                         break;
                 }
                   
                 // Update the cell with the bomb count
-                // Assuming 'setGame' is a function that takes a new game state
-                // You should pass the entire updated 'game' array, not just a single cell
-                // Modify this part based on how you update your game state
-                bombs !== 9 ? newGame[i][j] = bombs.toString() : newGame[i][j] = 'X'
+                bombs !== 9 
+                    ? newGame[i][j] = bombs.toString() 
+                    : newGame[i][j] = 'X'
             }
         }
         return newGame
     }
 
-    function renderBoard() { // Change game to user game so that positions are not revealed
-        // DimensionRender() runs before this, meaning you can plug in the specific style into face to make things seamless
+    function renderBoard() {
         const element = []
 
-        // Variable 'board' is unavailable, so use the stylized properties to calculate the total width of the board
+        // Calculate the total width of the board
         let length = { ...style.width }
         length = `${length[0]}${length[1]}${length[2]}`
         length = Number((length) - 20) / 16
 
         // Rendering start of information top border
-        element.push({key: 'tl-border', class: 'border tl'})
+        element.push({
+            key: 'tl-border', 
+            class: 'border tl'
+        })
 
         // Rendering information top border
         for (let i = 0; i < length; i++) {
             let borderNum = i + 1
-            element.push({key: `top-border-${borderNum}`, class: 'tb'})
+            element.push({
+                key: `top-border-${borderNum}`, 
+                class: 'tb'
+            })
         }
 
         // Rendering end of information top border
-        element.push({key: 'end-info-border', class: 'border tr'})
+        element.push({
+            key: 'end-info-border', 
+            class: 'border tr'
+        })
 
         // Rendering start of information container
-        element.push({key: 'start-info-container', class: 'lb'})
+        element.push({
+            key: 'start-info-container', 
+            class: 'lb'
+        })
 
         // Creating a variable to hold how many bombs are left in an array with three digits
         let bombs = String(currentBombs).padStart(3, '0')
@@ -606,33 +850,77 @@ function Board ({difficulty}) {
         // Rendering information container
 
         // Rendering bomb attributes
-        element.push({key: 'mines-hundreds', class: `time time${bombs[0]}`, id: 'mines_hundreds'})
-        element.push({key: 'mines-tens', class: `time time${bombs[1]}`, id: 'mines_tens'})
-        element.push({key: 'mines-ones', class: `time time${bombs[2]}}`, id: 'mines_ones'})
+        element.push({
+            key: 'mines-hundreds', 
+            class: `time time${bombs[0]}`, 
+            id: 'mines_hundreds'
+        })
+        element.push({
+            key: 'mines-tens', 
+            class: `time time${bombs[1]}`, 
+            id: 'mines_tens'
+        })
+        element.push({
+            key: 'mines-ones', 
+            class: `time time${bombs[2]}}`, 
+            id: 'mines_ones'
+        })
 
         // Rendering face attributes
-        element.push({key: 'face', class: `face ${face}`, style: {marginLeft: style.margin, marginRight: style.margin}, id: 'face'})
+        element.push({
+            key: 'face', 
+            class: `face ${face}`, 
+            style: {
+                marginLeft: style.margin, 
+                marginRight: style.margin
+            }, 
+            id: 'face'
+        })
 
         // Rendering time attributes
-        element.push({key: 'seconds-hundreds', class: `time time${time[0]}`, id: 'seconds_hundreds'})
-        element.push({key: 'seconds-tens', class: `time time${time[1]}`, id: 'seconds_tens'})
+        element.push({
+            key: 'seconds-hundreds', 
+            class: `time time${time[0]}`, 
+            id: 'seconds_hundreds'
+        })
+        element.push({
+            key: 'seconds-tens', 
+            class: `time time${time[1]}`, 
+            id: 'seconds_tens'
+        })
         // Hard coded so that it will display 0 until a cell is clicked
-        element.push({key: 'seconds-ones', class: `time time0`, id: 'seconds_ones'})
+        element.push({
+            key: 'seconds-ones', 
+            class: `time time0`, 
+            id: 'seconds_ones'
+        })
 
         // Rendering end of information container
-        element.push({key: 'lb-border', class: 'lb'})
+        element.push({
+            key: 'lb-border', 
+            class: 'lb'
+        })
 
         // Rendering start of information bottom border
-        element.push({key: 'jbl-border', class: 'border jbl'})
+        element.push({
+            key: 'jbl-border', 
+            class: 'border jbl'
+        })
 
         // Rendering information bottom border
         for (let i = 0; i < length; i++) {
             let borderNum = i + 1
-            element.push({key: `info-bottom-border-${borderNum}`, class: 'tb'})
+            element.push({
+                key: `info-bottom-border-${borderNum}`, 
+                class: 'tb'
+            })
         }
 
         // Rendering end of information bottom border
-        element.push({key: 'jbr-border', class: 'border jbr'})
+        element.push({
+            key: 'jbr-border', 
+            class: 'border jbr'
+        })
       
         for (let i = 0; i < userGame.length; i++) {
           for (let j = 0; j < userGame[i].length; j++) {
@@ -640,34 +928,59 @@ function Board ({difficulty}) {
       
             // Determine the class name based on the cell value
             let className;
+
             // Rendering start of playing board border
-            if ( j === 0) {
-                element.push({key: `left-border-${i}-${j}`, class: 'sb'})
-            }
-            if ( cellValue === 'O' ) {
-                className = 'square blank'
-            }
+            if ( j === 0) 
+                {
+                    element.push({
+                        key: `left-border-${i}-${j}`, 
+                        class: 'sb'
+                    })
+                }
+            if ( cellValue === 'O' ) 
+                {
+                    className = 'square blank'
+                }
+
             // Add JSX elements to the array
-            element.push({key: `cell-${i}-${j}`, xpos: i, ypos: j, class: className})
+            element.push({
+                key: `cell-${i}-${j}`, 
+                xpos: i, 
+                ypos: j, 
+                class: className
+            })
 
             // Rendering end of playing board border
-            if (j === userGame[i].length - 1) {
-                element.push({key: `right-border-${i}-${j}`, class: 'sb'})
-            }
+            if (j === userGame[i].length - 1) 
+                {
+                    element.push({
+                        key: `right-border-${i}-${j}`, 
+                        class: 'sb'
+                    })
+                }
           }
         }
 
         // Rendering bottom left of board
-        element.push({key: 'bl-border', class: 'border bl'})
+        element.push({
+            key: 'bl-border', 
+            class: 'border bl'
+        })
 
         // Rendering bottom of board
         for (let i = 0; i < length; i++) {
             let borderNum = i + 1
-            element.push({key: `bottom-border-${borderNum}`, class: 'tb'})
+            element.push({
+                key: `bottom-border-${borderNum}`, 
+                class: 'tb'
+            })
         }
 
         // Rendering bottom right of board
-        element.push({key: 'br-border', class: 'border br'})
+        element.push({
+            key: 'br-border', 
+            class: 'border br'
+        })
 
         setDivider(element)
       
@@ -687,61 +1000,155 @@ function Board ({difficulty}) {
 
                 if (currentBombs < -99) {
                     bombs = '-99';
-                } else if (currentBombs < 0 && currentBombs > -10) {
-                    bombs = `-0${String(Math.abs(currentBombs))}`;
-                } else if (currentBombs <= -10 && currentBombs > -100) {
-                    bombs = `-${String(Math.abs(currentBombs))}`
+                } else if (currentBombs < 0 
+                    && currentBombs > -10) 
+                    {
+                    bombs = `-0${
+                        String(
+                            Math.abs(
+                                currentBombs
+                                )
+                            )
+                        }`;
+                    } 
+                else if (currentBombs <= -10 
+                    && currentBombs > -100) 
+                    {
+                    bombs = `-${
+                        String(
+                            Math.abs(
+                                currentBombs
+                                )
+                            )
+                        }`
+                    }
+
+                updatedBoardCopy[board.width + 3] = {
+                    key: 'mines-hundreds', 
+                    class: `time time${bombs[0]}`, 
+                    id: 'mines_hundreds'
                 }
+                updatedBoardCopy[board.width + 4] = {
+                    key: 'mines-tens', 
+                    class: `time time${bombs[1]}`, 
+                    id: 'mines_tens'
+                }
+                updatedBoardCopy[board.width + 5] = {
+                    key: 'mines-ones', 
+                    class: `time time${bombs[2]}`, 
+                    id: 'mines_ones'}
 
-                updatedBoardCopy[board.width + 3] = {key: 'mines-hundreds', class: `time time${bombs[0]}`, id: 'mines_hundreds'}
-                updatedBoardCopy[board.width + 4] = {key: 'mines-tens', class: `time time${bombs[1]}`, id: 'mines_tens'}
-                updatedBoardCopy[board.width + 5] = {key: 'mines-ones', class: `time time${bombs[2]}`, id: 'mines_ones'}
-
-                updatedBoardCopy[(board.width * coords[0]) + (coords[0] * 2) + (board.width * 2) + coords[1] + 14] = {key: `cell-${coords[0]}-${coords[1]}`, xpos: coords[0], ypos: coords[1], class: 'square blank'}
+                updatedBoardCopy[
+                    (board.width * coords[0]) + 
+                    (coords[0] * 2) + 
+                    (board.width * 2) + 
+                    coords[1] + 
+                    14
+                ] = {
+                    key: `cell-${coords[0]}-${coords[1]}`, 
+                    xpos: coords[0], 
+                    ypos: coords[1], 
+                    class: 'square blank'
+                }
 
                 return updatedBoardCopy
             })
-        } else if (!isFlagged && name === 'square blank') {
-            setPrevBombsLeft(currentBombs)
-            currentBombs -= 1
+        } else if (!isFlagged && 
+            name === 'square blank') 
+            {
+                setPrevBombsLeft(currentBombs)
+                currentBombs -= 1
 
-            setDivider((prevBoard) => {
-                const updatedBoardCopy = [...prevBoard]
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
 
-                let bombs = String(currentBombs).padStart(3, '0');
+                    let bombs = String(currentBombs).padStart(3, '0');
 
-                if (currentBombs < -99) {
-                    bombs = '-99';
-                } else if (currentBombs < 0 && currentBombs > -10) {
-                    bombs = `-0${String(Math.abs(currentBombs))}`;
-                } else if (currentBombs <= -10 && currentBombs > -100) {
-                    bombs = `-${String(Math.abs(currentBombs))}`
-                }
+                    if (currentBombs < -99) {
+                        bombs = '-99';
+                    } else if (currentBombs < 0 
+                        && currentBombs > -10) 
+                        {
+                        bombs = `-0${
+                                String(
+                                    Math.abs(
+                                        currentBombs
+                                        )
+                                    )
+                            }`;
+                        } 
+                    else if (currentBombs <= -10 
+                        && currentBombs > -100) 
+                        {
+                        bombs = `-${
+                                String(
+                                    Math.abs(
+                                        currentBombs
+                                        )
+                                    )
+                            }`
+                        }
 
-                updatedBoardCopy[board.width + 3] = {key: 'mines-hundreds', class: `time time${bombs[0]}`, id: 'mines_hundreds'}
-                updatedBoardCopy[board.width + 4] = {key: 'mines-tens', class: `time time${bombs[1]}`, id: 'mines_tens'}
-                updatedBoardCopy[board.width + 5] = {key: 'mines-ones', class: `time time${bombs[2]}`, id: 'mines_ones'}
+                    updatedBoardCopy[board.width + 3] = {
+                        key: 'mines-hundreds', 
+                        class: `time time${bombs[0]}`, 
+                        id: 'mines_hundreds'
+                    }
+                    updatedBoardCopy[board.width + 4] = {
+                        key: 'mines-tens', 
+                        class: `time time${bombs[1]}`, 
+                        id: 'mines_tens'
+                    }
+                    updatedBoardCopy[board.width + 5] = {
+                        key: 'mines-ones', 
+                        class: `time time${bombs[2]}`, 
+                        id: 'mines_ones'
+                    }
 
-                updatedBoardCopy[(board.width * coords[0]) + (coords[0] * 2) + (board.width * 2) + coords[1] + 14] = {key: `cell-${coords[0]}-${coords[1]}`, xpos: coords[0], ypos: coords[1], class: 'square bombflagged', id: 'flagged'}
+                    updatedBoardCopy[
+                        (board.width * coords[0]) + 
+                        (coords[0] * 2) + 
+                        (board.width * 2) + 
+                        coords[1] + 
+                        14
+                    ] = {
+                        key: `cell-${coords[0]}-${coords[1]}`, 
+                        xpos: coords[0], 
+                        ypos: coords[1], 
+                        class: 'square bombflagged', 
+                        id: 'flagged'
+                    }
 
-                return updatedBoardCopy
-            })
-        }
+                    return updatedBoardCopy
+                })
+            }
     }
 
     function setSquares(xpos, ypos, id) {
-        if (game[xpos][ypos] >= '1' && game[xpos][ypos] <= '8' && id !== 'flagged') {
-            setDivider((prevBoard) => {
-                const updatedBoardCopy = [...prevBoard]
+        if (game[xpos][ypos] >= '1' && 
+            game[xpos][ypos] <= '8' && 
+            id !== 'flagged') 
+            {
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
 
-                updatedBoardCopy[(board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14] = {key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square open${game[xpos][ypos]}`}
+                    updatedBoardCopy[
+                        (board.width * xpos) + 
+                        (xpos * 2) + 
+                        (board.width * 2) + 
+                        ypos + 
+                        14
+                    ] = {
+                        key: `cell-${xpos}-${ypos}`, 
+                        xpos: xpos, 
+                        ypos: ypos, 
+                        class: `square open${
+                            game[xpos][ypos]
+                        }`}
 
-                console.log(`X-cord: ${xpos}\nY-cord: ${ypos}`)
-                console.log(`Answer key board's corresponding position is: ${game[xpos][ypos]}`)
-
-                return updatedBoardCopy
-            })
-        }
+                    return updatedBoardCopy
+                })
+            }
 
         if (game[xpos][ypos] === 'X' && id !== 'flagged') {
             start = false
@@ -750,41 +1157,115 @@ function Board ({difficulty}) {
                 const updatedBoardCopy = [...prevBoard]
 
                 setFace('facedead')
-                updatedBoardCopy[board.width + 6] = {key: 'face', class: 'face facedead', style: { marginLeft: style.margin, marginRight: style.margin }, id: 'face'}
+                updatedBoardCopy[board.width + 6] = 
+                    {
+                        key: 'face', 
+                        class: 'face facedead', 
+                        style: { 
+                            marginLeft: style.margin, 
+                            marginRight: style.margin 
+                        }, 
+                        id: 'face'
+                    }
 
                 for (let i = 0; i < game.length; i++) {
                     for (let j = 0; j < game[i].length; j++) {
                         if (game[i][j] === 'X') {
-                            updatedBoardCopy[(board.width * i) + (i * 2) + (board.width * 2) + j + 14] = {key: `cell-${i}-${j}`, xpos: i, ypos: j, class: `square bombrevealed`}
-                            updatedBoardCopy[(board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14] = {key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square bombdeath`}
-                        } else if (updatedBoardCopy[(board.width * i) + (i * 2) + (board.width * 2) + j + 14].id === 'flagged') {
-                            updatedBoardCopy[(board.width * i) + (i * 2) + (board.width * 2) + j + 14] = {key: `cell-${i}-${j}`, xpos: i, ypos: j, class: `square falsebomb`}
-                        }
+                            updatedBoardCopy[
+                                (board.width * i) + 
+                                (i * 2) + 
+                                (board.width * 2) + 
+                                j + 
+                                14
+                            ] = {
+                                key: `cell-${i}-${j}`, 
+                                xpos: i, 
+                                ypos: j, 
+                                class: `square bombrevealed`
+                            }
+                            updatedBoardCopy[
+                                (board.width * xpos) + 
+                                (xpos * 2) + 
+                                (board.width * 2) + 
+                                ypos + 
+                                14] = {
+                                    key: `cell-${xpos}-${ypos}`, 
+                                    xpos: xpos, 
+                                    ypos: ypos, 
+                                    class: `square bombdeath`
+                                }
+                        } else if (
+                            updatedBoardCopy[
+                                (board.width * i) + 
+                                (i * 2) + 
+                                (board.width * 2) + 
+                                j + 
+                                14
+                            ]
+                                .id === 'flagged'
+                            ) 
+                            {
+                                updatedBoardCopy[
+                                    (board.width * i) + 
+                                    (i * 2) + 
+                                    (board.width * 2) + 
+                                    j + 
+                                    14
+                                ] = {
+                                    key: `cell-${i}-${j}`, 
+                                    xpos: i, 
+                                    ypos: j, 
+                                    class: `square falsebomb`
+                                }
+                            }
                     }
                 }
-
-                console.log(`X-cord: ${xpos}\nY-cord: ${ypos}`)
-                console.log(`Answer key board's corresponding position is: ${game[xpos][ypos]}`)
 
                 return updatedBoardCopy
             })
         }
 
-        if (game[xpos][ypos] === '0' && id !== 'flagged') {
+        if (game[xpos][ypos] === '0' && 
+            id !== 'flagged') {
             setDivider((prevBoard) => {
                 const updatedBoardCopy = [...prevBoard]
                 // Check if the cell is within the bounds of the game board
-                if (xpos < 0 || xpos >= game.length || ypos < 0 || ypos >= game[0].length) {
-                    return;
-                }
+                if (xpos < 0 
+                    || xpos >= game.length 
+                    || ypos < 0 
+                    || ypos >= game[0].length
+                ) 
+                    {
+                        return;
+                    }
 
                 // Check if the cell has already been revealed or flagged
-                if (game[xpos][ypos] !== '0' || divider[(board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14].id === 'flagged') {
-                    return;
-                }
+                if (game[xpos][ypos] !== '0' || 
+                    divider[
+                        (board.width * xpos) + 
+                        (xpos * 2) + 
+                        (board.width * 2) + 
+                        ypos + 
+                        14
+                    ]
+                    .id === 'flagged') 
+                    {
+                        return;
+                    }
 
                 // Set the cell as revealed
-                updatedBoardCopy[(board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14] = {key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square open0`};
+                updatedBoardCopy[
+                    (board.width * xpos) + 
+                    (xpos * 2) + 
+                    (board.width * 2) + 
+                    ypos + 
+                    14
+                ] = {
+                    key: `cell-${xpos}-${ypos}`, 
+                    xpos: xpos, 
+                    ypos: ypos, 
+                    class: `square open0`
+                };
 
                 // Define the neighbors' positions (assuming 8 neighboring cells)
                 const neighbors = [
@@ -808,15 +1289,31 @@ function Board ({difficulty}) {
       
         function dfs(x, y) {
             // Check if the cell is within the bounds of the game board
-            if (x < 0 || x >= game.length || y < 0 || y >= game[0].length) {
-                return;
-            }
+            if (x < 0 || 
+                x >= game.length || 
+                y < 0 || 
+                y >= game[0].length) 
+                {
+                    return;
+                }
         
             // Check if the cell has already been visited, flagged, or contains a number
             const cellKey = `cell-${x}-${y}`;
-            if (visited.has(cellKey) || divider[(board.width * x) + (x * 2) + (board.width * 2) + y + 14].id === 'flagged' || game[x][y] === 'X') {
-                return;
-            }
+            if (
+                visited.has(cellKey) || 
+                divider[
+                    (board.width * x) + 
+                    (x * 2) + 
+                    (board.width * 2) + 
+                    y + 
+                    14
+                ]
+                .id === 'flagged' 
+                || game[x][y] === 'X'
+            ) 
+                {
+                    return;
+                }
         
             // Mark the cell as visited
             visited.add(cellKey);
@@ -828,7 +1325,20 @@ function Board ({difficulty}) {
             if (cellValue === '0') {
                 setDivider((prevBoard) => {
                     const updatedBoardCopy = [...prevBoard]
-                    updatedBoardCopy[(board.width * x) + (x * 2) + (board.width * 2) + y + 14] = {key: cellKey, xpos: x, ypos: y, class: `square open${game[x][y]}`}
+                    updatedBoardCopy[
+                        (board.width * x) + 
+                        (x * 2) + 
+                        (board.width * 2) + 
+                        y + 
+                        14
+                    ] = {
+                        key: cellKey, 
+                        xpos: x, 
+                        ypos: y, 
+                        class: `square open${
+                            game[x][y]
+                        }`
+                    }
     
                     return updatedBoardCopy
                 })
@@ -849,7 +1359,20 @@ function Board ({difficulty}) {
             else if (cellValue !== 'X') {
                 setDivider((prevBoard) => {
                     const updatedBoardCopy = [...prevBoard]
-                    updatedBoardCopy[(board.width * x) + (x * 2) + (board.width * 2) + y + 14] = {key: cellKey, xpos: x, ypos: y, class: `square open${game[x][y]}`}
+                    updatedBoardCopy[
+                        (board.width * x) + 
+                        (x * 2) + 
+                        (board.width * 2) + 
+                        y + 
+                        14
+                    ] = {
+                        key: cellKey, 
+                        xpos: x, 
+                        ypos: y, 
+                        class: `square open${
+                            game[x][y]
+                        }`
+                    }
     
                     return updatedBoardCopy
                 })
@@ -864,9 +1387,14 @@ function Board ({difficulty}) {
     return (
         <div className='placeholder'>
             <br /><br /><br />
-            {/* {playing && <TimeElapsed onTimeUpdate={handleTimeUpdate}/>} */}
-            {level !== 'custom' && dimensionRender() && (
-                <div id='game' style={{height: style.height, width: style.width}}>
+            {level !== 'custom' 
+                && dimensionRender() 
+                && (
+                    <div id='game' 
+                    style={{
+                        height: style.height, 
+                        width: style.width
+                    }}>
                     {
                         divider.map((item) => (
                             <div
@@ -892,12 +1420,18 @@ function Board ({difficulty}) {
                                     : null
                                 }
                                 onClick={
-                                    ((item.xpos >= 0 && item.xpos <= 8) && (item.ypos >= 0 && item.ypos <= 8)) || item.id
+                                    ((item.xpos >= 0 && 
+                                        item.xpos <= 8) && 
+                                        (item.ypos >= 0 && 
+                                            item.ypos <= 8)) || 
+                                            item.id
                                     ? () => {
                                         start = true;
-                                        item.id !== 'face' && playing || item.class.includes('square')
-                                            ? clicks ++
-                                            : start = false;
+                                        item.id !== 'face' && 
+                                            playing || 
+                                            item.class.includes('square')
+                                                ? clicks ++
+                                                : start = false;
                                         item.id === 'face'
                                             ? updateBoard(item.xpos, item.ypos, item.id)
                                             : _
@@ -908,11 +1442,13 @@ function Board ({difficulty}) {
                                     : undefined
                                 }
                                 onMouseOver={
-                                    (item.xpos && item.ypos) && playing
-                                        ? () => {
-                                            setCoords([item.xpos, item.ypos])
-                                        }
-                                        : undefined
+                                    (item.xpos && 
+                                        item.ypos) && 
+                                        playing
+                                            ? () => {
+                                                setCoords([item.xpos, item.ypos])
+                                            }
+                                            : undefined
                                 }
                                 onMouseOut={
                                     () => setCoords([])
