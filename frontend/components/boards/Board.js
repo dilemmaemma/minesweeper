@@ -704,7 +704,7 @@ function Board ({difficulty}) {
     }
 
     function setSquares(xpos, ypos, id) {
-        if (game[xpos][ypos] >= 1 && game[xpos][ypos] <=8 && id !== 'flagged') {
+        if (game[xpos][ypos] >= '1' && game[xpos][ypos] <= '8' && id !== 'flagged') {
             setDivider((prevBoard) => {
                 const updatedBoardCopy = [...prevBoard]
 
@@ -744,7 +744,7 @@ function Board ({difficulty}) {
             })
         }
 
-        if (game[xpos][ypos] === 0 && id !== 'flagged') {
+        if (game[xpos][ypos] === '0' && id !== 'flagged') {
             setDivider((prevBoard) => {
                 const updatedBoardCopy = [...prevBoard]
                 // Check if the cell is within the bounds of the game board
@@ -753,12 +753,12 @@ function Board ({difficulty}) {
                 }
 
                 // Check if the cell has already been revealed or flagged
-                if (game[xpos][ypos] !== '0' || isFlagged(xpos, ypos)) {
+                if (game[xpos][ypos] !== '0' || divider[(board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14].id === 'flagged') {
                     return;
                 }
 
                 // Set the cell as revealed
-                updatedBoardCopy[(board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14] = {key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square square0`};
+                updatedBoardCopy[(board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14] = {key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square open0`};
 
                 // Define the neighbors' positions (assuming 8 neighboring cells)
                 const neighbors = [
@@ -771,6 +771,8 @@ function Board ({difficulty}) {
                 for (const [dx, dy] of neighbors) {
                     revealEmptyCells(xpos + dx, ypos + dy);
                 }
+
+                return updatedBoardCopy
             })
         }
     }
@@ -785,32 +787,46 @@ function Board ({difficulty}) {
             }
         
             // Check if the cell has already been visited, flagged, or contains a number
-            const cellKey = `${x}-${y}`;
-            if (visited.has(cellKey) || isFlagged(x, y) || game[x][y] !== '0') {
+            const cellKey = `cell-${x}-${y}`;
+            if (visited.has(cellKey) || divider[(board.width * x) + (x * 2) + (board.width * 2) + y + 14].id === 'flagged' || game[x][y] === 'X') {
                 return;
             }
         
             // Mark the cell as visited
             visited.add(cellKey);
+
+            // Check the cell's value
+            const cellValue = game[x][y]
         
             // Set the cell as revealed
-            setDivider((prevBoard) => {
-                const updatedBoardCopy = [...prevBoard]
-                updatedBoardCopy[(board.width * x) + (x * 2) + (board.width * 2) + y + 14] = {key: `cell-${x}-${y}`, xpos: x, ypos: y, class: `square square${game[x][y]}`}
-
-                return updatedBoardCopy
-            })
-        
-            // Define the neighboring positions
-            const neighbors = [
-                [-1, -1], [-1, 0], [-1, 1],
-                [0, -1],           [0, 1],
-                [1, -1], [1, 0], [1, 1]
-            ];
-        
-            // Recursively reveal neighboring cells
-            for (const [dx, dy] of neighbors) {
-                dfs(x + dx, y + dy);
+            if (cellValue === '0') {
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+                    updatedBoardCopy[(board.width * x) + (x * 2) + (board.width * 2) + y + 14] = {key: cellKey, xpos: x, ypos: y, class: `square open${game[x][y]}`}
+    
+                    return updatedBoardCopy
+                })
+            
+                // Define the neighboring positions
+                const neighbors = [
+                    [-1, -1], [-1, 0], [-1, 1],
+                    [0, -1],           [0, 1],
+                    [1, -1], [1, 0], [1, 1]
+                ];
+            
+                // Recursively reveal neighboring cells
+                for (const [dx, dy] of neighbors) {
+                    dfs(x + dx, y + dy);
+                }
+            } 
+            // If the cell contains a number, just reveal it
+            else if (cellValue !== 'X') {
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+                    updatedBoardCopy[(board.width * x) + (x * 2) + (board.width * 2) + y + 14] = {key: cellKey, xpos: x, ypos: y, class: `square open${game[x][y]}`}
+    
+                    return updatedBoardCopy
+                })
             }
         }
         
