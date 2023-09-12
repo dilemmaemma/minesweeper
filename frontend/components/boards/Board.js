@@ -55,10 +55,8 @@ function Board ({difficulty}) {
     useEffect(() => {
         // console.clear()
         console.info('Game has been updated.')
-        console.info('Show placements:')
+        console.info('Board placements:')
         console.table(game)
-        console.info('Hide placements:')
-        console.table(userGame)
         if (difficulty !== 'custom') {
             const data = renderBoard()
             setCurrentBoard(data)
@@ -943,7 +941,6 @@ function Board ({difficulty}) {
 
         setDivider(element)
       
-        console.table(element)
         return divider;
     }
 
@@ -2043,10 +2040,6 @@ function Board ({difficulty}) {
 
     // Handles the death sequence
     function onDeath(x, y) {
-        console.info('Users POV:')
-        console.table(userGame)
-        console.info('Answer Board:')
-        console.table(game)
         start = false
         playing = false
 
@@ -2170,7 +2163,6 @@ function Board ({difficulty}) {
     function onVictory() {
         start = false
         playing = false
-        const seconds = time.split('')
         console.log(`Won on ${difficulty} difficulty in ${time[0] == 0 ? time[1] == 0 ? time[2] : time[1]+time[2] : time} ${time == 1 ? 'second' : 'seconds'}.`)
         time = 0
 
