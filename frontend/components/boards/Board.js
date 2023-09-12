@@ -17,13 +17,11 @@ let clicks = 0
 let isFlagged = false
 let currentBombs = 0
 let style
-let difference = 0
 
 function Board ({difficulty}) {
 
     const [game, setGame] = useState([])
     const [level, setLevel] = useState(difficulty)
-    const [prevBombsLeft, setPrevBombsLeft] = useState(0)
     const [userGame, setUserGame] = useState([])
     const [face, setFace] = useState('facesmile')
     const [_, setCurrentBoard] = useState([]) //eslint-disable-line
@@ -337,8 +335,8 @@ function Board ({difficulty}) {
         }
         setLevel(difficulty)
         currentBombs = board.bombs
-        setInitialBombs(currentBombs)
-        setPrevBombsLeft(currentBombs)
+        setInitialBombs(board.bombs)
+        // setPrevBombsLeft(currentBombs)
         const bombPlacement = createGameBoard(board);
         return bombPlacement;
     }
@@ -347,7 +345,6 @@ function Board ({difficulty}) {
     function newBoard() {
         start = false
         playing = true
-        difference = 0
         clicks = 0
         time = null
         setGame([]);
@@ -934,7 +931,6 @@ function Board ({difficulty}) {
     // Updates bombs based upon flagging/unflagging
     function setBombs(name, xpos, ypos) {
         if (isFlagged) {
-            setPrevBombsLeft(currentBombs + 2)
             currentBombs += 1
 
             isFlagged = false
@@ -996,7 +992,6 @@ function Board ({difficulty}) {
         } else if (!isFlagged && 
             name === 'square blank') 
             {
-                setPrevBombsLeft(currentBombs)
                 currentBombs -= 1
 
                 setUserGame((prevGame) => {
@@ -1161,17 +1156,7 @@ function Board ({difficulty}) {
                 return updatedBoardCopy
             })
         }
-        console.log('Initial difference: ', difference)
-        for (let i = 0; i < game.length; i++) {
-            for (let j = 0; j < game[i].length; j ++) {
-                if (userGame[i][j] !== game[i][j]) difference--
-                if (userGame[i][j] === game[i][j]) difference++
-            }
-        }
-        console.log('Difference after comparison: ', difference)
-
-        console.log(difference)
-        if (Math.abs(difference) === initialBombs) onVictory()
+        checkForVictory()     
     }
 
     // Reveals all empty cells when an empty cell is pressed until encountering a number
@@ -1248,7 +1233,7 @@ function Board ({difficulty}) {
             
                 // Recursively reveal neighboring cells
                 for (const [dx, dy] of neighbors) {
-                    dfs(x + dx, y + dy);
+                    dfs(x + dx, y + dy);userGame
                 }
             } 
             // If the cell contains a number, just reveal it
@@ -2141,46 +2126,50 @@ function Board ({difficulty}) {
         })
     }
 
+    // Runs a check on every click if victory has been achieved
+    function checkForVictory() {
+        let differenceCount = 0
+
+        for (let x = 0; x < game.length; x++) {
+            for (let y = 0; y < game[x].length; y++) {
+                if (game[x][y] === 'X' && (userGame[x][y] === 'F')) {
+                    differenceCount++;
+                }
+                    
+                if (differenceCount > initialBombs) {
+                    break;
+                }
+            }
+        }
+          
+        if (differenceCount === initialBombs) {
+            onVictory();
+        }
+    }
+
     // Handles the winning sequence
     function onVictory() {
         start = false
         playing = false
-        for (let i = 0; i < game.length; i++) {
-            for (let j = 0; j < game[i].length; j++) {
-                if (userGame[i][j] === 'O') {
-                    setDivider((prevBoard) => {
-                        const updatedBoardCopy = [...prevBoard]
-                        setFace('facewin')
 
-                        updatedBoardCopy[
-                            (board.width * i) + 
-                            (i * 2) + 
-                            (board.width * 2) + 
-                            j + 
-                            14
-                        ] = {
-                            key: `cell-${i}-${j}`, 
-                            xpos: i, 
-                            ypos: j, 
-                            class: `square open0`
-                        };
+        setFace('facewin')
+        setDivider((prevBoard) => {
+            const updatedBoardCopy = [...prevBoard]
 
-                        updatedBoardCopy[board.width + 6] = {
-                            key: 'face',
-                            class: 'face facewin',
-                            style: {
-                                marginLeft: style.margin, 
-                                marginRight: style.margin
-                            },
-                            id: 'face'
-                        }
-
-                        return updatedBoardCopy
-                    })
-                }
+            updatedBoardCopy[board.width + 6] = {
+                key: 'face',
+                class: 'face facewin',
+                style: {
+                    marginLeft: style.margin, 
+                    marginRight: style.margin
+                },
+                id: 'face'
             }
-        }
+
+            return updatedBoardCopy
+        })
     }
+
     return (
         <div className='placeholder'>
             <br /><br /><br />
