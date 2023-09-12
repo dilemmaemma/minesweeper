@@ -48,6 +48,8 @@ function Board ({difficulty}) {
     // Sets board dimensions on first render
     useEffect(() => {
         setLevel(difficulty)
+        setFace('facesmile')
+        playing = true
 
         if (difficulty === 'easy') {
             board = {
@@ -214,7 +216,7 @@ function Board ({difficulty}) {
     // Checks for changes in face
     useEffect(() => {
         const intervalId = setInterval(() => {
-          if (face !== 'facesmile') {
+          if (face === 'facepressed') {
             setFace('facesmile');
           }
           setDivider((prevBoard) => {
@@ -298,6 +300,7 @@ function Board ({difficulty}) {
     // Function to start a new board
     function newBoard() {
         start = false
+        playing = true
         clicks = 0
         time = null
         currentBombs = initialBombs
@@ -652,7 +655,7 @@ function Board ({difficulty}) {
             currentBombs += 1
             isFlagged = false
             setDivider((prevBoard) => {
-                const updatedBoardCopy = prevBoard
+                const updatedBoardCopy = [...prevBoard]
 
                 let bombs = String(currentBombs).padStart(3, '0');
 
@@ -677,7 +680,7 @@ function Board ({difficulty}) {
             currentBombs -= 1
 
             setDivider((prevBoard) => {
-                const updatedBoardCopy = prevBoard
+                const updatedBoardCopy = [...prevBoard]
 
                 let bombs = String(currentBombs).padStart(3, '0');
 
@@ -694,6 +697,48 @@ function Board ({difficulty}) {
                 updatedBoardCopy[board.width + 5] = {key: 'mines-ones', class: `time time${bombs[2]}`, id: 'mines_ones'}
 
                 updatedBoardCopy[(board.width * coords[0]) + (coords[0] * 2) + (board.width * 2) + coords[1] + 14] = {key: `cell-${coords[0]}-${coords[1]}`, xpos: coords[0], ypos: coords[1], class: 'square bombflagged', id: 'flagged'}
+
+                return updatedBoardCopy
+            })
+        }
+    }
+
+    function setSquares(xpos, ypos, id) {
+        if (game[xpos][ypos] >= 1 && game[xpos][ypos] <=8 && id !== 'flagged') {
+            setDivider((prevBoard) => {
+                const updatedBoardCopy = [...prevBoard]
+
+                updatedBoardCopy[(board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14] = {key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square open${game[xpos][ypos]}`}
+
+                console.log(`X-cord: ${xpos}\nY-cord: ${ypos}`)
+                console.log(`Answer key board's corresponding position is: ${game[xpos][ypos]}`)
+
+                return updatedBoardCopy
+            })
+        }
+
+        if (game[xpos][ypos] === 'X' && id !== 'flagged') {
+            start = false
+            playing = false
+            setDivider((prevBoard) => {
+                const updatedBoardCopy = [...prevBoard]
+
+                updatedBoardCopy[(board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14] = {key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square bombdeath`}
+                setFace('facedead')
+                updatedBoardCopy[board.width + 6] = {key: 'face', class: 'face facedead', style: { marginLeft: style.margin, marginRight: style.margin }, id: 'face'}
+
+                for (let i = 0; i < game.length; i++) {
+                    for (let j = 0; j < game[i].length; j++) {
+                        if (game[i][j] === 'X' && i !== xpos && j !== ypos) {
+                            updatedBoardCopy[(board.width * i) + (i * 2) + (board.width * 2) + j + 14] = {key: `cell-${i}-${j}`, xpos: i, ypos: j, class: `square bombrevealed`}
+                        } else if (updatedBoardCopy[(board.width * i) + (i * 2) + (board.width * 2) + j + 14].id === 'flagged') {
+                            updatedBoardCopy[(board.width * i) + (i * 2) + (board.width * 2) + j + 14] = {key: `cell-${i}-${j}`, xpos: i, ypos: j, class: `square falsebomb`}
+                        }
+                    }
+                }
+
+                console.log(`X-cord: ${xpos}\nY-cord: ${ypos}`)
+                console.log(`Answer key board's corresponding position is: ${game[xpos][ypos]}`)
 
                 return updatedBoardCopy
             })
@@ -720,27 +765,34 @@ function Board ({difficulty}) {
                                         }
                                     : undefined
                                 }
-                                onContextMenu={(e) => {
-                                    e.preventDefault();
-                                    item.id === 'flagged' ? isFlagged = true : null
-                                    setBombs()
-                                    return false;
-                                  }}
+                                onContextMenu={
+                                    playing
+                                    ? (e) => {
+                                        e.preventDefault();
+                                        item.id === 'flagged' ? isFlagged = true : null
+                                        setBombs()
+                                        return false;
+                                    }
+                                    : null
+                                }
                                 onClick={
                                     (item.xpos && item.ypos) || item.id
                                     ? () => {
                                         start = true;
-                                        item.id !== 'face' || item.class.includes('square')
+                                        item.id !== 'face' && playing || item.class.includes('square')
                                             ? clicks ++
                                             : start = false;
-                                        item.id
+                                        item.id === 'face'
                                             ? updateBoard(item.xpos, item.ypos, item.id)
-                                            : console.clear()
+                                            : _
+                                        item.class === 'square blank' && playing
+                                            ? setSquares(item.xpos, item.ypos, item.id)
+                                            : _
                                     }
                                     : undefined
                                 }
                                 onMouseOver={
-                                    (item.xpos && item.ypos)
+                                    (item.xpos && item.ypos) && playing
                                         ? () => {
                                             setCoords([item.xpos, item.ypos])
                                         }
