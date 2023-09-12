@@ -96,10 +96,19 @@ function Board ({difficulty}) {
     // Checks for certain key presses
     useEffect(() => {
         function handleKeyPress(event) {
-
             if (event.key === 'F2') {
                 newBoard()
             } 
+            // Check for victory when placing flags
+            else if (
+                event.button === 2 && 
+                ((coords[0] >= 0 && 
+                    coords[0] <= 8) && 
+                (coords[1] >=0 && 
+                    coords[1] <= 8))) 
+                    {
+                        checkForVictory()
+                    }
             // Middle Click sequence
             else if (
                 (event.shiftKey 
@@ -2151,6 +2160,8 @@ function Board ({difficulty}) {
     function onVictory() {
         start = false
         playing = false
+        console.log(`Won on ${difficulty} difficulty in ${elapsedTime} seconds.`)
+        time = 0
 
         setFace('facewin')
         setDivider((prevBoard) => {
@@ -2168,6 +2179,7 @@ function Board ({difficulty}) {
 
             return updatedBoardCopy
         })
+        return face
     }
 
     return (
@@ -2201,6 +2213,7 @@ function Board ({difficulty}) {
                                         e.preventDefault();
                                         item.id === 'flagged' ? isFlagged = true : null
                                         setBombs(item.class, item.xpos, item.ypos)
+                                        checkForVictory()
                                         return false;
                                     }
                                     : null
@@ -2239,7 +2252,10 @@ function Board ({difficulty}) {
                                             : undefined
                                 }
                                 onMouseOut={
-                                    () => setCoords([])
+                                    () => {
+                                        setCoords([])
+                                        setFace('facesmile')
+                                    }
                                 }
                             />
                         ))
