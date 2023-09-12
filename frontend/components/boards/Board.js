@@ -866,11 +866,19 @@ function Board ({difficulty}) {
     }
 
     // Updates bombs based upon flagging/unflagging
-    function setBombs(name) {
+    function setBombs(name, xpos, ypos) {
         if (isFlagged) {
             setPrevBombsLeft(currentBombs + 2)
             currentBombs += 1
+
             isFlagged = false
+
+            setUserGame((prevGame) => {
+                const userCopy = [...prevGame]
+
+                userCopy[xpos][ypos]= 'O'
+                return userCopy
+            })
             setDivider((prevBoard) => {
                 const updatedBoardCopy = [...prevBoard]
 
@@ -924,6 +932,13 @@ function Board ({difficulty}) {
             {
                 setPrevBombsLeft(currentBombs)
                 currentBombs -= 1
+
+                setUserGame((prevGame) => {
+                    const userCopy = [...prevGame]
+    
+                    userCopy[xpos][ypos]= 'F'
+                    return userCopy
+                })
 
                 setDivider((prevBoard) => {
                     const updatedBoardCopy = [...prevBoard]
@@ -1168,8 +1183,6 @@ function Board ({difficulty}) {
     function revealNeighboringCells(coords) {
         const xpos = coords[0]
         const ypos = coords[1]  
-        
-        console.log('Here with these coords: ', coords)
                   
         switch (true) {
 
@@ -1988,6 +2001,30 @@ function Board ({difficulty}) {
                                 class: `square falsebomb`
                             }
                         }
+
+                    if (
+                        updatedBoardCopy[
+                            (board.width * i) + 
+                            (i * 2) + 
+                            (board.width * 2) + 
+                            j + 
+                            14
+                        ].class === 'square bombrevealed' &&
+                        userGame[i][j] === 'F'
+                        ) {
+                            updatedBoardCopy[
+                                (board.width * i) + 
+                                (i * 2) + 
+                                (board.width * 2) + 
+                                j + 
+                                14
+                            ] = {
+                                key: `cell-${i}-${j}`, 
+                                xpos: i, 
+                                ypos: j, 
+                                class: `square bombflagged`
+                            }
+                        }
                 }
             }
 
@@ -2029,7 +2066,7 @@ function Board ({difficulty}) {
                                     ? (e) => {
                                         e.preventDefault();
                                         item.id === 'flagged' ? isFlagged = true : null
-                                        setBombs(item.class)
+                                        setBombs(item.class, item.xpos, item.ypos)
                                         return false;
                                     }
                                     : null
