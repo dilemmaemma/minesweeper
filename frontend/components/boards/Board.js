@@ -17,7 +17,7 @@ let clicks = 0
 let isFlagged = false
 let currentBombs = 0
 let style
-let initialBombs = 0 //eslint-disable-line
+let difference = 0
 
 function Board ({difficulty}) {
 
@@ -30,6 +30,7 @@ function Board ({difficulty}) {
     const [elapsedTime, setElapsedTime] = useState(1)
     const [divider, setDivider] = useState([])
     const [coords, setCoords] = useState([])
+    const [initialBombs, setInitialBombs] = useState(0)
 
     // Navigate to home with custom error message if DOM unmounts
     if (!['easy', 'medium', 'hard', 'custom'].includes(level)) {
@@ -131,23 +132,66 @@ function Board ({difficulty}) {
                 event.clientY <= 90) 
             {
                 setFace('facepressed')
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+
+                    updatedBoardCopy[board.width + 6] = {
+                        key: 'face',
+                        class: 'face facepressed',
+                        style: {
+                            marginLeft: style.margin, 
+                            marginRight: style.margin
+                        },
+                        id: 'face'
+                    }
+                    return updatedBoardCopy
+                })
             
                 newBoard();
               
                 setTimeout(() => {
-                      setFace('facesmile')
-                      console.log(face)
+                    setFace('facesmile')
+                    setDivider((prevBoard) => {
+                        const updatedBoardCopy = [...prevBoard]
+    
+                        updatedBoardCopy[board.width + 6] = {
+                            key: 'face',
+                            class: 'face facepressed',
+                            style: {
+                                marginLeft: style.margin, 
+                                marginRight: style.margin
+                            },
+                            id: 'face'
+                        }
+                        return updatedBoardCopy
+                    })
+                      
                 }, 100);
 
-                return divider;
             }
             else if (event.button === 0 && 
-                (coords[0] === 0 || 
-                    coords[1] === 0 || 
-                    coords)) {
+                ((coords[0] >= 0 && coords[0] <= 8) && 
+                    (coords[1] >= 0 && coords[1] <= 8)) &&
+                    !(event.clientX >= 380 && 
+                        event.clientX <= 410 && 
+                        event.clientY >= 70 && 
+                        event.clientY <= 90)) {
                         setFace('faceooh')
+                        setDivider((prevBoard) => {
+                            const updatedBoardCopy = [...prevBoard]
+        
+                            updatedBoardCopy[board.width + 6] = {
+                                key: 'face',
+                                class: 'face faceooh',
+                                style: {
+                                    marginLeft: style.margin, 
+                                    marginRight: style.margin
+                                },
+                                id: 'face'
+                            }
+                            return updatedBoardCopy
+                        })
 
-                        return divider
                     }            
         }
 
@@ -163,8 +207,28 @@ function Board ({difficulty}) {
     useEffect(() => {
         function handleKeyUp(event) {
             // Checks to see if left click is released
-            if (event.button === 0 && coords) {
+            if (event.button === 0 && 
+                ((coords[0] >= 0 && coords[0] <= 8) && 
+                    (coords[1] >= 0 && coords[1] <= 8)) &&
+                    !(event.clientX >= 380 && 
+                        event.clientX <= 410 && 
+                        event.clientY >= 70 && 
+                        event.clientY <= 90)) {
                 setFace('facesmile')
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+
+                    updatedBoardCopy[board.width + 6] = {
+                        key: 'face',
+                        class: 'face facesmile',
+                        style: {
+                            marginLeft: style.margin, 
+                            marginRight: style.margin
+                        },
+                        id: 'face'
+                    }
+                    return updatedBoardCopy
+                })
 
                 return divider
             }
@@ -273,6 +337,7 @@ function Board ({difficulty}) {
         }
         setLevel(difficulty)
         currentBombs = board.bombs
+        setInitialBombs(currentBombs)
         setPrevBombsLeft(currentBombs)
         const bombPlacement = createGameBoard(board);
         return bombPlacement;
@@ -282,6 +347,7 @@ function Board ({difficulty}) {
     function newBoard() {
         start = false
         playing = true
+        difference = 0
         clicks = 0
         time = null
         setGame([]);
@@ -1018,6 +1084,13 @@ function Board ({difficulty}) {
 
                     return updatedBoardCopy
                 })
+
+                setUserGame((prevGame) => {
+                    const updatedGame = [...prevGame]
+
+                    updatedGame[xpos][ypos] = String(game[xpos][ypos])
+                    return updatedGame
+                })
             }
 
         if (game[xpos][ypos] === 'X' && id !== 'flagged') {
@@ -1052,6 +1125,13 @@ function Board ({difficulty}) {
                         return;
                     }
 
+                setUserGame((prevGame) => {
+                    const updatedGame = [...prevGame]
+
+                    updatedGame[xpos][ypos] = '0'
+                    return updatedGame
+                })
+
                 // Set the cell as revealed
                 updatedBoardCopy[
                     (board.width * xpos) + 
@@ -1081,6 +1161,17 @@ function Board ({difficulty}) {
                 return updatedBoardCopy
             })
         }
+        console.log('Initial difference: ', difference)
+        for (let i = 0; i < game.length; i++) {
+            for (let j = 0; j < game[i].length; j ++) {
+                if (userGame[i][j] !== game[i][j]) difference--
+                if (userGame[i][j] === game[i][j]) difference++
+            }
+        }
+        console.log('Difference after comparison: ', difference)
+
+        console.log(difference)
+        if (Math.abs(difference) === initialBombs) onVictory()
     }
 
     // Reveals all empty cells when an empty cell is pressed until encountering a number
@@ -1140,6 +1231,13 @@ function Board ({difficulty}) {
     
                     return updatedBoardCopy
                 })
+
+                setUserGame((prevGame) => {
+                    const updatedGame = [...prevGame]
+
+                    updatedGame[x][y] = '0'
+                    return updatedGame
+                })
             
                 // Define the neighboring positions
                 const neighbors = [
@@ -1171,6 +1269,13 @@ function Board ({difficulty}) {
                     }
     
                     return updatedBoardCopy
+                })
+
+                setUserGame((prevGame) => {
+                    const updatedGame = [...prevGame]
+
+                    updatedGame[x][y] = String(game[x][y])
+                    return updatedGame
                 })
             }
         }
@@ -1934,6 +2039,10 @@ function Board ({difficulty}) {
 
     // Handles the death sequence
     function onDeath(x, y) {
+        console.info('Users POV:')
+        console.table(userGame)
+        console.info('Answer Board:')
+        console.table(game)
         start = false
         playing = false
 
@@ -2034,7 +2143,43 @@ function Board ({difficulty}) {
 
     // Handles the winning sequence
     function onVictory() {
-        console.log('Yay')
+        start = false
+        playing = false
+        for (let i = 0; i < game.length; i++) {
+            for (let j = 0; j < game[i].length; j++) {
+                if (userGame[i][j] === 'O') {
+                    setDivider((prevBoard) => {
+                        const updatedBoardCopy = [...prevBoard]
+                        setFace('facewin')
+
+                        updatedBoardCopy[
+                            (board.width * i) + 
+                            (i * 2) + 
+                            (board.width * 2) + 
+                            j + 
+                            14
+                        ] = {
+                            key: `cell-${i}-${j}`, 
+                            xpos: i, 
+                            ypos: j, 
+                            class: `square open0`
+                        };
+
+                        updatedBoardCopy[board.width + 6] = {
+                            key: 'face',
+                            class: 'face facewin',
+                            style: {
+                                marginLeft: style.margin, 
+                                marginRight: style.margin
+                            },
+                            id: 'face'
+                        }
+
+                        return updatedBoardCopy
+                    })
+                }
+            }
+        }
     }
     return (
         <div className='placeholder'>
