@@ -130,6 +130,8 @@ function Board ({difficulty}) {
         setGame(newGameData)
 
         setElapsedTime(1)
+
+        newBoard()
         
     }, [difficulty]);
 
