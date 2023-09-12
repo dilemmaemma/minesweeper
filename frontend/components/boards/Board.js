@@ -5,7 +5,7 @@ import { Navigate } from 'react-router'
 import CustomBoard from './CustomBoard'
 // import GenerateBoard from './GenerateBoard'
 
-import { startKeyListener, stopKeyListener } from '../keyPressListener'
+import { startKeyListener, stopKeyListener, startKeyUpListener, stopKeyUpListener } from '../keyPressListener'
 
 import '../../css/board.css'
 
@@ -204,6 +204,11 @@ function Board ({difficulty}) {
                 }, 100);
 
                 return divider;
+            }
+            else if (event.button === 0 && coords) {
+                setFace('faceooh')
+
+                return divider
             }            
         }
 
@@ -212,6 +217,25 @@ function Board ({difficulty}) {
         return () => {
             // Remove the event listener when the component unmounts
             stopKeyListener(handleKeyPress)
+        }
+    }, [coords])
+
+    // Checks for certain key ups
+    useEffect(() => {
+        function handleKeyUp(event) {
+            // Checks to see if left click is released
+            if (event.button === 0 && coords) {
+                setFace('facesmile')
+
+                return divider
+            }
+        }
+
+        startKeyUpListener(handleKeyUp)
+
+        return () => {
+            // Remove the event listener when the component unmounts
+            stopKeyUpListener(handleKeyUp)
         }
     }, [coords])
 
@@ -889,6 +913,9 @@ function Board ({difficulty}) {
                                             setCoords([item.xpos, item.ypos])
                                         }
                                         : undefined
+                                }
+                                onMouseOut={
+                                    () => setCoords([])
                                 }
                             />
                         ))
