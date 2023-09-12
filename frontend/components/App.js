@@ -9,7 +9,7 @@ import Board from './boards/Board'
 
 import '../css/header.css'
 
-function App() {
+function App() { // Need to change this to factor for multiple games
 
   const [showLinks, setShowLinks] = useState(false)
   const [difficulty, setDifficulty] = useState()
