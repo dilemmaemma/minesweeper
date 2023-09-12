@@ -65,7 +65,7 @@ function Board ({difficulty}) {
         } // Placeholder statement
     }, [game])
 
-    // Updates board
+    // Updates time
     useEffect(() => {
         if (start) {
           const intervalId = setInterval(() => {
@@ -92,7 +92,6 @@ function Board ({difficulty}) {
         }
       }, [start, elapsedTime]);
       
-    
     // Checks for certain key presses
     useEffect(() => {
         function handleKeyPress(event) {
@@ -278,6 +277,17 @@ function Board ({difficulty}) {
         };
       }, [face]);
     
+    // Checks for victory
+    useEffect(() => {
+        if (start) {
+            const victoryCheckInterval = setInterval(checkForVictory, 100);
+
+            return () => {
+                clearInterval(victoryCheckInterval)
+            }
+        }
+    }, [start])
+
     // Generates random bomb positions for game  
     function generateRandomBombPositions(board) {
         const bombPositions = [];
@@ -2160,7 +2170,8 @@ function Board ({difficulty}) {
     function onVictory() {
         start = false
         playing = false
-        console.log(`Won on ${difficulty} difficulty in ${elapsedTime} seconds.`)
+        const seconds = time.split('')
+        console.log(`Won on ${difficulty} difficulty in ${time[0] == 0 ? time[1] == 0 ? time[2] : time[1]+time[2] : time} ${time == 1 ? 'second' : 'seconds'}.`)
         time = 0
 
         setFace('facewin')
@@ -2254,7 +2265,7 @@ function Board ({difficulty}) {
                                 onMouseOut={
                                     () => {
                                         setCoords([])
-                                        setFace('facesmile')
+                                        face === 'faceooh' ? setFace('facesmile') : null
                                     }
                                 }
                             />
