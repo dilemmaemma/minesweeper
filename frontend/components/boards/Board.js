@@ -649,7 +649,7 @@ function Board ({difficulty}) {
         return divider;
     }
 
-    function setBombs() {
+    function setBombs(name) {
         if (isFlagged) {
             setPrevBombsLeft(currentBombs + 2)
             currentBombs += 1
@@ -675,7 +675,7 @@ function Board ({difficulty}) {
 
                 return updatedBoardCopy
             })
-        } else if (!isFlagged) {
+        } else if (!isFlagged && name === 'square blank') {
             setPrevBombsLeft(currentBombs)
             currentBombs -= 1
 
@@ -743,7 +743,81 @@ function Board ({difficulty}) {
                 return updatedBoardCopy
             })
         }
+
+        if (game[xpos][ypos] === 0 && id !== 'flagged') {
+            setDivider((prevBoard) => {
+                const updatedBoardCopy = [...prevBoard]
+                // Check if the cell is within the bounds of the game board
+                if (xpos < 0 || xpos >= game.length || ypos < 0 || ypos >= game[0].length) {
+                    return;
+                }
+
+                // Check if the cell has already been revealed or flagged
+                if (game[xpos][ypos] !== '0' || isFlagged(xpos, ypos)) {
+                    return;
+                }
+
+                // Set the cell as revealed
+                updatedBoardCopy[(board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14] = {key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square square0`};
+
+                // Define the neighbors' positions (assuming 8 neighboring cells)
+                const neighbors = [
+                    [-1, -1], [-1, 0], [-1, 1],
+                    [0, -1],           [0, 1],
+                    [1, -1], [1, 0], [1, 1]
+                ];
+
+                // Recursively reveal neighboring cells
+                for (const [dx, dy] of neighbors) {
+                    revealEmptyCells(xpos + dx, ypos + dy);
+                }
+            })
+        }
     }
+
+    function revealEmptyCells(x, y) {
+        const visited = new Set(); // To keep track of visited cells
+      
+        function dfs(x, y) {
+            // Check if the cell is within the bounds of the game board
+            if (x < 0 || x >= game.length || y < 0 || y >= game[0].length) {
+                return;
+            }
+        
+            // Check if the cell has already been visited, flagged, or contains a number
+            const cellKey = `${x}-${y}`;
+            if (visited.has(cellKey) || isFlagged(x, y) || game[x][y] !== '0') {
+                return;
+            }
+        
+            // Mark the cell as visited
+            visited.add(cellKey);
+        
+            // Set the cell as revealed
+            setDivider((prevBoard) => {
+                const updatedBoardCopy = [...prevBoard]
+                updatedBoardCopy[(board.width * x) + (x * 2) + (board.width * 2) + y + 14] = {key: `cell-${x}-${y}`, xpos: x, ypos: y, class: `square square${game[x][y]}`}
+
+                return updatedBoardCopy
+            })
+        
+            // Define the neighboring positions
+            const neighbors = [
+                [-1, -1], [-1, 0], [-1, 1],
+                [0, -1],           [0, 1],
+                [1, -1], [1, 0], [1, 1]
+            ];
+        
+            // Recursively reveal neighboring cells
+            for (const [dx, dy] of neighbors) {
+                dfs(x + dx, y + dy);
+            }
+        }
+        
+            // Start the DFS from the initial cell
+            dfs(x, y);
+    }
+      
 
     return (
         <div className='placeholder'>
@@ -770,7 +844,7 @@ function Board ({difficulty}) {
                                     ? (e) => {
                                         e.preventDefault();
                                         item.id === 'flagged' ? isFlagged = true : null
-                                        setBombs()
+                                        setBombs(item.class)
                                         return false;
                                     }
                                     : null
