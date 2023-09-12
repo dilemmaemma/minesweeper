@@ -868,7 +868,7 @@ function Board ({difficulty}) {
                                     : null
                                 }
                                 onClick={
-                                    (item.xpos && item.ypos) || item.id
+                                    ((item.xpos >= 0 && item.xpos <= 8) && (item.ypos >= 0 && item.ypos <= 8)) || item.id
                                     ? () => {
                                         start = true;
                                         item.id !== 'face' && playing || item.class.includes('square')
