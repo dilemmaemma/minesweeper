@@ -113,7 +113,14 @@ function Board ({difficulty}) {
                     (board.width * 2) + 
                     (coords[1]) + 
                     14
-                ].class !== 'square blank'
+                ].class !== 'square blank' &&
+                divider[
+                    (board.width * coords[0]) + 
+                    (coords[0] * 2) + 
+                    (board.width * 2) + 
+                    (coords[1]) + 
+                    14
+                ].id !== 'face'
             ) {
                     revealNeighboringCells(coords)
             }
@@ -134,11 +141,14 @@ function Board ({difficulty}) {
 
                 return divider;
             }
-            else if (event.button === 0 && coords) {
-                setFace('faceooh')
+            else if (event.button === 0 && 
+                (coords[0] === 0 || 
+                    coords[1] === 0 || 
+                    coords)) {
+                        setFace('faceooh')
 
-                return divider
-            }            
+                        return divider
+                    }            
         }
 
         startKeyListener(handleKeyPress)
@@ -196,7 +206,8 @@ function Board ({difficulty}) {
           clearInterval(intervalId);
         };
       }, [face]);
-      
+    
+    // Generates random bomb positions for game  
     function generateRandomBombPositions(board) {
         const bombPositions = [];
       
@@ -219,7 +230,8 @@ function Board ({difficulty}) {
           
         return bombPositions;
     }
-      
+     
+    // Creates the entire game board
     function createGameBoard(board) {
         const bombPositions = generateRandomBombPositions(board);
         const newGame = [];
@@ -238,6 +250,7 @@ function Board ({difficulty}) {
         return newGame;
     }
 
+    // Sets basic constraints for each difficulty
     function createBoard() {
         if (level === 'easy') {
             board = {
@@ -334,6 +347,7 @@ function Board ({difficulty}) {
         // }
     }
 
+    // Updates time every second
     function setTime() {
         // Tests to see if it is the first click. If it is, time starts
         if (clicks === 1 && 
@@ -662,6 +676,7 @@ function Board ({difficulty}) {
         return newGame
     }
 
+    // Creates an array with divs inside to render to the DOM
     function renderBoard() {
         dimensionRender()
         const element = []
@@ -850,6 +865,7 @@ function Board ({difficulty}) {
         return divider;
     }
 
+    // Updates bombs based upon flagging/unflagging
     function setBombs(name) {
         if (isFlagged) {
             setPrevBombsLeft(currentBombs + 2)
@@ -962,6 +978,7 @@ function Board ({difficulty}) {
             }
     }
 
+    // Updates squares based upon clicks and what is inside of the game array
     function setSquares(xpos, ypos, id) {
         if (game[xpos][ypos] >= '1' && 
             game[xpos][ypos] <= '8' && 
@@ -1051,6 +1068,7 @@ function Board ({difficulty}) {
         }
     }
 
+    // Reveals all empty cells when an empty cell is pressed until encountering a number
     function revealEmptyCells(x, y) {
         const visited = new Set(); // To keep track of visited cells
       
@@ -1146,9 +1164,12 @@ function Board ({difficulty}) {
             dfs(x, y);
     }
     
+    // Reveals all squares around an opened cell with a middle click. If a bomb is revealed, instant death
     function revealNeighboringCells(coords) {
         const xpos = coords[0]
-        const ypos = coords[1]    
+        const ypos = coords[1]  
+        
+        console.log('Here with these coords: ', coords)
                   
         switch (true) {
 
@@ -1898,6 +1919,7 @@ function Board ({difficulty}) {
         }
     }
 
+    // Handles the death sequence
     function onDeath(x, y) {
         start = false
         playing = false
@@ -1973,6 +1995,10 @@ function Board ({difficulty}) {
         })
     }
 
+    // Handles the winning sequence
+    function onVictory() {
+        console.log('Yay')
+    }
     return (
         <div className='placeholder'>
             <br /><br /><br />
