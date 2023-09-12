@@ -723,14 +723,14 @@ function Board ({difficulty}) {
             setDivider((prevBoard) => {
                 const updatedBoardCopy = [...prevBoard]
 
-                updatedBoardCopy[(board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14] = {key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square bombdeath`}
                 setFace('facedead')
                 updatedBoardCopy[board.width + 6] = {key: 'face', class: 'face facedead', style: { marginLeft: style.margin, marginRight: style.margin }, id: 'face'}
 
                 for (let i = 0; i < game.length; i++) {
                     for (let j = 0; j < game[i].length; j++) {
-                        if (game[i][j] === 'X' && i !== xpos && j !== ypos) {
+                        if (game[i][j] === 'X') {
                             updatedBoardCopy[(board.width * i) + (i * 2) + (board.width * 2) + j + 14] = {key: `cell-${i}-${j}`, xpos: i, ypos: j, class: `square bombrevealed`}
+                            updatedBoardCopy[(board.width * xpos) + (xpos * 2) + (board.width * 2) + ypos + 14] = {key: `cell-${xpos}-${ypos}`, xpos: xpos, ypos: ypos, class: `square bombdeath`}
                         } else if (updatedBoardCopy[(board.width * i) + (i * 2) + (board.width * 2) + j + 14].id === 'flagged') {
                             updatedBoardCopy[(board.width * i) + (i * 2) + (board.width * 2) + j + 14] = {key: `cell-${i}-${j}`, xpos: i, ypos: j, class: `square falsebomb`}
                         }
