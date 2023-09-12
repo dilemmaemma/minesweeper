@@ -2,30 +2,28 @@ import React, {useState, useEffect} from 'react'
 import { Navigate } from 'react-router'
 // import axios from 'axios'
 
-import CustomBoard from './CustomBoard'
-// import GenerateBoard from './GenerateBoard'
+import CustomBoard from './CustomBoard' //eslint-disable-line
 
 import { startKeyListener, stopKeyListener, startKeyUpListener, stopKeyUpListener } from '../keyPressListener'
 
 import '../../css/board.css'
 
-// Set board up with false values to trick the parser into moving on to the next step when Custom Board is called before other gamemodes
+// Setting initial values needed by the app
 let board
-let style
 let time
 let playing = true
 let start = false
 let clicks = 0
 let isFlagged = false
 let currentBombs = 0
-let initialBombs = 0
+let style
+let initialBombs = 0 //eslint-disable-line
 
 function Board ({difficulty}) {
 
     const [game, setGame] = useState([])
     const [level, setLevel] = useState(difficulty)
-    // const [bombsLeft, setBombsLeft] = useState(0)
-    const [prevBombsLeft, setPrevBombsLeft] = useState(0) // Make sure when a user flags a square, before bombsLeft goes down, to set prevBombsLeft to current bombsLeft value, then decrement bombsLeft
+    const [prevBombsLeft, setPrevBombsLeft] = useState(0)
     const [userGame, setUserGame] = useState([])
     const [face, setFace] = useState('facesmile')
     const [_, setCurrentBoard] = useState([]) //eslint-disable-line
@@ -50,89 +48,8 @@ function Board ({difficulty}) {
         setLevel(difficulty)
         setFace('facesmile')
         playing = true
-
-        if (difficulty === 'easy') {
-            board = {
-                bombs: 10,
-                width: 9,
-                height: 9,
-            }
-            currentBombs = 10
-            initialBombs = currentBombs
-            setPrevBombsLeft(10)
-        } else if (difficulty === 'medium') {
-            board = {
-                bombs: 40,
-                width: 16,
-                height: 16,
-            }
-            currentBombs = 40
-            initialBombs = currentBombs
-            setPrevBombsLeft(40)
-        } else if (difficulty === 'hard') {
-            board = {
-                bombs: 99,
-                width: 30,
-                height: 16,
-            }
-            currentBombs = 99
-            initialBombs = currentBombs
-            setPrevBombsLeft(99)
-        } else if (difficulty === 'custom') {
-            board = {
-                bombs: 8,
-                width: 8,
-                height: 8,
-            }; 
-            currentBombs = 8;
-            initialBombs = currentBombs;
-            setPrevBombsLeft(8); // Placeholder info
-            <CustomBoard/>
-            // axios get from custom board api
-            // axios.get('localhost:9000/api/custom/board')
-            //     .then(res => {
-            //        board = {
-            //         bombs: res.data.bombs
-            //         width: res.data.width
-            //         height: res.data.height
-            //        }
-            //     })
-            //     .catch(err => {
-            //         console.error(err)
-            //     })
-            // setBombsLeft(board.bombs)
-        } else {
-            board = {
-                bombs: 8,
-                width: 8,
-                height: 10,
-            }
-            currentBombs = 8
-            initialBombs = currentBombs
-            setPrevBombsLeft(8)
-        }
-
-        // Sets the game that the user will see. Updates with values that correspond to the game state
-        let hiddenGame = []
-
-        for (let i = 0; i < board.height; i++) {
-            let row = []
-            for (let j = 0; j < board.width; j++) {
-                row.push('O')
-            }
-            hiddenGame.push(row)
-        }
-
-        let bombPlacement = createGameBoard(board)
-        setGame(bombPlacement)
-        setUserGame(hiddenGame)
-        let newGameData = renderClues(bombPlacement)
-        setGame(newGameData)
-
-        setElapsedTime(1)
-
-        newBoard()
-        
+        dimensionRender()
+        newBoard() 
     }, [difficulty]);
 
     // For dev use only - shows board placements
@@ -155,7 +72,7 @@ function Board ({difficulty}) {
           const intervalId = setInterval(() => {
             setElapsedTime((prevTime) => prevTime + 1);
             if (difficulty !== 'custom') {
-              const updatedBoard = updateBoard();
+              const updatedBoard = setTime();
               
               setDivider((prevBoard) => {
                 // Clone the previous board to avoid mutating it directly
@@ -189,9 +106,16 @@ function Board ({difficulty}) {
                 (event.shiftKey 
                     && (event.keyCode === 13 
                     || event.key === ' ')) 
-                || (event.button === 1) // Double check that left + right and middle clicks work
+                || (event.button === 1) &&
+                divider[
+                    (board.width * coords[0]) + 
+                    (coords[0] * 2) + 
+                    (board.width * 2) + 
+                    (coords[1]) + 
+                    14
+                ].class !== 'square blank'
             ) {
-                    handleMiddleClick()
+                    revealNeighboringCells(coords)
             }
             else if (event.button === 0 && 
                 event.clientX >= 380 && 
@@ -273,9 +197,6 @@ function Board ({difficulty}) {
         };
       }, [face]);
       
-
-    localStorage.setItem('board', JSON.stringify(game))
-
     function generateRandomBombPositions(board) {
         const bombPositions = [];
       
@@ -337,6 +258,7 @@ function Board ({difficulty}) {
                 height: 16,
             }
         }
+        setLevel(difficulty)
         currentBombs = board.bombs
         setPrevBombsLeft(currentBombs)
         const bombPlacement = createGameBoard(board);
@@ -349,8 +271,9 @@ function Board ({difficulty}) {
         playing = true
         clicks = 0
         time = null
-        currentBombs = initialBombs
         setGame([]);
+        setDivider([]);
+        setFace('facesmile');
         const newGame = createBoard();
         setGame(newGame);
         // Sets the game that the user will see. Updates with values that correspond to the game state
@@ -371,10 +294,7 @@ function Board ({difficulty}) {
         setElapsedTime(1)
     }
 
-    function handleMiddleClick() {
-        console.log('Middle button/equivalent pressed')
-    }
-
+    // Generate dimensions of board
     function dimensionRender() {
         if (difficulty === 'easy') return (
             style = { 
@@ -384,7 +304,7 @@ function Board ({difficulty}) {
             }
         )
         else if (difficulty === 'medium') return (
-            style = { 
+            style ={ 
                 height: '318px',
                 width: '276px', 
                 margin: '70px' 
@@ -398,7 +318,7 @@ function Board ({difficulty}) {
             }
         )
         // else if (difficulty === 'custom') {
-        //     axios.get(l`localhost:9000/api/board/custom`)
+        //     axios.get(`localhost:9000/api/board/custom`)
         //         .then(res => {
         //             console.log(res.data)
         //             return (
@@ -414,7 +334,7 @@ function Board ({difficulty}) {
         // }
     }
 
-    function updateBoard(xpos, ypos, id) {
+    function setTime() {
         // Tests to see if it is the first click. If it is, time starts
         if (clicks === 1 && 
             (time === undefined || 
@@ -425,24 +345,6 @@ function Board ({difficulty}) {
 
         const element = []
         const boardLocation = []
-        
-        // Calculate square pressed: (width * xpos) + (xpos * 2) + (width * 2) + ypos + 14
-        if (xpos && ypos && id !== 'flagged') {
-            element.push({
-                key: `cell-${xpos}-${ypos}`, 
-                xpos: xpos, 
-                ypos: ypos, 
-                class: `square open${
-                    game[xpos][ypos]
-                }`
-            })
-            boardLocation.push(
-                (board.width * xpos) + 
-                (xpos * 2) + 
-                (board.width * 2) + 
-                ypos + 14
-            )
-        }
 
         // Calculate starting position of time: board.width + 7
         if (time) {
@@ -469,48 +371,6 @@ function Board ({difficulty}) {
                 board.width + 7, 
                 board.width + 8, 
                 board.width + 9
-            )
-        }
-
-        // Check to see if bomb value has changed
-        if (prevBombsLeft !== currentBombs) {
-            let bombs = String(currentBombs).padStart(3, '0');
-
-            if (currentBombs < -99) {
-                bombs = '-99';
-            } else if (currentBombs < 0 
-                && currentBombs > -10) 
-                {
-                    bombs = `-0${String(Math.abs(currentBombs))}`;
-                } 
-            else if (currentBombs <= -10 
-                && currentBombs > -100) 
-                {
-                    bombs = `-${String(Math.abs(currentBombs))}`
-                }
-
-            element.push({
-                key: 'mines-hundreds', 
-                class: `time time${bombs[0]}`, 
-                id: 'mines_hundreds'
-            })
-            element.push({
-                key: 'mines-tens', 
-                class: `time time${bombs[1]}`, 
-                id: 'mines_tens'
-            })
-            element.push({
-                key: 'mines-ones', 
-                class: `time time${bombs[2]}`, 
-                id: 'mines_ones'
-            })
-
-
-            // Calculate starting position of bombs: board.width + 3
-            boardLocation.push(
-                board.width + 3, 
-                board.width + 4, 
-                board.width + 5
             )
         }
 
@@ -803,9 +663,11 @@ function Board ({difficulty}) {
     }
 
     function renderBoard() {
+        dimensionRender()
         const element = []
 
         // Calculate the total width of the board
+        console.log(style)
         let length = { ...style.width }
         length = `${length[0]}${length[1]}${length[2]}`
         length = Number((length) - 20) / 16
@@ -1003,24 +865,12 @@ function Board ({difficulty}) {
                 } else if (currentBombs < 0 
                     && currentBombs > -10) 
                     {
-                    bombs = `-0${
-                        String(
-                            Math.abs(
-                                currentBombs
-                                )
-                            )
-                        }`;
+                    bombs = `-0${String(Math.abs(currentBombs))}`;
                     } 
                 else if (currentBombs <= -10 
                     && currentBombs > -100) 
                     {
-                    bombs = `-${
-                        String(
-                            Math.abs(
-                                currentBombs
-                                )
-                            )
-                        }`
+                    bombs = `-${String(Math.abs(currentBombs))}`
                     }
 
                 updatedBoardCopy[board.width + 3] = {
@@ -1069,24 +919,12 @@ function Board ({difficulty}) {
                     } else if (currentBombs < 0 
                         && currentBombs > -10) 
                         {
-                        bombs = `-0${
-                                String(
-                                    Math.abs(
-                                        currentBombs
-                                        )
-                                    )
-                            }`;
+                        bombs = `-0${String(Math.abs(currentBombs))}`;
                         } 
                     else if (currentBombs <= -10 
                         && currentBombs > -100) 
                         {
-                        bombs = `-${
-                                String(
-                                    Math.abs(
-                                        currentBombs
-                                        )
-                                    )
-                            }`
+                        bombs = `-${String(Math.abs(currentBombs))}`
                         }
 
                     updatedBoardCopy[board.width + 3] = {
@@ -1151,78 +989,7 @@ function Board ({difficulty}) {
             }
 
         if (game[xpos][ypos] === 'X' && id !== 'flagged') {
-            start = false
-            playing = false
-            setDivider((prevBoard) => {
-                const updatedBoardCopy = [...prevBoard]
-
-                setFace('facedead')
-                updatedBoardCopy[board.width + 6] = 
-                    {
-                        key: 'face', 
-                        class: 'face facedead', 
-                        style: { 
-                            marginLeft: style.margin, 
-                            marginRight: style.margin 
-                        }, 
-                        id: 'face'
-                    }
-
-                for (let i = 0; i < game.length; i++) {
-                    for (let j = 0; j < game[i].length; j++) {
-                        if (game[i][j] === 'X') {
-                            updatedBoardCopy[
-                                (board.width * i) + 
-                                (i * 2) + 
-                                (board.width * 2) + 
-                                j + 
-                                14
-                            ] = {
-                                key: `cell-${i}-${j}`, 
-                                xpos: i, 
-                                ypos: j, 
-                                class: `square bombrevealed`
-                            }
-                            updatedBoardCopy[
-                                (board.width * xpos) + 
-                                (xpos * 2) + 
-                                (board.width * 2) + 
-                                ypos + 
-                                14] = {
-                                    key: `cell-${xpos}-${ypos}`, 
-                                    xpos: xpos, 
-                                    ypos: ypos, 
-                                    class: `square bombdeath`
-                                }
-                        } else if (
-                            updatedBoardCopy[
-                                (board.width * i) + 
-                                (i * 2) + 
-                                (board.width * 2) + 
-                                j + 
-                                14
-                            ]
-                                .id === 'flagged'
-                            ) 
-                            {
-                                updatedBoardCopy[
-                                    (board.width * i) + 
-                                    (i * 2) + 
-                                    (board.width * 2) + 
-                                    j + 
-                                    14
-                                ] = {
-                                    key: `cell-${i}-${j}`, 
-                                    xpos: i, 
-                                    ypos: j, 
-                                    class: `square falsebomb`
-                                }
-                            }
-                    }
-                }
-
-                return updatedBoardCopy
-            })
+            onDeath(xpos, ypos)
         }
 
         if (game[xpos][ypos] === '0' && 
@@ -1297,7 +1064,7 @@ function Board ({difficulty}) {
                     return;
                 }
         
-            // Check if the cell has already been visited, flagged, or contains a number
+            // Check if the cell has already been visited, flagged, or contains a bomb
             const cellKey = `cell-${x}-${y}`;
             if (
                 visited.has(cellKey) || 
@@ -1335,9 +1102,7 @@ function Board ({difficulty}) {
                         key: cellKey, 
                         xpos: x, 
                         ypos: y, 
-                        class: `square open${
-                            game[x][y]
-                        }`
+                        class: `square open${game[x][y]}`
                     }
     
                     return updatedBoardCopy
@@ -1369,9 +1134,7 @@ function Board ({difficulty}) {
                         key: cellKey, 
                         xpos: x, 
                         ypos: y, 
-                        class: `square open${
-                            game[x][y]
-                        }`
+                        class: `square open${game[x][y]}`
                     }
     
                     return updatedBoardCopy
@@ -1382,13 +1145,839 @@ function Board ({difficulty}) {
             // Start the DFS from the initial cell
             dfs(x, y);
     }
-      
+    
+    function revealNeighboringCells(coords) {
+        const xpos = coords[0]
+        const ypos = coords[1]    
+                  
+        switch (true) {
+
+            // Top-left corner
+            case xpos === 0 && ypos === 0:
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+
+                    updatedBoardCopy[
+                        (board.width * xpos) + 
+                            (xpos * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos}-${ypos + 1}`, 
+                            xpos: xpos, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos][ypos + 1] 
+                                : onDeath(xpos, ypos + 1)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos, 
+                            class: `square ${
+                                game[xpos + 1][ypos] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos] 
+                                : onDeath(xpos + 1, ypos)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos + 1}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos + 1][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos + 1] 
+                                : onDeath(xpos + 1, ypos + 1)}`
+                        } : null
+
+                    return updatedBoardCopy
+                })
+
+                break;
+
+            // Top-right corner
+            case xpos === 0 && ypos === game[xpos].length - 1:
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+
+                    updatedBoardCopy[
+                        (board.width * xpos) + 
+                            (xpos * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos}-${ypos - 1}`, 
+                            xpos: xpos, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos][ypos - 1] 
+                                : onDeath(xpos, ypos - 1)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos, 
+                            class: `square ${
+                                game[xpos + 1][ypos] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos] 
+                                : onDeath(xpos + 1, ypos)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos - 1}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos + 1][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos - 1] 
+                                : onDeath(xpos + 1, ypos - 1)}`
+                        } : null
+
+                    return updatedBoardCopy
+                })
+
+                break;
+
+            // Bottom-left corner
+            case xpos === game.length - 1 && ypos === 0:
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+
+                    updatedBoardCopy[
+                        (board.width * (xpos)) + 
+                            ((xpos) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos}-${ypos + 1}`, 
+                            xpos: xpos, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos][ypos + 1] 
+                                : onDeath(xpos, ypos + 1)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos, 
+                            class: `square ${
+                                game[xpos - 1][ypos] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos] 
+                                : onDeath(xpos - 1, ypos)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos + 1}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos - 1][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos + 1] 
+                                : onDeath(xpos - 1, ypos + 1)}`
+                        } : null
+
+                    return updatedBoardCopy
+                })
+
+                break;
+
+            // Bottom-right corner
+            case xpos === game.length - 1 && ypos === game[xpos].length - 1:
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+
+                    updatedBoardCopy[
+                        (board.width * (xpos)) + 
+                            ((xpos) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos}-${ypos - 1}`, 
+                            xpos: xpos, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos][ypos - 1] 
+                                : onDeath(xpos, ypos)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos, 
+                            class: `square ${
+                                game[xpos - 1][ypos] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos] 
+                                : onDeath(xpos, ypos)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos - 1}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos - 1][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos - 1] 
+                                : onDeath(xpos - 1, ypos - 1)}`
+                        } : null
+
+                    return updatedBoardCopy
+                })
+                        
+                break;
+
+            // Top edge
+            case xpos === 0 && 
+                (
+                    ypos > 0 
+                    && ypos < game[xpos].length - 1
+                ):
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+        
+                    updatedBoardCopy[
+                        (board.width * (xpos)) + 
+                            ((xpos) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos}-${ypos + 1}`, 
+                            xpos: xpos, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos][ypos + 1] 
+                                : onDeath(xpos, ypos + 1)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos)) + 
+                            ((xpos) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos}-${ypos - 1}`, 
+                            xpos: xpos, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos][ypos - 1] 
+                                : onDeath(xpos, ypos - 1)}`
+                        } : null
+        
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos, 
+                            class: `square ${
+                                game[xpos + 1][ypos] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos] 
+                                : onDeath(xpos + 1, ypos)}`
+                        } : null
+        
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos + 1}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos + 1][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos + 1] 
+                                : onDeath(xpos + 1, ypos + 1)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos - 1}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos + 1][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos - 1] 
+                                : onDeath(xpos + 1, ypos - 1)}`
+                        } : null
+        
+                    return updatedBoardCopy
+                })
+                        
+                break;
+
+             // Bottom edge
+            case xpos === game.length - 1 && 
+                (
+                    ypos > 0 
+                    && ypos < game[xpos].length - 1
+                ):
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+            
+                    updatedBoardCopy[
+                        (board.width * (xpos)) + 
+                            ((xpos) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos}-${ypos + 1}`, 
+                            xpos: xpos, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos][ypos + 1] 
+                                : onDeath(xpos, ypos + 1)}`
+                        } : null
+    
+                    updatedBoardCopy[
+                        (board.width * (xpos)) + 
+                            ((xpos) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos}-${ypos - 1}`, 
+                            xpos: xpos, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos][ypos - 1] 
+                                : onDeath(xpos, ypos - 1)}`
+                        } : null
+            
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos, 
+                            class: `square ${
+                                game[xpos - 1][ypos] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos] 
+                                : onDeath(xpos - 1, ypos)}`
+                        } : null
+            
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos + 1}`, 
+                            xpos: xpos - 1,
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos - 1][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos + 1] 
+                                : onDeath(xpos - 1, ypos + 1)}`
+                            } : null
+    
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos - 1}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos - 1][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos - 1] 
+                                : onDeath(xpos - 1, ypos - 1)}`
+                        } : null
+            
+                    return updatedBoardCopy
+                })
+                        
+                break;
+
+            // Left edge
+            case ypos === 0 && 
+                (
+                    xpos > 0 
+                    && xpos < game.length - 1
+                ):
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+            
+                    updatedBoardCopy[
+                        (board.width * (xpos)) + 
+                            ((xpos) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos}-${ypos + 1}`, 
+                            xpos: xpos, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos][ypos + 1] 
+                                : onDeath(xpos, ypos + 1)}`
+                        } : null
+    
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos, 
+                            class: `square ${
+                                game[xpos + 1][ypos] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos] 
+                                : onDeath(xpos + 1, ypos)}`
+                        } : null
+            
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos, 
+                            class: `square ${
+                                game[xpos - 1][ypos] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos] 
+                                : onDeath(xpos - 1, ypos)}`
+                        } : null
+            
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos + 1}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos - 1][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos + 1] 
+                                : onDeath(xpos - 1, ypos + 1)}`
+                        } : null
+    
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos + 1}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos + 1][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos + 1] 
+                                : onDeath(xpos + 1, ypos + 1)}`
+                        } : null
+            
+                    return updatedBoardCopy
+                })
+                        
+                break;
+
+            // Right edge
+            case ypos === game[xpos].length - 1 && 
+                (
+                    xpos > 0 
+                    && xpos < game.length - 1
+                ):
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+            
+                    updatedBoardCopy[
+                        (board.width * (xpos)) + 
+                            ((xpos) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos}-${ypos - 1}`, 
+                            xpos: xpos, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos][ypos - 1] 
+                                : onDeath(xpos, ypos - 1)}`
+                        } : null
+    
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos, 
+                            class: `square ${
+                                game[xpos - 1][ypos] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos] 
+                                : onDeath(xpos - 1, ypos)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos}`, 
+                            xpos: xpos, 
+                            ypos: ypos, 
+                            class: `square ${
+                                game[xpos + 1][ypos] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos] 
+                                : onDeath(xpos + 1, ypos)}`
+                        } : null
+            
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos - 1}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos + 1][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos - 1] 
+                                : onDeath(xpos + 1, ypos - 1)}`
+                        } : null
+    
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos - 1}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos - 1][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos - 1] 
+                                : onDeath(xpos - 1, ypos - 1)}`
+                        } : null
+            
+                    return updatedBoardCopy
+                })
+                        
+                break;
+            default: // Middle of the board
+                setDivider((prevBoard) => {
+                    const updatedBoardCopy = [...prevBoard]
+            
+                    updatedBoardCopy[
+                        (board.width * (xpos)) + 
+                            ((xpos) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos}-${ypos - 1}`, 
+                            xpos: xpos, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos][ypos - 1] 
+                                : onDeath(xpos, ypos - 1)}`
+                        } : null
+                        
+                    updatedBoardCopy[
+                        (board.width * (xpos)) + 
+                            ((xpos) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos}-${ypos + 1}`, 
+                            xpos: xpos, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos][ypos + 1] 
+                                : onDeath(xpos, ypos + 1)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos, 
+                            class: `square ${
+                                game[xpos - 1][ypos] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos] 
+                                : onDeath(xpos - 1, ypos)}`
+                        } : null
+            
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos, 
+                            class: `square ${
+                                game[xpos + 1][ypos] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos] 
+                                : onDeath(xpos + 1, ypos)}`
+                        } : null
+            
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos - 1}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos + 1][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos - 1] 
+                                : onDeath(xpos + 1, ypos - 1)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos + 1}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos - 1][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos + 1] 
+                                : onDeath(xpos - 1, ypos + 1)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos + 1)) + 
+                            ((xpos + 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos + 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos + 1}-${ypos + 1}`, 
+                            xpos: xpos + 1, 
+                            ypos: ypos + 1, 
+                            class: `square ${
+                                game[xpos + 1][ypos + 1] !== 'X' 
+                                ? 'open' + game[xpos + 1][ypos + 1] 
+                                : onDeath(xpos + 1, ypos + 1)}`
+                        } : null
+
+                    updatedBoardCopy[
+                        (board.width * (xpos - 1)) + 
+                            ((xpos - 1) * 2) + 
+                            (board.width * 2) + 
+                            (ypos - 1) + 
+                            14
+                        ].id !== 'flagged' ? {
+                            key: `cell-${xpos - 1}-${ypos - 1}`, 
+                            xpos: xpos - 1, 
+                            ypos: ypos - 1, 
+                            class: `square ${
+                                game[xpos - 1][ypos - 1] !== 'X' 
+                                ? 'open' + game[xpos - 1][ypos - 1] 
+                                : onDeath(xpos - 1, ypos - 1)}`
+                        } : null
+            
+                    return updatedBoardCopy
+                })
+                        
+                break;
+        }
+    }
+
+    function onDeath(x, y) {
+        start = false
+        playing = false
+
+        setDivider((prevBoard) => {
+            const updatedBoardCopy = [...prevBoard]
+            setFace('facedead')
+    
+            updatedBoardCopy[board.width + 6] = {
+                key: 'face',
+                class: 'face facedead',
+                style: { 
+                    marginLeft: style.margin, 
+                    marginRight: style.margin 
+                }, 
+                id: 'face'
+            }
+
+            for (let i = 0; i < game.length; i++) {
+                for (let j = 0; j < game[i].length; j++) {
+                    if (game[i][j] === 'X') {
+                        updatedBoardCopy[
+                            (board.width * i) + 
+                            (i * 2) + 
+                            (board.width * 2) + 
+                            j + 
+                            14
+                        ] = {
+                            key: `cell-${i}-${j}`, 
+                            xpos: i, 
+                            ypos: j, 
+                            class: `square bombrevealed`
+                        }
+                        updatedBoardCopy[
+                            (board.width * x) + 
+                            (x * 2) + 
+                            (board.width * 2) + 
+                            y + 
+                            14] = {
+                                key: `cell-${x}-${y}`, 
+                                xpos: x, 
+                                ypos: y, 
+                                class: `square bombdeath`
+                            }
+                    } else if (
+                        updatedBoardCopy[
+                            (board.width * i) + 
+                            (i * 2) + 
+                            (board.width * 2) + 
+                            j + 
+                            14
+                        ]
+                            .id === 'flagged'
+                        ) 
+                        {
+                            updatedBoardCopy[
+                                (board.width * i) + 
+                                (i * 2) + 
+                                (board.width * 2) + 
+                                j + 
+                                14
+                            ] = {
+                                key: `cell-${i}-${j}`, 
+                                xpos: i, 
+                                ypos: j, 
+                                class: `square falsebomb`
+                            }
+                        }
+                }
+            }
+
+            return updatedBoardCopy
+        })
+    }
 
     return (
         <div className='placeholder'>
             <br /><br /><br />
             {level !== 'custom' 
-                && dimensionRender() 
+                && dimensionRender()
                 && (
                     <div id='game' 
                     style={{
@@ -1420,10 +2009,10 @@ function Board ({difficulty}) {
                                     : null
                                 }
                                 onClick={
-                                    ((item.xpos >= 0 && 
-                                        item.xpos <= 8) && 
-                                        (item.ypos >= 0 && 
-                                            item.ypos <= 8)) || 
+                                    ((item.xpos === 0 ||
+                                        item.xpos) && 
+                                        (item.ypos === 0 ||
+                                            item.ypos)) || 
                                             item.id
                                     ? () => {
                                         start = true;
@@ -1433,7 +2022,7 @@ function Board ({difficulty}) {
                                                 ? clicks ++
                                                 : start = false;
                                         item.id === 'face'
-                                            ? updateBoard(item.xpos, item.ypos, item.id)
+                                            ? setTime(item.xpos, item.ypos, item.id)
                                             : _
                                         item.class === 'square blank' && playing
                                             ? setSquares(item.xpos, item.ypos, item.id)
@@ -1442,8 +2031,10 @@ function Board ({difficulty}) {
                                     : undefined
                                 }
                                 onMouseOver={
-                                    (item.xpos && 
-                                        item.ypos) && 
+                                    ((item.xpos === 0 ||
+                                        item.xpos) && 
+                                        (item.ypos === 0 ||
+                                        item.ypos)) && 
                                         playing
                                             ? () => {
                                                 setCoords([item.xpos, item.ypos])
