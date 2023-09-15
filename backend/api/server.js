@@ -1,27 +1,28 @@
-const express = require('express')
-const cors = require('cors')
-const path = require('path')
+const express = require('express');
+const cors = require('cors');
+// const path = require('path');
 
-const customBoardRouter = require('./customBoard/router')
-const highscoreRouter = require('./highscore/router')
+const customBoardRouter = require('./customBoard/router.js');
+const highscoreRouter = require('./highscore/router');
 
-const server = express()
+const server = express();
 
-server.use(express.json())
-server.use(cors())
+server.use(express.json());
+server.use(cors());
 
-server.get('/api/customboard', customBoardRouter)
+server.use('/api/customboard', customBoardRouter);
 
-server.get('/api/highscore', highscoreRouter)
+server.use('/api/highscore', highscoreRouter);
 
-server.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist/index.html'))
-  })
+server.use((err, req, res, next) => { // eslint-disable-line
+    res.status(err.status || 500).json({
+      message: err.message,
+      stack: err.stack,
+    });
+  });
 
-server.use((req, res) => {
-    res.status(404).json({
-        message: `Endpoint [${req.method}] ${req.originalUrl} does not exist`,
-    })
-})
+// server.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../dist/index.html'));
+// });
 
 module.exports = server
