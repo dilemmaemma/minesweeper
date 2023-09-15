@@ -361,7 +361,7 @@ function Board ({difficulty}) {
             console.log('here'),
             <CustomBoard />
             try {
-                const response = await axios.get('http://localhost:9000/api/customboard')
+                const response = await axios.get('http://localhost:9000/api/customboard/board')
                 console.log(response)
             } catch (error) {
                 console.error(error)

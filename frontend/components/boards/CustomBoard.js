@@ -8,7 +8,8 @@ const initialBoard = {
     width: 0,
     height: 0,
     bombs: 0,
-    error: ''
+    error: '',
+    success: ''
 }
 
 const CustomBoard = () => {
@@ -68,16 +69,14 @@ const CustomBoard = () => {
 
     const onSubmit = e => {
         e.preventDefault()
-        console.log([customBoard.width,
-            customBoard.height,
-            customBoard.bombs ])
-        axios.post('http://localhost:9000/api/customboard', {
+        axios.post('http://localhost:9000/api/customboard/board', {
             width: customBoard.width,
             height: customBoard.height,
             bombs: customBoard.bombs            
     })
             .then(res => {
-                console.log(res)
+                setCustomBoard({ ...customBoard, success: res.data.message })
+                console.log(res.data)
             })
             .catch(err => {
                 setCustomBoard({ ...customBoard, error: err })
@@ -143,6 +142,7 @@ const CustomBoard = () => {
         <div>
             <form id='custom-board' onSubmit={onSubmit} onReset={onReset}>
                 <h2 className='custom-heading'>Create Custom Board</h2>
+                {customBoard.success && <h3 id='success'>{customBoard.success}</h3>}
                 <div>
                     <label htmlFor='width' style={{color: 'white'}}>Width/Rows:&nbsp;</label>
                     <input
