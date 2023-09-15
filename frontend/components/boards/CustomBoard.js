@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -85,53 +85,53 @@ const CustomBoard = () => {
         return <Navigate to=''/>
     }
 
-    // useEffect(() => {
-    //     // Checks for possible errors in form. If present, generates an error message. If all tests pass, deletes the error message
-    //     if (customBoard.width < 8 || 
-    //         customBoard.width > 50) {
-    //             setCustomBoard({ 
-    //                 ...customBoard, 
-    //                 error: 'Board width must be between 8 and 50' 
-    //             })
-    //     } else if (customBoard.height < 8 || 
-    //         customBoard.height > 50) {
-    //             setCustomBoard({ 
-    //                 ...customBoard, 
-    //                 error: 'Board height must be between 8 and 50' 
-    //             })
-    //     } else if (customBoard.bombs < 1 || 
-    //         customBoard.bombs > 
-    //         ((customBoard.width*customBoard.height)/2 <=999 ? 
-    //         (customBoard.width*customBoard.height)/2 : 999)) {
-    //             setCustomBoard({ 
-    //                 ...customBoard, 
-    //                 error: 
-    //                     `Total number of bombs must be between 1 and 
-    //                     ${(customBoard.width*customBoard.height)/2 <=999 ? 
-    //                     Math.floor((customBoard.width*customBoard.height)/2) : 999}` 
-    //             })
-    //     }
+    useEffect(() => {
+        // Checks for possible errors in form. If present, generates an error message. If all tests pass, deletes the error message
+        if (customBoard.width < 8 || 
+            customBoard.width > 50) {
+                setCustomBoard({ 
+                    ...customBoard, 
+                    error: 'Board width must be between 8 and 50' 
+                })
+        } else if (customBoard.height < 8 || 
+            customBoard.height > 50) {
+                setCustomBoard({ 
+                    ...customBoard, 
+                    error: 'Board height must be between 8 and 50' 
+                })
+        } else if (customBoard.bombs < 1 || 
+            customBoard.bombs > 
+            ((customBoard.width*customBoard.height)/2 <=999 ? 
+            (customBoard.width*customBoard.height)/2 : 999)) {
+                setCustomBoard({ 
+                    ...customBoard, 
+                    error: 
+                        `Total number of bombs must be between 1 and 
+                        ${(customBoard.width*customBoard.height)/2 <=999 ? 
+                        Math.floor((customBoard.width*customBoard.height)/2) : 999}` 
+                })
+        }
 
-    //     if (customBoard.error && 
-    //         customBoard.width >= 8 && 
-    //         customBoard.width <= 50 && 
-    //         customBoard.height >= 8 && 
-    //         customBoard.height <= 50 && 
-    //         customBoard.bombs >= 1 && 
-    //         customBoard.bombs <= 
-    //         ((customBoard.width*customBoard.height)/2 <=999 ? 
-    //         (customBoard.width*customBoard.height)/2 : 999)) {
-    //             setCustomBoard({ 
-    //                 ...customBoard, 
-    //                 error: '' 
-    //             })
-    //         }
+        if (customBoard.error && 
+            customBoard.width >= 8 && 
+            customBoard.width <= 50 && 
+            customBoard.height >= 8 && 
+            customBoard.height <= 50 && 
+            customBoard.bombs >= 1 && 
+            customBoard.bombs <= 
+            ((customBoard.width*customBoard.height)/2 <=999 ? 
+            (customBoard.width*customBoard.height)/2 : 999)) {
+                setCustomBoard({ 
+                    ...customBoard, 
+                    error: '' 
+                })
+            }
 
-    // }, [
-    //     customBoard.width, 
-    //     customBoard.height, 
-    //     customBoard.bombs
-    // ])
+    }, [
+        customBoard.width, 
+        customBoard.height, 
+        customBoard.bombs
+    ])
 
     // Max size: 50x50
     // Min size: 8x8

@@ -337,6 +337,10 @@ function Board ({difficulty}) {
         return newGame;
     }
 
+    function customBoard () {
+        return <CustomBoard />
+    }
+
     // Sets basic constraints for each difficulty
     async function createBoard() {
         if (level === 'easy') {
@@ -358,8 +362,7 @@ function Board ({difficulty}) {
                 height: 16,
             }
         } else if (level === 'custom') {
-            console.log('here'),
-            <CustomBoard />
+            customBoard()
             try {
                 const response = await axios.get('http://localhost:9000/api/customboard/board')
                 console.log(response)
@@ -431,21 +434,21 @@ function Board ({difficulty}) {
                 margin: '182px' 
             }
         )
-        // else if (difficulty === 'custom') {
-        //     axios.get(`localhost:9000/api/board/custom`)
-        //         .then(res => {
-        //             console.log(res.data)
-        //             return (
-        //                style = { 
-        //                    height: `${String((res.data.height * 16) + 62)}px`, 
-        //                    width: `${String((res.data.width * 16) + 20)}px`, 
-        //                    margin: `${String(((res.data.width * 16) - 116) / 2)}`, 
-        //                })
-        //         })
-        //         .catch(err => {
-        //             console.error(err)
-        //         })
-        // }
+        else if (difficulty === 'custom') {
+            axios.get(`localhost:9000/api/customboard/board`)
+                .then(res => {
+                    console.log(res.data)
+                    return (
+                       style = { 
+                           height: `${String((res.data.height * 16) + 62)}px`, 
+                           width: `${String((res.data.width * 16) + 20)}px`, 
+                           margin: `${String(((res.data.width * 16) - 116) / 2)}`, 
+                       })
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        }
     }
 
     // Updates time every second
@@ -2209,7 +2212,7 @@ function Board ({difficulty}) {
     return (
         <div className='placeholder'>
             <br /><br /><br />
-            { difficulty === 'custom' && <CustomBoard />}
+            {/* { difficulty === 'custom' && <CustomBoard />} */}
             {level !== 'custom' 
                 && dimensionRender()
                 && (
