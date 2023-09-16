@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import { Navigate } from 'react-router'
-// import axios from 'axios'
+import axios from 'axios'
 
-import CustomBoard from './CustomBoard' //eslint-disable-line
+import CustomBoard from './CustomBoard'
 
 import { startKeyListener, stopKeyListener, startKeyUpListener, stopKeyUpListener } from '../keyPressListener'
 
@@ -46,9 +46,15 @@ function Board ({difficulty}) {
     useEffect(() => {
         setLevel(difficulty)
         setFace('facesmile')
-        playing = true
-        dimensionRender()
-        newBoard() 
+        if (difficulty === 'custom') {
+            <div>
+                <CustomBoard />
+            </div>
+        } else {
+            playing = true
+            dimensionRender()
+            newBoard() 
+        }
     }, [difficulty]);
 
     // For dev use only - shows board placements
@@ -139,7 +145,7 @@ function Board ({difficulty}) {
                 setDivider((prevBoard) => {
                     const updatedBoardCopy = [...prevBoard]
 
-                    updatedBoardCopy[board.width + 6] = {
+                    updatedBoardCopy[level !== 'custom' ? board.width + 6 : 6] = {
                         key: 'face',
                         class: 'face facepressed',
                         style: {
@@ -248,31 +254,33 @@ function Board ({difficulty}) {
 
     // Checks for changes in face
     useEffect(() => {
-        const intervalId = setInterval(() => {
-          if (face === 'facepressed') {
-            setFace('facesmile');
-          }
-          setDivider((prevBoard) => {
-            const updatedBoardCopy = [...prevBoard]
-
-            updatedBoardCopy[board.width + 6] = 
-                {
-                    key: 'face', 
-                    class: `face ${face}`, 
-                    style: { 
-                        marginLeft: style.margin, 
-                        marginRight: style.margin
-                    }, 
-                    id: 'face'
+        if (level !== 'custom') {
+            const intervalId = setInterval(() => {
+                if (face === 'facepressed') {
+                  setFace('facesmile');
                 }
-
-            return updatedBoardCopy
-          })
-        }, 500);
+                setDivider((prevBoard) => {
+                  const updatedBoardCopy = [...prevBoard]
       
-        return () => {
-          clearInterval(intervalId);
-        };
+                  updatedBoardCopy[board.width + 6] = 
+                      {
+                          key: 'face', 
+                          class: `face ${face}`, 
+                          style: { 
+                              marginLeft: style.margin, 
+                              marginRight: style.margin
+                          }, 
+                          id: 'face'
+                      }
+      
+                  return updatedBoardCopy
+                })
+              }, 500);
+            
+              return () => {
+                clearInterval(intervalId);
+              };
+        }
       }, [face]);
     
     // Checks for victory
@@ -329,8 +337,12 @@ function Board ({difficulty}) {
         return newGame;
     }
 
+    function customBoard () {
+        return <CustomBoard />
+    }
+
     // Sets basic constraints for each difficulty
-    function createBoard() {
+    async function createBoard() {
         if (level === 'easy') {
             board = {
                 bombs: 10,
@@ -343,23 +355,33 @@ function Board ({difficulty}) {
                 width: 16,
                 height: 16,
             };
-        } else if (difficulty === 'hard') {
+        } else if (level === 'hard') {
             board = {
                 bombs: 99,
                 width: 30,
                 height: 16,
             }
+        } else if (level === 'custom') {
+            customBoard()
+            try {
+                const response = await axios.get('http://localhost:9000/api/customboard/board')
+                console.log(response)
+            } catch (error) {
+                console.error(error)
+            }
         }
-        setLevel(difficulty)
-        currentBombs = board.bombs
-        setInitialBombs(board.bombs)
-        // setPrevBombsLeft(currentBombs)
-        const bombPlacement = createGameBoard(board);
-        return bombPlacement;
+        
+        if (level !== 'custom') {
+            setLevel(difficulty)
+            currentBombs = board.bombs
+            setInitialBombs(board.bombs)
+            const bombPlacement = createGameBoard(board);
+            return bombPlacement;
+        }
     }
 
     // Function to start a new board
-    function newBoard() {
+    async function newBoard() {
         start = false
         playing = true
         clicks = 0
@@ -367,22 +389,24 @@ function Board ({difficulty}) {
         setGame([]);
         setDivider([]);
         setFace('facesmile');
-        const newGame = createBoard();
+        const newGame = await createBoard();
         setGame(newGame);
         // Sets the game that the user will see. Updates with values that correspond to the game state
         let hiddenGame = []
 
-        for (let i = 0; i < board.height; i++) {
-            let row = []
-            for (let j = 0; j < board.width; j++) {
-                row.push('O')
+        if (level !== 'custom') {
+            for (let i = 0; i < board.height; i++) {
+                let row = []
+                for (let j = 0; j < board.width; j++) {
+                    row.push('O')
+                }
+                hiddenGame.push(row)
             }
-            hiddenGame.push(row)
+    
+            setUserGame(hiddenGame)
+            const newGameData = renderClues(newGame)
+            setGame(newGameData);
         }
-
-        setUserGame(hiddenGame)
-        const newGameData = renderClues(newGame)
-        setGame(newGameData);
 
         setElapsedTime(1)
     }
@@ -410,21 +434,21 @@ function Board ({difficulty}) {
                 margin: '182px' 
             }
         )
-        // else if (difficulty === 'custom') {
-        //     axios.get(`localhost:9000/api/board/custom`)
-        //         .then(res => {
-        //             console.log(res.data)
-        //             return (
-        //                style = { 
-        //                    height: `${String((res.data.height * 16) + 62)}px`, 
-        //                    width: `${String((res.data.width * 16) + 20)}px`, 
-        //                    margin: `${String(((res.data.width * 16) - 116) / 2)}`, 
-        //                })
-        //         })
-        //         .catch(err => {
-        //             console.error(err)
-        //         })
-        // }
+        else if (difficulty === 'custom') {
+            axios.get(`localhost:9000/api/customboard/board`)
+                .then(res => {
+                    console.log(res.data)
+                    return (
+                       style = { 
+                           height: `${String((res.data.height * 16) + 62)}px`, 
+                           width: `${String((res.data.width * 16) + 20)}px`, 
+                           margin: `${String(((res.data.width * 16) - 116) / 2)}`, 
+                       })
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        }
     }
 
     // Updates time every second
@@ -2188,6 +2212,12 @@ function Board ({difficulty}) {
     return (
         <div className='placeholder'>
             <br /><br /><br />
+            { difficulty === 'custom' && 
+                <div>
+                    <CustomBoard />
+
+                </div>
+            }
             {level !== 'custom' 
                 && dimensionRender()
                 && (

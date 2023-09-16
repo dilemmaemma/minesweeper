@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
-// import axios from 'axios'
+import axios from 'axios'
 
 import '../../css/board.css'
 
@@ -8,7 +8,8 @@ const initialBoard = {
     width: 0,
     height: 0,
     bombs: 0,
-    error: ''
+    error: '',
+    success: ''
 }
 
 const CustomBoard = () => {
@@ -68,7 +69,18 @@ const CustomBoard = () => {
 
     const onSubmit = e => {
         e.preventDefault()
-        // axios post call - may not need
+        axios.post('http://localhost:9000/api/customboard/board', {
+            width: customBoard.width,
+            height: customBoard.height,
+            bombs: customBoard.bombs            
+    })
+            .then(res => {
+                setCustomBoard({ ...customBoard, success: res.data.message })
+                console.log(res.data)
+            })
+            .catch(err => {
+                setCustomBoard({ ...customBoard, error: err })
+            })
         onReset()
         return <Navigate to=''/>
     }
@@ -130,6 +142,7 @@ const CustomBoard = () => {
         <div>
             <form id='custom-board' onSubmit={onSubmit} onReset={onReset}>
                 <h2 className='custom-heading'>Create Custom Board</h2>
+                {customBoard.success && <h3 id='success'>{customBoard.success}</h3>}
                 <div>
                     <label htmlFor='width' style={{color: 'white'}}>Width/Rows:&nbsp;</label>
                     <input
@@ -223,7 +236,6 @@ const CustomBoard = () => {
                     <button id='ResetForm'>Reset</button>
                 </div>
             </form>
-            {console.log(customBoard)}
         </div>
     )
 }
