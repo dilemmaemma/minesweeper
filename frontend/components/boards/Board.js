@@ -2212,7 +2212,12 @@ function Board ({difficulty}) {
     return (
         <div className='placeholder'>
             <br /><br /><br />
-            {/* { difficulty === 'custom' && <CustomBoard />} */}
+            { difficulty === 'custom' && 
+                <div>
+                    <CustomBoard />
+
+                </div>
+            }
             {level !== 'custom' 
                 && dimensionRender()
                 && (

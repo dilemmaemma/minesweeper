@@ -3,7 +3,7 @@ const confirmation = (req, res, next) => {
     if (!width || width < 8 || width > 50) {
         next({ status: 500, message: 'Width must be between 8 and 50' })
     } else if (!height || height < 8 || height > 50) {
-        next({ status: 500, message: 'Width must be between 8 and 50' })
+        next({ status: 500, message: 'Height must be between 8 and 50' })
     } else if (!bombs || bombs < 1 || bombs > (width !== 0 && height !== 0 
         ? (
             (width*height)/2 <=999 
