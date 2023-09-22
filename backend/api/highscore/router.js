@@ -4,10 +4,6 @@ const Highscore = require('./model')
 
 router.use(requestIp.mw())
 
-router.get('/test', (req, res) => {
-    res.json({message: 'Custom board test route is working'})
-})
-
 router.get('/', (req, res, next) => {
     Highscore.find()
         .then(users => {
