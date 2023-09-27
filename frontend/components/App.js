@@ -46,8 +46,68 @@ function App() { // Need to change this to factor for multiple games
                       marginTop: '0', 
                       marginBottom: '0'
                     }}>
-                    Gamemodes {!showLinks ? '▼' : '▲'}
+                    Games {!showLinks ? '▼' : '▲'}
                   </p>
+                </li>
+                <li>
+                  <Link to='minesweeper'
+                    className={`menu__item ${!showLinks ? 'hidden' : ''}`} 
+                    style={{ 
+                      textIndent: '40px', 
+                      fontSize: '17px'
+                    }}>
+                    Minesweeper
+                  </Link>
+                </li>
+                <li>
+                  <Link to='tictactoe'
+                    className={`menu__item ${!showLinks ? 'hidden' : ''}`} 
+                    style={{ 
+                      textIndent: '40px', 
+                      fontSize: '17px'
+                    }}>
+                    Tic-Tac-Toe
+                  </Link>
+                </li>
+                <li>
+                  <Link to='concentration'
+                    className={`menu__item ${!showLinks ? 'hidden' : ''}`} 
+                    style={{ 
+                      textIndent: '40px', 
+                      fontSize: '17px'
+                    }}>
+                    Concentration
+                  </Link>
+                </li>
+                <li>
+                  <Link to='blackjack'
+                    className={`menu__item ${!showLinks ? 'hidden' : ''}`} 
+                    style={{ 
+                      textIndent: '40px', 
+                      fontSize: '17px'
+                    }}>
+                    Black Jack
+                  </Link>
+                </li>
+                <li>
+                  <Link to='puzzleslider'
+                    className={`menu__item ${!showLinks ? 'hidden' : ''}`} 
+                    style={{ 
+                      textIndent: '40px', 
+                      fontSize: '17px'
+                    }}>
+                    2048
+                  </Link>
+                </li>
+                <li>
+                  <Link to='monopoly'
+                    className={`menu__item ${!showLinks ? 'hidden' : ''}`} 
+                    style={{ 
+                      textIndent: '40px', 
+                      fontSize: '17px'
+                    }}>
+                    Monopoly
+                  </Link>
                 </li>
                 <li>
                   <Link to='board' 
@@ -109,6 +169,12 @@ function App() { // Need to change this to factor for multiple games
         <Route path='highscores' element={<Highscores />} />
         <Route path='controls' element={<Controls />} />
         <Route path='board' element = {<Board difficulty={difficulty} />} />
+        {/* <Route path='minesweeper' element={<Minesweeper />} />
+        <Route path='tictactoe' element={<TicTacToe />} />
+        <Route path='concentration' element={<Concentration />} />
+        <Route path='blackjack' element={<BlackJack />} />
+        <Route path='puzzleslider' element={<PuzzleSlider />} />
+        <Route path='monopoly' element={<Monopoly />} /> */}
     </Routes>
   </div>
   );
