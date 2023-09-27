@@ -1,5 +1,5 @@
 // Generates random bomb positions for game
-export function generateRandomBombPositions(sweeperBoard) {
+function generateRandomBombPositions(sweeperBoard) {
     const bombPositions = [];
   
     while (bombPositions.length < sweeperBoard.bombs) {

@@ -5,7 +5,7 @@ import axios from 'axios'
 import CustomBoard from './CustomBoard'
 
 import { startKeyListener, stopKeyListener, startKeyUpListener, stopKeyUpListener } from '../keyPressListener'
-import { createGameBoard, generateRandomBombPositions } from '../helpers/boardConstruction'
+import { createGameBoard } from '../helpers/boardConstruction'
 
 import '../../css/board.css'
 
@@ -58,12 +58,8 @@ function Board ({difficulty}) {
         }
     }, [difficulty]);
 
-    // For dev use only - shows board placements
+    // Renders the game board to the DOM
     useEffect(() => {
-        // console.clear()
-        console.info('Game has been updated.')
-        console.info('Board placements:')
-        console.table(game)
         if (difficulty !== 'custom') {
             const data = renderBoard()
             setCurrentBoard(data)
