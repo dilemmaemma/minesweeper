@@ -99,6 +99,7 @@ function Board ({difficulty}) {
     // Checks for certain key presses
     useEffect(() => {
         function handleKeyPress(event) {
+            console.log(`Coords: (${event.clientX}, ${event.clientY})`)
             if (event.key === 'F2') {
                 newBoard()
             } 
@@ -136,11 +137,12 @@ function Board ({difficulty}) {
                     revealNeighboringCells(coords)
             }
             else if (event.button === 0 && 
-                event.clientX >= 380 && 
-                event.clientX <= 410 && 
+                event.clientX >= 755 && 
+                event.clientX <= 780 && 
                 event.clientY >= 70 && 
                 event.clientY <= 90) 
             {
+                console.log('Here')
                 setFace('facepressed')
                 setDivider((prevBoard) => {
                     const updatedBoardCopy = [...prevBoard]
@@ -180,8 +182,8 @@ function Board ({difficulty}) {
 
             }
             else if (event.button === 0 && 
-                ((coords[0] >= 0 && coords[0] <= 8) && 
-                    (coords[1] >= 0 && coords[1] <= 8)) &&
+                ((coords[0] >= 0 && coords[0] <= board.width) && 
+                    (coords[1] >= 0 && coords[1] <= board.width)) &&
                     !(event.clientX >= 380 && 
                         event.clientX <= 410 && 
                         event.clientY >= 70 && 
