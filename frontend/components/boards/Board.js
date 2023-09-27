@@ -5,6 +5,7 @@ import axios from 'axios'
 import CustomBoard from './CustomBoard'
 
 import { startKeyListener, stopKeyListener, startKeyUpListener, stopKeyUpListener } from '../keyPressListener'
+import { createGameBoard, generateRandomBombPositions } from '../helpers/boardConstruction'
 
 import '../../css/board.css'
 
@@ -99,7 +100,6 @@ function Board ({difficulty}) {
     // Checks for certain key presses
     useEffect(() => {
         function handleKeyPress(event) {
-            console.log(`Coords: (${event.clientX}, ${event.clientY})`)
             if (event.key === 'F2') {
                 newBoard()
             } 
@@ -296,55 +296,13 @@ function Board ({difficulty}) {
         }
     }, [start])
 
-    // Generates random bomb positions for game  
-    function generateRandomBombPositions(board) {
-        const bombPositions = [];
-      
-        while (bombPositions.length < board.bombs) {
-            const x = Math.floor(
-                Math.random() * 
-                board.width
-            );
-            const y = Math.floor(
-                Math.random() * 
-                board.height
-            );
-            const position = `${x}-${y}`;
-          
-            // Ensure there are no duplicates
-            if (!bombPositions.includes(position)) {
-                bombPositions.push(position);
-            }
-        }
-          
-        return bombPositions;
-    }
-     
-    // Creates the entire game board
-    function createGameBoard(board) {
-        const bombPositions = generateRandomBombPositions(board);
-        const newGame = [];
-          
-        for (let i = 0; i < board.height; i++) {
-            const row = [];
-          
-            for (let j = 0; j < board.width; j++) {
-                const isBomb = bombPositions.includes(`${j}-${i}`);
-                row.push(isBomb ? 'X' : 'O');
-            }
-          
-            newGame.push(row);
-        }
-          
-        return newGame;
-    }
-
     function customBoard () {
         return <CustomBoard />
     }
 
     // Sets basic constraints for each difficulty
     async function createBoard() {
+        console.log(level)
         if (level === 'easy') {
             board = {
                 bombs: 10,
