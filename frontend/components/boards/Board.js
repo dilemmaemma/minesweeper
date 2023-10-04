@@ -314,7 +314,6 @@ function Board ({difficulty}) {
                 height: 16,
             }
         } else if (level === 'custom') {
-            customBoard()
             try {
                 const response = await axios.get('http://localhost:9000/api/customboard/board')
                 console.log(response)
