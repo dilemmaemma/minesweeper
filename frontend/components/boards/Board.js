@@ -517,8 +517,8 @@ function Board ({difficulty}) {
                                 && game[i - 1][j] === 'X'
                             ) bombs++;
                             if (
-                                isValidCell(i - 1, j - 1) 
-                                && game[i - 1][j - 1] === 'X'
+                                isValidCell(i - 1, j + 1) 
+                                && game[i - 1][j + 1] === 'X'
                             ) bombs++;
                         } else if (
                             game[i][j] === 'X'
