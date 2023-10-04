@@ -292,10 +292,6 @@ function Board ({difficulty}) {
         }
     }, [start])
 
-    function customBoard () {
-        return <CustomBoard />
-    }
-
     // Sets basic constraints for each difficulty
     async function createBoard() {
         console.log(level)
